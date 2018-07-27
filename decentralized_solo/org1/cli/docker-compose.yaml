@@ -1,0 +1,22 @@
+version: '2'
+
+# The network should already exist, even if this is the first service(s) to start (see README step 0.1)
+networks:
+  decentralized_solo:
+    external: true
+
+services:
+  org1-cli:
+    container_name: org1-cli
+    image: hyperledger/fabric-ca-tools
+    environment:
+      - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/cli
+      - CORE_LOGGING_LEVEL=DEBUG
+      
+    volumes:
+      - ./:/etc/hyperledger/cli/setup
+      # This directory map allows the CLI environment to access the passed CA crypto material:
+      - ./../data:/data
+    command: /bin/bash -c '/etc/hyperledger/cli/setup/cli.sh 2>&1 | tee /data/logs/cli.log; sleep 99999'
+    networks:
+      - decentralized_solo

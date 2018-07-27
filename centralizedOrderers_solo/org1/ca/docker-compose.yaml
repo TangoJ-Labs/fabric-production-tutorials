@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+# The leading "ca_" on the network name is the dir name of the starting compose file,
+# since docker-compose prepends the directory name to the stated network name
+networks:
+  ca_full_solo:
+    external: true
+
+services:
+  org1-ca:
+    container_name: org1-ca
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
+      - BOOTSTRAP_USER_PASS=org1-ca-admin:adminpw
+    volumes:
+      - ./../data:/etc/hyperledger/fabric-ca/data
+      - ./:/etc/hyperledger/fabric-ca/setup
+    command: /bin/bash -c '/etc/hyperledger/fabric-ca/setup/ca.sh 2>&1 | tee /etc/hyperledger/fabric-ca/data/logs/ca.log'
+    networks:
+      - ca_full_solo
