@@ -1,4 +1,7 @@
+# Centralized HLF Network (simplified)
+This network runs on a solo orderer (hosted by a single org) and static docker containers (no swarm, etc.)
 
+---
 ## CHECK CUSTOM CHANGES (each org):
 
 `fabric-ca-server-config.yaml`:

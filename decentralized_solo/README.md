@@ -1,5 +1,5 @@
 # Decentralized HLF Network (simplified)
-This network runs on a solo orderer and static docker containers (no swarm, etc.)
+This network runs on a solo orderer (for each org) and static docker containers (no swarm, etc.)
 
 ---
 ## NOTES
