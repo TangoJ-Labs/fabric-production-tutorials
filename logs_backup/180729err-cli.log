@@ -1,0 +1,294 @@
+POST https://org1-ca:7054/enroll
+{"hosts":["aa7d987bef41"],"certificate_request":"-----BEGIN CERTIFICATE REQUEST-----\nMIIBSjCB8QIBADBlMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xp\nbmExFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZGYWJyaWMxFjAUBgNV\nBAMTDW9yZzEtYWRtaW4tY2EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQiiR7b\nm/sEWYEzgCq+O4xXJuGbeRw7/2Z9OTB6ktqOJ+iRYCKob1Vxey1IwIZQni4t2JY2\nMGzLZGmMbyQX++FroCowKAYJKoZIhvcNAQkOMRswGTAXBgNVHREEEDAOggxhYTdk\nOTg3YmVmNDEwCgYIKoZIzj0EAwIDSAAwRQIhAOQFI27Uy1rBPbSk094aWlJf+IK7\nF8XgAGl3S16UnP0/AiAdROxbHh3fjzmtcTw9++e+sDY8NCG77Csf2TAUWnoyjQ==\n-----END CERTIFICATE REQUEST-----\n","profile":"","crl_override":"","label":"","NotBefore":"0001-01-01T00:00:00Z","NotAfter":"0001-01-01T00:00:00Z","CAName":""}
+--
+POST https://org1-ca:7054/cainfo
+{}
+--
+POST https://org1-ca:7054/register
+{"id":"org1-admin-orderer","type":"client","secret":"adminpw","affiliation":"","attrs":[{"name":"admin","value":"true","ecert":true}]}
+--
+POST https://org1-ca:7054/register
+{"id":"org1-admin-peer","type":"client","secret":"adminpw","affiliation":"","attrs":[{"name":"hf.Registrar.Roles","value":"client"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.Revoker","value":"true"},{"name":"hf.GenCRL","value":"true"},{"name":"admin","value":"true","ecert":true},{"name":"abac.init","value":"true","ecert":true}]}
+--
+POST https://org1-ca:7054/register
+{"id":"org1-orderer","type":"orderer","secret":"ordererpw","affiliation":""}
+--
+POST https://org1-ca:7054/register
+{"id":"org1-peer0","type":"peer","secret":"peerpw","affiliation":""}
+--
+POST https://org1-ca:7054/register
+{"id":"org1-user1","type":"client","secret":"userpw","affiliation":""}
+
+
+
+--------- BEGIN LOG ----------
+2018/07/29 11:52:00 [DEBUG] Home directory: /etc/hyperledger/fabric
+2018/07/29 11:52:00 [INFO] Created a default configuration file at /etc/hyperledger/fabric/fabric-ca-client-config.yaml
+2018/07/29 11:52:00 [DEBUG] Client configuration settings: &{URL:https://org1-admin-ca:adminpw@org1-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420450780}
+2018/07/29 11:52:00 [DEBUG] Entered runEnroll
+2018/07/29 11:52:00 [DEBUG] Enrolling { Name:org1-admin-ca Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:&{org1-admin-ca [{US North Carolina  Hyperledger Fabric }] [aa7d987bef41] <nil> <nil> } Type:x509  }
+2018/07/29 11:52:00 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name:org1-admin-ca Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:&{org1-admin-ca [{US North Carolina  Hyperledger Fabric }] [aa7d987bef41] <nil> <nil> } Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420450780}
+2018/07/29 11:52:00 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4204507e0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:52:00 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc42029e070 DummyKeystore:<nil>}
+2018/07/29 11:52:00 [INFO] TLS Enabled
+2018/07/29 11:52:00 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:52:00 [DEBUG] Client Cert File: 
+2018/07/29 11:52:00 [DEBUG] Client Key File: 
+2018/07/29 11:52:00 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:52:00 [DEBUG] GenCSR &{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:}
+2018/07/29 11:52:00 [INFO] generating key: &{A:ecdsa S:256}
+2018/07/29 11:52:00 [DEBUG] generate key from request: algo=ecdsa, size=256
+2018/07/29 11:52:00 [INFO] encoded CSR
+2018/07/29 11:52:00 [DEBUG] Sending request
+POST https://org1-ca:7054/enroll
+{"hosts":["aa7d987bef41"],"certificate_request":"-----BEGIN CERTIFICATE REQUEST-----\nMIIBSjCB8QIBADBlMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xp\nbmExFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZGYWJyaWMxFjAUBgNV\nBAMTDW9yZzEtYWRtaW4tY2EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQiiR7b\nm/sEWYEzgCq+O4xXJuGbeRw7/2Z9OTB6ktqOJ+iRYCKob1Vxey1IwIZQni4t2JY2\nMGzLZGmMbyQX++FroCowKAYJKoZIhvcNAQkOMRswGTAXBgNVHREEEDAOggxhYTdk\nOTg3YmVmNDEwCgYIKoZIzj0EAwIDSAAwRQIhAOQFI27Uy1rBPbSk094aWlJf+IK7\nF8XgAGl3S16UnP0/AiAdROxbHh3fjzmtcTw9++e+sDY8NCG77Csf2TAUWnoyjQ==\n-----END CERTIFICATE REQUEST-----\n","profile":"","crl_override":"","label":"","NotBefore":"0001-01-01T00:00:00Z","NotAfter":"0001-01-01T00:00:00Z","CAName":""}
+2018/07/29 11:52:00 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/07/29 11:52:00 [DEBUG] Response body result: map[Cert:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNQakNDQWVXZ0F3SUJBZ0lVVHBrb3JKSnNpUzJVV3hTNmY0RlRDNkNRaGtnd0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3hMV05oCk1CNFhEVEU0TURjeU9URXhORGN3TUZvWERURTVNRGN5T1RFeE5USXdNRm93WlRFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFUApNQTBHQTFVRUN4TUdZMnhwWlc1ME1SWXdGQVlEVlFRREV3MXZjbWN4TFdGa2JXbHVMV05oTUZrd0V3WUhLb1pJCnpqMENBUVlJS29aSXpqMERBUWNEUWdBRUlva2UyNXY3QkZtQk00QXF2anVNVnliaG0za2NPLzltZlRrd2VwTGEKamlmb2tXQWlxRzlWY1hzdFNNQ0dVSjR1TGRpV05qQnN5MlJwakc4a0YvdmhhNk41TUhjd0RnWURWUjBQQVFILwpCQVFEQWdlQU1Bd0dBMVVkRXdFQi93UUNNQUF3SFFZRFZSME9CQllFRkxnUnhRM2RWM0laM2dRdDFGT0Njc3pFCjZkdjRNQjhHQTFVZEl3UVlNQmFBRkxPaHpncDZ1QURVdmZQWlJyeVZoUXdWMU55MU1CY0dBMVVkRVFRUU1BNkMKREdGaE4yUTVPRGRpWldZME1UQUtCZ2dxaGtqT1BRUURBZ05IQURCRUFpQWZuS2lvbE5RdHBGQ2luWFB6cVh5QgpoUjlpdTNDckcrcE1sbUw5Z2R2NGNBSWdNMnhMaHArcGtXSy83ZnJWZW1vLzJJcC8vdFlWVzZuZDBjci9TcEdqCkRCbz0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo= ServerInfo:map[CAName:org1-ca CAChain:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNCRENDQWF1Z0F3SUJBZ0lVSTQwY2M2RVd1VlNyOVlheFBmSzFzQzBKMUxNd0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3hMV05oCk1CNFhEVEU0TURjeU9URXhORFF3TUZvWERUTXpNRGN5TlRFeE5EUXdNRm93WHpFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFUApNQTBHQTFVRUN4TUdSbUZpY21sak1SQXdEZ1lEVlFRREV3ZHZjbWN4TFdOaE1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUVOYmJHVzBjdU1zcUpvQnY5dXVWdTFhRU4xS3d5V3pBaDNYV2JKcHZzUDR6R29wMXMKSWFiOWlNdWZseWgybmFmallMamR6V0lzQmZiNVRSbjF2K3R3WUtORk1FTXdEZ1lEVlIwUEFRSC9CQVFEQWdFRwpNQklHQTFVZEV3RUIvd1FJTUFZQkFmOENBUUV3SFFZRFZSME9CQllFRkxPaHpncDZ1QURVdmZQWlJyeVZoUXdWCjFOeTFNQW9HQ0NxR1NNNDlCQU1DQTBjQU1FUUNJQVFEa0Y3TjZnUHhSMjFTSVR1VVZGVkpoU3hPdWsrYUxJcjEKdnFia1pPenZBaUIrSmZ4cVp4QlQ5N3F1ekVrZmw0N2NvaHE2alQvQ3orVXFjWksycm02dkx3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo= Version:]]
+2018/07/29 11:52:00 [DEBUG] newEnrollmentResponse org1-admin-ca
+2018/07/29 11:52:00 [INFO] Stored client certificate at /etc/hyperledger/fabric/msp/signcerts/cert.pem
+2018/07/29 11:52:00 [INFO] Stored root CA certificate at /etc/hyperledger/fabric/msp/cacerts/org1-ca-7054.pem
+
+
+
+
+2018/07/29 11:52:42 [DEBUG] Home directory: /etc/hyperledger/fabric
+2018/07/29 11:52:42 [INFO] Configuration file location: /etc/hyperledger/fabric/fabric-ca-client-config.yaml
+2018/07/29 11:52:42 [DEBUG] Client configuration settings: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200626c0}
+2018/07/29 11:52:42 [DEBUG] Entered runGetCACert
+2018/07/29 11:52:42 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200626c0}
+2018/07/29 11:52:42 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc420062720 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:52:42 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc420067d60 DummyKeystore:<nil>}
+2018/07/29 11:52:42 [INFO] TLS Enabled
+2018/07/29 11:52:42 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:52:42 [DEBUG] Client Cert File: 
+2018/07/29 11:52:42 [DEBUG] Client Key File: 
+2018/07/29 11:52:42 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:52:42 [DEBUG] Sending request
+POST https://org1-ca:7054/cainfo
+{}
+2018/07/29 11:52:43 [DEBUG] Received response
+statusCode=200 (200 OK)
+2018/07/29 11:52:43 [DEBUG] Response body result: map[CAName:org1-ca CAChain:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNCRENDQWF1Z0F3SUJBZ0lVSTQwY2M2RVd1VlNyOVlheFBmSzFzQzBKMUxNd0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3hMV05oCk1CNFhEVEU0TURjeU9URXhORFF3TUZvWERUTXpNRGN5TlRFeE5EUXdNRm93WHpFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFUApNQTBHQTFVRUN4TUdSbUZpY21sak1SQXdEZ1lEVlFRREV3ZHZjbWN4TFdOaE1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUVOYmJHVzBjdU1zcUpvQnY5dXVWdTFhRU4xS3d5V3pBaDNYV2JKcHZzUDR6R29wMXMKSWFiOWlNdWZseWgybmFmallMamR6V0lzQmZiNVRSbjF2K3R3WUtORk1FTXdEZ1lEVlIwUEFRSC9CQVFEQWdFRwpNQklHQTFVZEV3RUIvd1FJTUFZQkFmOENBUUV3SFFZRFZSME9CQllFRkxPaHpncDZ1QURVdmZQWlJyeVZoUXdWCjFOeTFNQW9HQ0NxR1NNNDlCQU1DQTBjQU1FUUNJQVFEa0Y3TjZnUHhSMjFTSVR1VVZGVkpoU3hPdWsrYUxJcjEKdnFia1pPenZBaUIrSmZ4cVp4QlQ5N3F1ekVrZmw0N2NvaHE2alQvQ3orVXFjWksycm02dkx3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo= Version:1.2.0-stable]
+2018/07/29 11:52:43 [INFO] Stored root CA certificate at /etc/hyperledger/fabric/msp/cacerts/org1-ca-7054.pem
+
+
+
+
+
+cp: target '/data/orgs/org1/msp/cacerts' is not a directory
+mkdir: cannot create directory '/data/orgs/org1/admin/msp/admincerts': File exists
+
+
+mkdir: cannot create directory '/data/orgs/org1/msp/admincerts': File exists
+mkdir: cannot create directory '/data/orgs/org1/admin/msp/admincerts': File exists
+
+
+
+root@aa7d987bef41:/# fabric-ca-client register -d --id.name org1-admin-orderer --id.secret adminpw --id.attrs "admin=true:ecert"
+2018/07/29 11:56:35 [DEBUG] Home directory: /etc/hyperledger/fabric
+2018/07/29 11:56:35 [INFO] Configuration file location: /etc/hyperledger/fabric/fabric-ca-client-config.yaml
+2018/07/29 11:56:35 [DEBUG] Checking for enrollment
+2018/07/29 11:56:35 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-admin-orderer Type:client Secret:adminpw MaxEnrollments:0 Affiliation: Attributes:[{Name:admin Value:true ECert:true}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200d05d0}
+2018/07/29 11:56:35 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200d0630 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:56:35 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc42040b840 DummyKeystore:<nil>}
+2018/07/29 11:56:35 [INFO] TLS Enabled
+2018/07/29 11:56:35 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:56:35 [DEBUG] Client Cert File: 
+2018/07/29 11:56:35 [DEBUG] Client Key File: 
+2018/07/29 11:56:35 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:56:35 [DEBUG] Client configuration settings: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-admin-orderer Type:client Secret:adminpw MaxEnrollments:0 Affiliation: Attributes:[{Name:admin Value:true ECert:true}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200d05d0}
+2018/07/29 11:56:35 [DEBUG] Entered runRegister
+2018/07/29 11:56:35 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-admin-orderer Type:client Secret:adminpw MaxEnrollments:0 Affiliation: Attributes:[{Name:admin Value:true ECert:true}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200d05d0}
+2018/07/29 11:56:35 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200d0630 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:56:35 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc42040b840 DummyKeystore:<nil>}
+2018/07/29 11:56:35 [INFO] TLS Enabled
+2018/07/29 11:56:35 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:56:35 [DEBUG] Client Cert File: 
+2018/07/29 11:56:35 [DEBUG] Client Key File: 
+2018/07/29 11:56:35 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:56:35 [DEBUG] Loading identity: keyFile=/etc/hyperledger/fabric/msp/keystore/key.pem, certFile=/etc/hyperledger/fabric/msp/signcerts/cert.pem
+2018/07/29 11:56:35 [DEBUG] No credential found at /etc/hyperledger/fabric/msp/user/SignerConfig: open /etc/hyperledger/fabric/msp/user/SignerConfig: no such file or directory
+2018/07/29 11:56:35 [DEBUG] No Idemix credential found at /etc/hyperledger/fabric/msp/user/SignerConfig
+2018/07/29 11:56:35 [DEBUG] Register { Name:org1-admin-orderer Type:client Secret:**** MaxEnrollments:0 Affiliation: Attributes:[{admin true true}] CAName:  }
+2018/07/29 11:56:35 [DEBUG] Adding token-based authorization header
+2018/07/29 11:56:35 [DEBUG] Sending request
+POST https://org1-ca:7054/register
+{"id":"org1-admin-orderer","type":"client","secret":"adminpw","affiliation":"","attrs":[{"name":"admin","value":"true","ecert":true}]}
+2018/07/29 11:56:35 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/07/29 11:56:35 [DEBUG] Response body result: map[secret:adminpw]
+2018/07/29 11:56:35 [DEBUG] The register request completed successfully
+Password: adminpw
+
+
+root@aa7d987bef41:/# fabric-ca-client register -d --id.name org1-admin-peer --id.secret adminpw --id.attrs "hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert,abac.init=true:ecert"
+2018/07/29 11:57:23 [DEBUG] Home directory: /etc/hyperledger/fabric
+2018/07/29 11:57:23 [INFO] Configuration file location: /etc/hyperledger/fabric/fabric-ca-client-config.yaml
+2018/07/29 11:57:23 [DEBUG] Checking for enrollment
+2018/07/29 11:57:23 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-admin-peer Type:client Secret:adminpw MaxEnrollments:0 Affiliation: Attributes:[{Name:hf.Registrar.Roles Value:client ECert:false} {Name:hf.Registrar.Attributes Value:* ECert:false} {Name:hf.Revoker Value:true ECert:false} {Name:hf.GenCRL Value:true ECert:false} {Name:admin Value:true ECert:true} {Name:abac.init Value:true ECert:true}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c65a0}
+2018/07/29 11:57:23 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200c6600 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:57:23 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc420195540 DummyKeystore:<nil>}
+2018/07/29 11:57:23 [INFO] TLS Enabled
+2018/07/29 11:57:23 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:57:23 [DEBUG] Client Cert File: 
+2018/07/29 11:57:23 [DEBUG] Client Key File: 
+2018/07/29 11:57:23 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:57:23 [DEBUG] Client configuration settings: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-admin-peer Type:client Secret:adminpw MaxEnrollments:0 Affiliation: Attributes:[{Name:hf.Registrar.Roles Value:client ECert:false} {Name:hf.Registrar.Attributes Value:* ECert:false} {Name:hf.Revoker Value:true ECert:false} {Name:hf.GenCRL Value:true ECert:false} {Name:admin Value:true ECert:true} {Name:abac.init Value:true ECert:true}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c65a0}
+2018/07/29 11:57:23 [DEBUG] Entered runRegister
+2018/07/29 11:57:23 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-admin-peer Type:client Secret:adminpw MaxEnrollments:0 Affiliation: Attributes:[{Name:hf.Registrar.Roles Value:client ECert:false} {Name:hf.Registrar.Attributes Value:* ECert:false} {Name:hf.Revoker Value:true ECert:false} {Name:hf.GenCRL Value:true ECert:false} {Name:admin Value:true ECert:true} {Name:abac.init Value:true ECert:true}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c65a0}
+2018/07/29 11:57:23 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200c6600 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:57:23 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc420195540 DummyKeystore:<nil>}
+2018/07/29 11:57:23 [INFO] TLS Enabled
+2018/07/29 11:57:23 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:57:23 [DEBUG] Client Cert File: 
+2018/07/29 11:57:23 [DEBUG] Client Key File: 
+2018/07/29 11:57:23 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:57:23 [DEBUG] Loading identity: keyFile=/etc/hyperledger/fabric/msp/keystore/key.pem, certFile=/etc/hyperledger/fabric/msp/signcerts/cert.pem
+2018/07/29 11:57:23 [DEBUG] No credential found at /etc/hyperledger/fabric/msp/user/SignerConfig: open /etc/hyperledger/fabric/msp/user/SignerConfig: no such file or directory
+2018/07/29 11:57:23 [DEBUG] No Idemix credential found at /etc/hyperledger/fabric/msp/user/SignerConfig
+2018/07/29 11:57:23 [DEBUG] Register { Name:org1-admin-peer Type:client Secret:**** MaxEnrollments:0 Affiliation: Attributes:[{hf.Registrar.Roles client false} {hf.Registrar.Attributes * false} {hf.Revoker true false} {hf.GenCRL true false} {admin true true} {abac.init true true}] CAName:  }
+2018/07/29 11:57:23 [DEBUG] Adding token-based authorization header
+2018/07/29 11:57:23 [DEBUG] Sending request
+POST https://org1-ca:7054/register
+{"id":"org1-admin-peer","type":"client","secret":"adminpw","affiliation":"","attrs":[{"name":"hf.Registrar.Roles","value":"client"},{"name":"hf.Registrar.Attributes","value":"*"},{"name":"hf.Revoker","value":"true"},{"name":"hf.GenCRL","value":"true"},{"name":"admin","value":"true","ecert":true},{"name":"abac.init","value":"true","ecert":true}]}
+2018/07/29 11:57:23 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/07/29 11:57:23 [DEBUG] Response body result: map[secret:adminpw]
+2018/07/29 11:57:23 [DEBUG] The register request completed successfully
+Password: adminpw
+
+
+
+root@aa7d987bef41:/# fabric-ca-client register -d --id.name org1-orderer --id.secret ordererpw --id.type orderer
+2018/07/29 11:57:49 [DEBUG] Home directory: /etc/hyperledger/fabric
+2018/07/29 11:57:49 [INFO] Configuration file location: /etc/hyperledger/fabric/fabric-ca-client-config.yaml
+2018/07/29 11:57:49 [DEBUG] Checking for enrollment
+2018/07/29 11:57:49 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-orderer Type:orderer Secret:ordererpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c25a0}
+2018/07/29 11:57:49 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200c2600 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:57:49 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200c93b0 DummyKeystore:<nil>}
+2018/07/29 11:57:49 [INFO] TLS Enabled
+2018/07/29 11:57:49 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:57:49 [DEBUG] Client Cert File: 
+2018/07/29 11:57:49 [DEBUG] Client Key File: 
+2018/07/29 11:57:49 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:57:49 [DEBUG] Client configuration settings: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-orderer Type:orderer Secret:ordererpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c25a0}
+2018/07/29 11:57:49 [DEBUG] Entered runRegister
+2018/07/29 11:57:49 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-orderer Type:orderer Secret:ordererpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c25a0}
+2018/07/29 11:57:49 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200c2600 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:57:49 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200c93b0 DummyKeystore:<nil>}
+2018/07/29 11:57:49 [INFO] TLS Enabled
+2018/07/29 11:57:49 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:57:49 [DEBUG] Client Cert File: 
+2018/07/29 11:57:49 [DEBUG] Client Key File: 
+2018/07/29 11:57:49 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:57:49 [DEBUG] Loading identity: keyFile=/etc/hyperledger/fabric/msp/keystore/key.pem, certFile=/etc/hyperledger/fabric/msp/signcerts/cert.pem
+2018/07/29 11:57:49 [DEBUG] No credential found at /etc/hyperledger/fabric/msp/user/SignerConfig: open /etc/hyperledger/fabric/msp/user/SignerConfig: no such file or directory
+2018/07/29 11:57:49 [DEBUG] No Idemix credential found at /etc/hyperledger/fabric/msp/user/SignerConfig
+2018/07/29 11:57:49 [DEBUG] Register { Name:org1-orderer Type:orderer Secret:**** MaxEnrollments:0 Affiliation: Attributes:[] CAName:  }
+2018/07/29 11:57:49 [DEBUG] Adding token-based authorization header
+2018/07/29 11:57:49 [DEBUG] Sending request
+POST https://org1-ca:7054/register
+{"id":"org1-orderer","type":"orderer","secret":"ordererpw","affiliation":""}
+2018/07/29 11:57:50 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/07/29 11:57:50 [DEBUG] Response body result: map[secret:ordererpw]
+2018/07/29 11:57:50 [DEBUG] The register request completed successfully
+Password: ordererpw
+
+
+root@aa7d987bef41:/# fabric-ca-client register -d --id.name org1-peer0 --id.secret peerpw --id.type peer
+2018/07/29 11:58:13 [DEBUG] Home directory: /etc/hyperledger/fabric
+2018/07/29 11:58:13 [INFO] Configuration file location: /etc/hyperledger/fabric/fabric-ca-client-config.yaml
+2018/07/29 11:58:13 [DEBUG] Checking for enrollment
+2018/07/29 11:58:13 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-peer0 Type:peer Secret:peerpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c2630}
+2018/07/29 11:58:13 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200c2690 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:58:13 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200c9c00 DummyKeystore:<nil>}
+2018/07/29 11:58:13 [INFO] TLS Enabled
+2018/07/29 11:58:13 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:58:13 [DEBUG] Client Cert File: 
+2018/07/29 11:58:13 [DEBUG] Client Key File: 
+2018/07/29 11:58:13 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:58:13 [DEBUG] Client configuration settings: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-peer0 Type:peer Secret:peerpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c2630}
+2018/07/29 11:58:13 [DEBUG] Entered runRegister
+2018/07/29 11:58:13 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-peer0 Type:peer Secret:peerpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200c2630}
+2018/07/29 11:58:13 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200c2690 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:58:13 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200c9c00 DummyKeystore:<nil>}
+2018/07/29 11:58:13 [INFO] TLS Enabled
+2018/07/29 11:58:13 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:58:13 [DEBUG] Client Cert File: 
+2018/07/29 11:58:13 [DEBUG] Client Key File: 
+2018/07/29 11:58:13 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:58:13 [DEBUG] Loading identity: keyFile=/etc/hyperledger/fabric/msp/keystore/key.pem, certFile=/etc/hyperledger/fabric/msp/signcerts/cert.pem
+2018/07/29 11:58:13 [DEBUG] No credential found at /etc/hyperledger/fabric/msp/user/SignerConfig: open /etc/hyperledger/fabric/msp/user/SignerConfig: no such file or directory
+2018/07/29 11:58:13 [DEBUG] No Idemix credential found at /etc/hyperledger/fabric/msp/user/SignerConfig
+2018/07/29 11:58:13 [DEBUG] Register { Name:org1-peer0 Type:peer Secret:**** MaxEnrollments:0 Affiliation: Attributes:[] CAName:  }
+2018/07/29 11:58:13 [DEBUG] Adding token-based authorization header
+2018/07/29 11:58:13 [DEBUG] Sending request
+POST https://org1-ca:7054/register
+{"id":"org1-peer0","type":"peer","secret":"peerpw","affiliation":""}
+2018/07/29 11:58:13 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/07/29 11:58:13 [DEBUG] Response body result: map[secret:peerpw]
+2018/07/29 11:58:13 [DEBUG] The register request completed successfully
+Password: peerpw
+
+
+
+root@aa7d987bef41:/# fabric-ca-client register -d --id.name org1-user1 --id.secret userpw
+2018/07/29 11:58:31 [DEBUG] Home directory: /etc/hyperledger/fabric
+2018/07/29 11:58:31 [INFO] Configuration file location: /etc/hyperledger/fabric/fabric-ca-client-config.yaml
+2018/07/29 11:58:31 [DEBUG] Checking for enrollment
+2018/07/29 11:58:31 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-user1 Type:client Secret:userpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4203805d0}
+2018/07/29 11:58:31 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc420380630 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:58:31 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc420065e40 DummyKeystore:<nil>}
+2018/07/29 11:58:31 [INFO] TLS Enabled
+2018/07/29 11:58:31 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:58:31 [DEBUG] Client Cert File: 
+2018/07/29 11:58:31 [DEBUG] Client Key File: 
+2018/07/29 11:58:31 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:58:31 [DEBUG] Client configuration settings: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-user1 Type:client Secret:userpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4203805d0}
+2018/07/29 11:58:31 [DEBUG] Entered runRegister
+2018/07/29 11:58:31 [DEBUG] Initializing client with config: &{URL:https://org1-ca:7054 MSPDir:/etc/hyperledger/fabric/msp TLS:{Enabled:true CertFiles:[/data/org1-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org1-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[aa7d987bef41] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org1-user1 Type:client Secret:userpw MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4203805d0}
+2018/07/29 11:58:31 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc420380630 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/07/29 11:58:31 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc420065e40 DummyKeystore:<nil>}
+2018/07/29 11:58:31 [INFO] TLS Enabled
+2018/07/29 11:58:31 [DEBUG] CA Files: [/data/org1-ca-cert.pem]
+2018/07/29 11:58:31 [DEBUG] Client Cert File: 
+2018/07/29 11:58:31 [DEBUG] Client Key File: 
+2018/07/29 11:58:31 [DEBUG] Client TLS certificate and/or key file not provided
+2018/07/29 11:58:31 [DEBUG] Loading identity: keyFile=/etc/hyperledger/fabric/msp/keystore/key.pem, certFile=/etc/hyperledger/fabric/msp/signcerts/cert.pem
+2018/07/29 11:58:31 [DEBUG] No credential found at /etc/hyperledger/fabric/msp/user/SignerConfig: open /etc/hyperledger/fabric/msp/user/SignerConfig: no such file or directory
+2018/07/29 11:58:31 [DEBUG] No Idemix credential found at /etc/hyperledger/fabric/msp/user/SignerConfig
+2018/07/29 11:58:31 [DEBUG] Register { Name:org1-user1 Type:client Secret:**** MaxEnrollments:0 Affiliation: Attributes:[] CAName:  }
+2018/07/29 11:58:31 [DEBUG] Adding token-based authorization header
+2018/07/29 11:58:31 [DEBUG] Sending request
+POST https://org1-ca:7054/register
+{"id":"org1-user1","type":"client","secret":"userpw","affiliation":""}
+2018/07/29 11:58:31 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/07/29 11:58:31 [DEBUG] Response body result: map[secret:userpw]
+2018/07/29 11:58:31 [DEBUG] The register request completed successfully
+Password: userpw
+
+
+
+root@aa7d987bef41:/# echo $FABRIC_CFG_PATH
+/etc/hyperledger/fabric
+root@aa7d987bef41:/# /etc/hyperledger/fabric/setup/generate_channel_artifacts.sh
+/usr/local/bin/configtxgen
+Generating orderer genesis block to /data
+2018-07-29 11:59:07.003 UTC [common/tools/configtxgen] main -> INFO 001 Loading configuration
+2018-07-29 11:59:07.056 UTC [common/tools/configtxgen] doOutputBlock -> INFO 002 Generating genesis block
+2018-07-29 11:59:07.059 UTC [common/tools/configtxgen] doOutputBlock -> INFO 003 Writing genesis block
+Generating channel configuration transaction to /data
+2018-07-29 11:59:07.132 UTC [common/tools/configtxgen] main -> INFO 001 Loading configuration
+2018-07-29 11:59:07.166 UTC [common/tools/configtxgen] doOutputChannelCreateTx -> INFO 002 Generating new channel configtx
+2018-07-29 11:59:07.171 UTC [common/tools/configtxgen] doOutputChannelCreateTx -> INFO 003 Writing new channel tx
+Generating anchor peer update transaction for org1 to /data
+2018-07-29 11:59:07.228 UTC [common/tools/configtxgen] main -> INFO 001 Loading configuration
+2018-07-29 11:59:07.267 UTC [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
+2018-07-29 11:59:07.269 UTC [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
+
+
+

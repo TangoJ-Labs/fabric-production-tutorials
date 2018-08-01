@@ -6,7 +6,7 @@ This network runs on a solo orderer (for each org) and static docker containers 
 In a decentralized service, each org needs its own CA and MSP hierarchy.
 <br>
 <br>
-IF YOU MODIFY THE ORG NAMES, change the below commands as needed, and be sure to check the docker compose files and the config files:
+IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the docker compose files and the config files:
 >`fabric-ca-server-config.yaml`:
 >- version: (ensure usable by ca server image)
 >- ca: name:
@@ -35,11 +35,12 @@ Start the network separately to ensure the network name is consistent in all sec
 # ORG 1
 ## CA Service
 **1.1) Start the CA service**
-<br>From the ...decentralized_solo/org1/ca dir:
+>`cd {your repo home}/decentralized_solo/org1/ca`
+
 >`docker-compose up -d`
 
-An MSP directory should have been created in the CA home directory:
-<br><pre>.
+An MSP directory should have been created in the CA home directory (inside the CA environment):
+<br><pre style="line-height: 0.7;">.
 <br>├── IssuerPublicKey
 <br>├── IssuerRevocationPublicKey
 <br>├── ca-cert.pem
@@ -62,13 +63,15 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 >>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /data/org1-ca-cert.pem`
 ><br>
 >
+>End the Bash session with `exit`
 
 <br>
 <br>
 
 ## CLI (tools) Service
 **1.4) Start the CLI (tools) service**
-<br>From the ...decentralized_solo/org1/cli dir:
+>`cd {your repo home}/decentralized_solo/org1/cli`
+
 >`docker-compose up -d`
 
 <br>
@@ -78,11 +81,11 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 
 #### The following steps occur inside the CLI Bash session:
 >**1.6) Enroll the CA administrator**
-<br>This will create a client config file (if not preexisting), and create an msp directory.
+<br>This will create a client config file (if not preexisting), and create an msp directory:
 >>`fabric-ca-client enroll -d -u https://org1-admin-ca:adminpw@org1-ca:7054`
 >
-><br>An MSP directory should have been created in the CLI home directory.  The `cacerts/org1-ca-7054.pem` is the same certificate as the ca-cert.pem (renamed org1-ca-7054.pem) we created in the CA and used in the CLI config file:
-><br><pre>.
+><br>An MSP directory should have been created in the CLI home directory.  The `cacerts/org1-ca-7054.pem` is the same certificate as the ca-cert.pem (renamed org1-ca-cert.pem) we created in the CA and passed to the common `/data` directory to be used in the CLI config file.
+><br><pre style="line-height: 0.7;">.
 ><br>└── msp
 ><br>    ├── cacerts
 ><br>    │   └── org1-ca-7054.pem
@@ -95,11 +98,11 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 ><br>
 >
 >**1.7) Create the MSP directory tree**
-><br>Get the cert again (same cert), but direct it to a new directory to fill it out with a new format (the `/data` dir in this case).
->>`fabric-ca-client getcacert -d -u https://org1-ca:7054 -M /data/orgs/org1/msp`
+><br>Get the cert again (same cert), but direct it to a common directory to fill out an msp tree (the `/data` dir in this case):
+>>`fabric-ca-client getcacert -d -u https://org1-ca:7054 -M /etc/hyperledger/fabric/msp`
 >
->This script will move the needed crypto material from the cli home directory msp to the new msp tree. If you changed the org name, or other details, check the script for needed changes.
->>`/etc/hyperledger/cli/setup/generate_msp.sh`
+>This script will move the needed crypto material from the cli home directory msp to the common (`/data`) msp tree. If you changed the org name, or other details, check the script for needed changes:
+>>`/etc/hyperledger/fabric/setup/generate_msp.sh`
 >
 ><br>
 >
@@ -107,7 +110,7 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 >Registration adds an entry into the `fabric-ca-server.db` or LDAP
 >
 >**1.8) Register the org administrator**
-<br>The admin identity has the "admin" attribute which is added to ECert by default.
+<br>The admin identity has the "admin" attribute which is added to ECert by default.  Register the admin:
 >>`fabric-ca-client register -d --id.name org1-admin-orderer --id.secret adminpw --id.attrs "admin=true:ecert"`
 >
 >OR (potential attributes - see [docs](https://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#registering-a-new-identity) for more):
@@ -135,20 +138,58 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 >### **Channel Artifacts**
 >
 >**1.12) Create the Channel Artifacts**
->>`export FABRIC_CFG_PATH=/etc/hyperledger/cli/setup`
+>>`export FABRIC_CFG_PATH=/etc/hyperledger/fabric`
 >
->>`/etc/hyperledger/cli/setup/generate_channel_artifacts.sh`
+>>`/etc/hyperledger/fabric/setup/generate_channel_artifacts.sh`
 >
->
+>The `genesis.block`, `channel.tx`, and `anchors.tx` should have been added to the `/data` common directory.
 ><br>
 >
+><br>
+>The `/data` common directory for org1 should now look like:
+><br><pre style="line-height: 0.7;">.
+><br>├── anchors.tx
+><br>├── channel.tx
+><br>├── genesis.block
+><br>├── logs
+><br>│   ├── ca.log
+><br>│   └── cli.log
+><br>├── org1-ca-cert.pem
+><br>├── orgs
+><br>│   └── org1
+><br>│       ├── admin
+><br>│       │   └── msp
+><br>│       │       ├── admincerts
+><br>│       │       │   └── cert.pem
+><br>│       │       ├── cacerts
+><br>│       │       │   └── org1-ca-7054.pem
+><br>│       │       ├── keystore
+><br>│       │       │   └── {...}_sk
+><br>│       │       ├── signcerts
+><br>│       │       │   └── cert.pem
+><br>│       │       └── user
+><br>│       └── msp
+><br>│           ├── admincerts
+><br>│           │   └── cert.pem
+><br>│           ├── cacerts
+><br>│           │   └── org1-ca-7054.pem
+><br>│           ├── keystore
+><br>│           ├── signcerts
+><br>│           ├── tlscacerts
+><br>│           │   └── org1-ca-7054.pem
+><br>│           └── user
+><br>└── tls
+><br></pre>
+>
+>End the Bash session with `exit`
 
 <br>
 <br>
 
 ## ORDERER
 **1.13) Start the ORDERER service**
-<br>From the ...decentralized_solo/org1/orderer dir:
+>`cd {your repo home}/decentralized_solo/org1/orderer`
+
 >`docker-compose up -d`
 
 <br>
@@ -157,15 +198,21 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 >`docker exec -it org1-orderer bash`
 
 #### The following step occurs inside the ORDERER Bash session:
+>Ensure you're logged in as the administrator (if not, run `enroll` again)
+><br>
+><br>
+>
 >**1.15) Enroll the orderer to get TLS & Certs**
 >
 >Use the `--enrollment.profile` `tls` option to receive the TLS key & cert:
 >>`fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-orderer:ordererpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-orderer`
 >
->Enroll again to get the orderer's enrollment certificate (default profile)
+>The key & cert were stored in a temporary location for use later in this section.
+>
+>Enroll again to get the orderer's enrollment certificate (default profile):
 >>`fabric-ca-client enroll -d -u https://org1-orderer:ordererpw@org1-ca:7054 -M /etc/hyperledger/orderer/msp`
 >
->Copy the crypto material to the msp & tls directories
+>Copy the tls material to the common `/data` directory, and the msp material to the local (orderer) msp tree:
 >>`/etc/hyperledger/orderer/setup/copy_certs.sh`
 >
 ><br>
@@ -173,14 +220,22 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 >**1.16) Start the orderer**
 ><!-- >>`env | grep ORDERER` -->
 >
+>>`env | grep ORDERER`
+>
 >>`orderer >> /data/logs/orderer.log 2>&1 &`
+>
+>The log file is at: `/data/logs/orderer.log`
+><br>Ensure the orderer is running with `jobs`, if it does not show "Running", check the log for errors.
+>
+>End the Bash session with `exit`
 
 <br>
 <br>
 
 ## ANCHOR PEER
 **1.17) Start the PEER0 service**
-<br>From the ...decentralized_solo/org1/peer0 dir:
+>`cd {your repo home}/decentralized_solo/org1/peer0`
+
 >`docker-compose up -d`
 
 <br>
@@ -189,15 +244,19 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 >`docker exec -it org1-peer0 bash`
 
 #### The following step occurs inside the PEER0 Bash session:
+>Ensure you're logged in as the administrator (if not, run `enroll` again)
+><br>
+><br>
+>
 >**1.19) Enroll the orderer to get TLS & Certs**
 >
 >Use the `--enrollment.profile` `tls` option to receive the TLS key & cert:
->>`fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer0:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer0`
+>>`fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer1:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer1`
 >
 >Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
->>`fabric-ca-client enroll -d -u https://org1-peer0:peerpw@org1-ca:7054 -M /opt/gopath/src/github.com/hyperledger/fabric/peer/msp`
+>>`fabric-ca-client enroll -d -u https://org1-peer1:peerpw@org1-ca:7054 -M /opt/gopath/src/github.com/hyperledger/fabric/peer/msp`
 >
->Copy the crypto material to the msp & tls directories
+>Copy the tls material to the common `/data` directory, and the msp material to the local (peer0) msp tree:
 >>`/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/copy_certs.sh`
 >
 ><br>
@@ -205,7 +264,14 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 >**1.20) Start the orderer**
 ><!-- >>`env | grep CORE` -->
 >
+>>`env | grep CORE`
+>
 >>`peer node start >> /data/logs/peer0.log 2>&1 &`
+>
+>The log file is at: `/data/logs/peer0.log`
+><br>Ensure the peer is running with `jobs`, if it does not show "Running", check the log for errors.
+>
+>End the Bash session with `exit`
 
 
 <br>
@@ -214,17 +280,31 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 # CHANNEL - CREATE, JOIN, ADD ANCHOR PEER
 ## Create the Channel
 **1.21) Start the CLI (tools) service**
-<br>From the ...decentralized_solo/org1/cli dir:
+>`cd {your repo home}/decentralized_solo/org1/cli`
+
 >`docker exec -it org1-cli bash`
 
 #### The following steps occur inside the CLI Bash session:
+>Ensure you're logged in as the administrator (if not, run `enroll` again)
+><br>
+><br>
+>
+>>`fabric-ca-client enroll -d -u https://org1-admin-orderer:adminpw@org1-ca:7054`
+>
 >**1.22) Create the Channel**
+>>`peer channel create --logging-level=DEBUG -c dsolo -f /data/channel.tx -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt`
+>
+>
+>
+>End the Bash session with `exit`
 
 
 <br>
 <br>
 
 # ORG 2
+### Adding additional orgs at any time follows this same process
+
 
 
 

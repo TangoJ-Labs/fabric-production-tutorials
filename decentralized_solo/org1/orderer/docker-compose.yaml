@@ -12,10 +12,7 @@ services:
     environment:
       - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/orderer
       - FABRIC_CA_CLIENT_TLS_CERTFILES=/data/org1-ca-cert.pem
-
-      - ORDERER_GENERAL_LOGLEVEL=DEBUG
-      - ORDERER_DEBUG_BROADCASTTRACEDIR=data/logs
-
+      
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/data/genesis.block
@@ -24,9 +21,11 @@ services:
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/data/org1-ca.pem]
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/data/org1-ca-cert.pem]
       - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=true
-      - ORDERER_GENERAL_TLS_CLIENTROOTCAS=[/data/org1-ca.pem]
+      - ORDERER_GENERAL_TLS_CLIENTROOTCAS=[/data/org1-ca-cert.pem]
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_DEBUG_BROADCASTTRACEDIR=data/logs
       
     command: /bin/bash -c '/etc/hyperledger/orderer/setup/orderer.sh 2>&1 | tee /data/logs/orderer.log; sleep 99999'
     volumes:

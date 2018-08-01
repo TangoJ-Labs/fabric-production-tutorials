@@ -10,13 +10,17 @@ services:
     container_name: org1-cli
     image: hyperledger/fabric-ca-tools
     environment:
-      - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/cli
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric #Needed to find the configtx.yaml file for configtxgen processes
       - CORE_LOGGING_LEVEL=DEBUG
-      
+    
     volumes:
-      - ./:/etc/hyperledger/cli/setup
+      - ./:/etc/hyperledger/fabric/setup
       # This directory map allows the CLI environment to access the passed CA crypto material:
       - ./../data:/data
-    command: /bin/bash -c '/etc/hyperledger/cli/setup/cli.sh 2>&1 | tee /data/logs/cli.log; sleep 99999'
+      # Map the directories needed for the chaincode (file and processes):
+      - /Users/seanhart/fabric/fabric-samples:/opt/gopath/src/github.com/hyperledger/fabric-samples
+      - /Users/seanhart/go/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
+      
+    command: /bin/bash -c '/etc/hyperledger/fabric/setup/cli.sh 2>&1 | tee /data/logs/cli.log; sleep 99999'
     networks:
       - decentralized_solo

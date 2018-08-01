@@ -13,6 +13,14 @@ if [ ! -d /data/tls ]; then
 fi
 cp /tmp/tls/keystore/* /data/tls/server.key
 cp /tmp/tls/signcerts/* /data/tls/server.crt
+
+# Copy the TLS key and cert to the local tls dir
+if [ ! -d /etc/hyperledger/orderer/tls ]; then
+    mkdir -p /etc/hyperledger/orderer/tls
+fi
+cp /tmp/tls/keystore/* /etc/hyperledger/orderer/tls/server.key
+cp /tmp/tls/signcerts/* /etc/hyperledger/orderer/tls/server.crt
+
 rm -rf /tmp/tls
 
 # Finish setting up the local MSP for the orderer

@@ -12,20 +12,12 @@ services:
     environment:
       - FABRIC_CA_CLIENT_HOME=/opt/gopath/src/github.com/hyperledger/fabric/peer
       - FABRIC_CA_CLIENT_TLS_CERTFILES=/data/org1-ca-cert.pem
-
+      
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_ID=org1-peer0
       - CORE_PEER_ADDRESS=org1-peer0:7051
       - CORE_PEER_LOCALMSPID=org1MSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp
-
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      # the following setting starts chaincode containers on the same
-      # bridge network as the peers
-      # https://docs.docker.com/compose/networking/
-      # networkmode name format: ${COMPOSE_PROJECT_NAME}_${NETWORK}
-      # (Compose Project Name is typically the directory name containing the compose file)
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=decentralized_solo_decentralized_solo
       
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.crt
@@ -40,6 +32,14 @@ services:
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=org1-peer0:7051
       - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      # networkmode name format: ${COMPOSE_PROJECT_NAME}_${NETWORK}
+      # (Compose Project Name is typically the directory name containing the compose file)
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=decentralized_solo
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash -c '/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/peer0.sh 2>&1 | tee /data/logs/peer0.log; sleep 99999'

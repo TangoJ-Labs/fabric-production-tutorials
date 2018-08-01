@@ -6,13 +6,22 @@
 #
 
 ##### COPY PEER CERTS #####
+PEER_NUM=1
 
-# Copy the TLS key and cert to the local tls dir
+# Copy the TLS key and cert to the common tls dir
 if [ ! -d /data/tls ]; then
     mkdir -p /data/tls
 fi
-cp /tmp/tls/signcerts/* /data/tls/org1-peer0-client.crt
-cp /tmp/tls/keystore/* /data/tls/org1-peer0-client.key
+cp /tmp/tls/signcerts/* /data/tls #org1-peer$PEER_NUM-client.crt
+cp /tmp/tls/keystore/* /data/tls #org1-peer$PEER_NUM-client.key
+
+# Copy the TLS key and cert to the local tls dir
+if [ ! -d /opt/gopath/src/github.com/hyperledger/fabric/peer/tls ]; then
+    mkdir -p /opt/gopath/src/github.com/hyperledger/fabric/peer/tls
+fi
+cp /tmp/tls/signcerts/* /opt/gopath/src/github.com/hyperledger/fabric/peer/tls #org1-peer$PEER_NUM-client.crt
+cp /tmp/tls/keystore/* /opt/gopath/src/github.com/hyperledger/fabric/peer/tls #org1-peer$PEER_NUM-client.key
+
 rm -rf /tmp/tls
 
 # Finish setting up the local MSP for the orderer
