@@ -82,56 +82,11 @@ function chaincodeQuery {
 trap finish EXIT
 logr "The docker 'run' container has started"
 
-log "************************* initOrdererVars ***********************"
-export FABRIC_CA_CLIENT=/etc/hyperledger/orderer
-export ORDERER_GENERAL_LOGLEVEL=DEBUG
-export ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-export ORDERER_GENERAL_GENESISMETHOD=file
-export ORDERER_GENERAL_GENESISFILE=/data/genesis.block
-export ORDERER_GENERAL_LOCALMSPID=org1MSP
-export ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/orderer/msp
-export ORDERER_GENERAL_TLS_ENABLED=true
-export ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
-export ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
-export ORDERER_GENERAL_TLS_ROOTCAS=[/data/org1-ca-cert.pem]
-
-# export ORDERER_PORT_ARGS="-o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth"
-
-log "************************** initPeerVars *************************"
-export FABRIC_CA_CLIENT=/opt/gopath/src/github.com/hyperledger/fabric/peer
-export CORE_PEER_ID=org1-peer0
-export CORE_PEER_ADDRESS=org1-peer0:7051
-export CORE_PEER_LOCALMSPID=org1MSP
-export CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-# export CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=decentralized_solo
-export CORE_LOGGING_LEVEL=DEBUG
-export CORE_PEER_TLS_ENABLED=true
-export CORE_PEER_TLS_CLIENTAUTHREQUIRED=true
-export CORE_PEER_TLS_ROOTCERT_FILE=/data/org1-ca-cert.pem
-export CORE_PEER_TLS_CLIENTCERT_FILE=/data/tls/org1-peer0-cli-client.crt
-export CORE_PEER_TLS_CLIENTKEY_FILE=/data/tls/org1-peer0-cli-client.key
-export CORE_PEER_PROFILE_ENABLED=true
-export CORE_PEER_GOSSIP_USELEADERELECTION=true
-export CORE_PEER_GOSSIP_ORGLEADER=false
-export CORE_PEER_GOSSIP_EXTERNALENDPOINT=org1-peer0:7051
-
-export ORDERER_CONN_ARGS="-o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt"
+log "*************************** LOAD VARS **************************"
+source .env
 
 log "********************* switchToAdminIdentity ********************"
-# If the admincerts folder already exists, the admin is already signed in
-if [ ! -d /data/orgs/org1/admin ]; then
-  log "Enrolling admin 'org1-admin' with org1-ca ..."
-  export FABRIC_CA_CLIENT_HOME=/data/orgs/org1/admin
-  export FABRIC_CA_CLIENT_TLS_CERTFILES=/data/org1-ca-cert.pem
-
-  fabric-ca-client enroll -d -u https://org1-admin:adminpw@org1-ca:7054
-  # Copy the cert to the admin certs dir and to the local MSP
-  mkdir -p $(dirname "/data/orgs/org1/msp/admincerts/cert.pem")
-  cp /data/orgs/org1/admin/msp/signcerts/* /data/orgs/org1/msp/admincerts/cert.pem
-  mkdir /data/orgs/org1/admin/msp/admincerts
-  cp /data/orgs/org1/admin/msp/signcerts/* /data/orgs/org1/admin/msp/admincerts
-fi
-export CORE_PEER_MSPCONFIGPATH=/data/orgs/org1/admin/msp
+source /etc/hyperledger/fabric/setup/switchToAdmin.sh
 
 
 # Create the channel
@@ -175,6 +130,7 @@ peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric-samples/c
 # Instantiate chaincode on peer with chaincode installed
 log "****************** peer chaincode instantiate ******************"
 logr "Instantiating chaincode on org1-peer0 with Policy: OR('org1MSP.member')..."
+# USE ".member" NOT ".peer" - need to figure out NodeOUs to use ".peer", ".client", etc
 peer chaincode instantiate -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR('org1MSP.member')" $ORDERER_CONN_ARGS
 
 # Query chaincode

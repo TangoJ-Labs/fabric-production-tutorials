@@ -32,6 +32,11 @@ fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-orderer:orde
 mkdir -p $FABRIC_CA_CLIENT_HOME/tls
 cp /tmp/tls/keystore/* $ORDERER_GENERAL_TLS_PRIVATEKEY
 cp /tmp/tls/signcerts/* $ORDERER_GENERAL_TLS_CERTIFICATE
+# Copy the public cert to the org common directory
+if [ ! -d /data/tls ]; then
+    mkdir /data/tls
+fi
+cp /tmp/tls/signcerts/* /data/tls/org1-orderer.crt
 rm -rf /tmp/tls
 
 # Enroll again to get the orderer's enrollment certificate (default profile)
@@ -39,8 +44,11 @@ fabric-ca-client enroll -d -u https://org1-orderer:ordererpw@org1-ca:7054 -M $OR
 
 # Finish setting up the local MSP for the orderer
 # finishMSPSetup $ORDERER_GENERAL_LOCALMSPDIR
-mkdir $ORDERER_GENERAL_LOCALMSPDIR/tlscacerts
+if [ ! -d $ORDERER_GENERAL_LOCALMSPDIR/tlscacerts ]; then
+    mkdir $ORDERER_GENERAL_LOCALMSPDIR/tlscacerts
+fi
 cp $ORDERER_GENERAL_LOCALMSPDIR/cacerts/* $ORDERER_GENERAL_LOCALMSPDIR/tlscacerts
+
 if [ -d $ORDERER_GENERAL_LOCALMSPDIR/intermediatecerts ]; then
     mkdir $ORDERER_GENERAL_LOCALMSPDIR/tlsintermediatecerts
     cp $ORDERER_GENERAL_LOCALMSPDIR/intermediatecerts/* $ORDERER_GENERAL_LOCALMSPDIR/tlsintermediatecerts

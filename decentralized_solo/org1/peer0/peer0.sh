@@ -62,6 +62,7 @@ fabric-ca-client enroll -d -u https://org1-peer0:peerpw@org1-ca:7054 -M $CORE_PE
 # finishMSPSetup $CORE_PEER_MSPCONFIGPATH
 mkdir $CORE_PEER_MSPCONFIGPATH/tlscacerts
 cp $CORE_PEER_MSPCONFIGPATH/cacerts/* $CORE_PEER_MSPCONFIGPATH/tlscacerts
+
 if [ -d $CORE_PEER_MSPCONFIGPATH/intermediatecerts ]; then
     mkdir $CORE_PEER_MSPCONFIGPATH/tlsintermediatecerts
     cp $CORE_PEER_MSPCONFIGPATH/intermediatecerts/* $CORE_PEER_MSPCONFIGPATH/tlsintermediatecerts

@@ -28,12 +28,12 @@ Profiles:
       Organizations:
         - *org1
     Consortiums:
-      SampleConsortium:
+      dSoloConsortium:
         Organizations:
           - *org1
 
   OrgsChannel:
-    Consortium: SampleConsortium
+    Consortium: dSoloConsortium
     Application:
       <<: *ApplicationDefaults
       Organizations:

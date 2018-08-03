@@ -1,0 +1,27 @@
+version: '2'
+
+# The network should already exist, even if this is the first service(s) to start (see README step 0.1)
+networks:
+  decentralized_solo:
+    external: true
+
+services:
+  
+  org2-ca:
+    container_name: org2-ca
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_CSR_CN=org2-ca
+      - FABRIC_CA_SERVER_CSR_HOSTS=org2-ca
+      - FABRIC_CA_SERVER_DEBUG=true
+      
+    volumes:
+      - ./:/etc/hyperledger/fabric-ca/setup
+      # This directory map allows the CLI environment to access the passed CA crypto material:
+      - ./../data:/data
+    command: /bin/bash -c '/etc/hyperledger/fabric-ca/setup/ca.sh 2>&1 | tee /data/logs/ca.log'
+    # command: /bin/bash -c 'sleep 99999 2>&1 | tee /data/logs/ca.log'
+    networks:
+      - decentralized_solo

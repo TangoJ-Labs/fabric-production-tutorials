@@ -1,0 +1,13 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+Organizations:
+  - &org2
+    Name: org2
+    ID: org2MSP
+    MSPDir: /data/orgs/org2/msp
+    AnchorPeers:
+       - Host: org2-peer0
+         Port: 7051

@@ -53,7 +53,17 @@ log "Registering admin identity with org1-ca"
 # The admin identity has the "admin" attribute which is added to ECert by default
 # fabric-ca-client register -d --id.name org1-admin --id.secret adminpw --id.attrs "admin=true:ecert"
 fabric-ca-client register -d --id.name org1-admin --id.secret adminpw --id.attrs "hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert,abac.init=true:ecert"
-  
+
+
+
+# fabric-ca-client register -d --id.name org1-user5 --id.secret userpw --id.type peer
+
+# # -M option is WHERE TO LOOK FOR CURRENT MSP DIR (for authorization) based on home at current FABRIC_CA_CLIENT_HOME
+# fabric-ca-client register -d --id.name peercheck --id.secret password --id.type peer
+# fabric-ca-client enroll -d -u https://peercheck:password@org1-ca:7054
+
+
+
 
 log "********************* registerPeerIdentities ********************"
 log "************************** initPeerVars *************************"
@@ -81,19 +91,8 @@ if [ ! -d /data/orgs/org1/msp/tlscacerts ]; then
   fi
 fi
 
-# Populate the admincerts directory
-log "Enrolling admin 'org1-admin' with org1-ca ..."
-export FABRIC_CA_CLIENT_HOME=/data/orgs/org1/admin
-
-fabric-ca-client enroll -d -u https://org1-admin:adminpw@org1-ca:7054
-
-# Copy the cert to the admin certs dir and to the local MSP
-mkdir -p $(dirname "/data/orgs/org1/msp/admincerts/cert.pem")
-cp /data/orgs/org1/admin/msp/signcerts/* /data/orgs/org1/msp/admincerts/cert.pem
-if [ ! -d /data/orgs/org1/admin/msp/admincerts ]; then
-    mkdir /data/orgs/org1/admin/msp/admincerts
-fi
-cp /data/orgs/org1/admin/msp/signcerts/* /data/orgs/org1/admin/msp/admincerts
+# Enroll the ORG ADMIN and populate the admincerts directory
+source /etc/hyperledger/fabric/setup/switchToAdmin.sh
 
 
 log "******************* generateChannelArtifacts ********************"
@@ -129,3 +128,6 @@ fi
 
 log "Finished building channel artifacts"
 touch /data/logs/setup.successful
+
+
+# fabric-ca-client enroll -d -u https://org1-user1:userpw@org1-ca:7054

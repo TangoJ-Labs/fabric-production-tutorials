@@ -6,19 +6,7 @@ This network runs on a solo orderer (for each org) and static docker containers 
 In a decentralized service, each org needs its own CA and MSP hierarchy.
 <br>
 <br>
-IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the docker compose files and the config files:
->`fabric-ca-server-config.yaml`:
->- version: (ensure usable by ca server image)
->- ca: name:
->- registry: identities: name:, pass:
->- tls:
->- debug:
->- affiliations: (list orgs, deptartments, teams)
->- csr:
->
->`fabric-ca-client-config.yaml`:
->- url:
->- csr:
+IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the docker compose files and the configtx file.
 ---
 
 # SETUP - DOCKER NETWORK
@@ -289,7 +277,7 @@ NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than a
 ><br>
 ><br>
 >
->>`fabric-ca-client enroll -d -u https://org1-admin-orderer:adminpw@org1-ca:7054`
+>>`fabric-ca-client enroll -d -u https://org1-admin:adminpw@org1-ca:7054`
 >
 >**1.22) Create the Channel**
 >>`peer channel create --logging-level=DEBUG -c dsolo -f /data/channel.tx -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt`
