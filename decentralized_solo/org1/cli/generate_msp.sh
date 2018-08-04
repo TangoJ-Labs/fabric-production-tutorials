@@ -7,32 +7,43 @@
 
 ##### CREATE MSP TREE #####
 
-# Copy the ca-cert into the tlscacerts folder (for both root ca and intermediate ca, if needed)
-mkdir -p /etc/hyperledger/fabric/msp/tlscacerts
+# Copy the ca-cert into the tlscacerts dir (for both root ca and intermediate ca, if needed)
+if [ ! -d /etc/hyperledger/fabric/msp/tlscacerts ]; then
+    mkdir -p /etc/hyperledger/fabric/msp/tlscacerts
+fi
 cp /etc/hyperledger/fabric/msp/cacerts/* /etc/hyperledger/fabric/msp/tlscacerts
 if [ -d /etc/hyperledger/fabric/msp/intermediatecerts ]; then
-    mkdir /etc/hyperledger/fabric/msp/tlsintermediatecerts
+    mkdir -p /etc/hyperledger/fabric/msp/tlsintermediatecerts
     cp /etc/hyperledger/fabric/msp/intermediatecerts/* /etc/hyperledger/fabric/msp/tlsintermediatecerts
 fi
 
-# Copy the tls data to the common folder
-mkdir -p /data/orgs/org1/msp/cacerts
-mkdir -p /data/orgs/org1/msp/tlscacerts
+# Copy the cacerts folder from local to common directory
+if [ ! -d /data/orgs/org1/msp/cacerts ]; then
+    mkdir -p /data/orgs/org1/msp/cacerts
+fi
 cp /etc/hyperledger/fabric/msp/cacerts/* /data/orgs/org1/msp/cacerts
-cp /etc/hyperledger/fabric/msp/cacerts/* /data/orgs/org1/msp/tlscacerts
-if [ -d /data/orgs/org1/msp/intermediatecerts ]; then
-    mkdir /data/orgs/org1/msp/tlsintermediatecerts
-    cp /etc/hyperledger/fabric/msp/intermediatecerts/* /data/orgs/org1/msp/intermediatecerts
-    cp /etc/hyperledger/fabric/msp/intermediatecerts/* /data/orgs/org1/msp/tlsintermediatecerts
+
+# Copy the tlscacerts folder from local to common directory
+if [ ! -d /data/orgs/org1/msp/tlscacerts ]; then
+    mkdir -p /data/orgs/org1/msp/tlscacerts
+fi
+cp /data/orgs/org1/msp/cacerts/* /data/orgs/org1/msp/tlscacerts
+
+# If needed, copy the intermediatecerts & tlsintermediatecerts folder from local to common directory
+if [ -d /etc/hyperledger/fabric/msp/intermediatecerts ]; then
+    if [ ! -d /data/orgs/org1/msp/intermediatecerts ]; then
+        mkdir -p /data/orgs/org1/msp/intermediatecerts
+        cp /data/orgs/org1/msp/intermediatecerts/* /data/orgs/org1/msp/intermediatecerts
+    fi
+    if [ ! -d /data/orgs/org1/msp/tlsintermediatecerts ]; then
+        mkdir -p /data/orgs/org1/msp/tlsintermediatecerts
+        cp /data/orgs/org1/msp/intermediatecerts/* /data/orgs/org1/msp/tlsintermediatecerts
+    fi
 fi
 
-# Copy admincert to MSP and to my local MSP
-# mkdir -p $(dirname "/data/orgs/org1/msp/admincerts/cert.pem")
-mkdir /data/orgs/org1/msp/admincerts
-cp /etc/hyperledger/fabric/msp/signcerts/* /data/orgs/org1/msp/admincerts
 
-# Create the admin MSP by first copying over the existing home dir MSP, then modify
-mkdir -p /data/orgs/org1/admin/msp
-cp -R /etc/hyperledger/fabric/msp /data/orgs/org1/admin
-mkdir /data/orgs/org1/admin/msp/admincerts
-cp /etc/hyperledger/fabric/msp/signcerts/* /data/orgs/org1/admin/msp/admincerts
+# Copy the admincerts folder from local to common directory
+if [ ! -d /data/orgs/org1/msp/admincerts ]; then
+    mkdir -p /data/orgs/org1/msp/admincerts
+fi
+cp /etc/hyperledger/fabric/msp/signcerts/cert.pem /data/orgs/org1/msp/admincerts/cert.pem

@@ -1,0 +1,314 @@
+2018/08/04 21:52:54 [INFO] Created default configuration file at /etc/hyperledger/fabric-ca/fabric-ca-server-config.yaml
+2018/08/04 21:52:54 [INFO] Server Version: 1.2.0-stable
+2018/08/04 21:52:54 [INFO] Server Levels: &{Identity:1 Affiliation:1 Certificate:1 Credential:1 RAInfo:1 Nonce:1}
+2018/08/04 21:52:54 [DEBUG] Making server filenames absolute
+2018/08/04 21:52:54 [DEBUG] Initializing default CA in directory /etc/hyperledger/fabric-ca
+2018/08/04 21:52:54 [DEBUG] Init CA with home /etc/hyperledger/fabric-ca and config {Version:1.2.0-stable Cfg:{Identities:{AllowRemove:false} Affiliations:{AllowRemove:false}} CA:{Name: Keyfile: Certfile:ca-cert.pem Chainfile:ca-chain.pem} Signing:0xc420309d50 CSR:{CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:<nil> CA:0xc42030d740 SerialNumber:} Registry:{MaxEnrollments:-1 Identities:[{ Name:**** Pass:**** Type:client Affiliation: MaxEnrollments:0 Attrs:map[hf.Revoker:1 hf.IntermediateCA:1 hf.GenCRL:1 hf.Registrar.Attributes:* hf.AffiliationMgr:1 hf.Registrar.Roles:* hf.Registrar.DelegateRoles:*]  }]} Affiliations:map[org1:[department1 department2] org2:[department1]] LDAP:{ Enabled:false URL:ldap://****:****@<host>:<port>/<base> UserFilter:(uid=%s) GroupFilter:(memberUid=%s) Attribute:{[uid member] [{ }] map[groups:[{ }]]} TLS:{false [] { }}  } DB:{ Type:sqlite3 Datasource:fabric-ca-server.db TLS:{false [] { }}  } CSP:0xc4202e4cf0 Client:<nil> Intermediate:{ParentServer:{ URL: CAName:  } TLS:{Enabled:false CertFiles:[] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  }} CRL:{Expiry:24h0m0s} Idemix:{IssuerPublicKeyfile: IssuerSecretKeyfile: RevocationPublicKeyfile: RevocationPrivateKeyfile: RHPoolSize:0 NonceExpiration: NonceSweepInterval:}}
+2018/08/04 21:52:54 [DEBUG] CA Home Directory: /etc/hyperledger/fabric-ca
+2018/08/04 21:52:54 [DEBUG] Checking configuration file version '1.2.0-stable' against server version: '1.2.0-stable'
+2018/08/04 21:52:54 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4202e4d50 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/04 21:52:54 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4203088c0 DummyKeystore:<nil>}
+2018/08/04 21:52:54 [DEBUG] Initialize key material
+2018/08/04 21:52:54 [DEBUG] Making CA filenames absolute
+2018/08/04 21:52:54 [WARNING] &{69 The specified CA certificate file /etc/hyperledger/fabric-ca/ca-cert.pem does not exist}
+2018/08/04 21:52:54 [DEBUG] Root CA certificate request: {CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:0xc42030dde0 CA:0xc42030d740 SerialNumber:}
+2018/08/04 21:52:54 [INFO] generating key: &{A:ecdsa S:256}
+2018/08/04 21:52:54 [DEBUG] generate key from request: algo=ecdsa, size=256
+2018/08/04 21:52:54 [INFO] encoded CSR
+2018/08/04 21:52:54 [DEBUG] validating configuration
+2018/08/04 21:52:54 [DEBUG] validate local profile
+2018/08/04 21:52:54 [DEBUG] profile is valid
+2018/08/04 21:52:54 [INFO] signed certificate with serial number 296158906693420365876988242427768649800720872851
+2018/08/04 21:52:54 [INFO] The CA key and certificate were generated for CA 
+2018/08/04 21:52:54 [INFO] The key was stored by BCCSP provider 'SW'
+2018/08/04 21:52:54 [INFO] The certificate is at: /etc/hyperledger/fabric-ca/ca-cert.pem
+2018/08/04 21:52:54 [DEBUG] Initializing DB
+2018/08/04 21:52:54 [DEBUG] Initializing 'sqlite3' database at '/etc/hyperledger/fabric-ca/fabric-ca-server.db'
+2018/08/04 21:52:54 [DEBUG] Using sqlite database, connect to database in home (/etc/hyperledger/fabric-ca/fabric-ca-server.db) directory
+2018/08/04 21:52:54 [DEBUG] Creating SQLite database (/etc/hyperledger/fabric-ca/fabric-ca-server.db) if it does not exist...
+2018/08/04 21:52:54 [DEBUG] Creating users table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Creating affiliations table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Creating certificates table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Creating credentials table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Creating revocation_authority_info table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Creating nonces table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Creating properties table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Successfully opened sqlite3 DB
+2018/08/04 21:52:54 [DEBUG] Checking database schema...
+2018/08/04 21:52:54 [DEBUG] Update SQLite schema, if using outdated schema
+2018/08/04 21:52:54 [DEBUG] Upgrade identities table
+2018/08/04 21:52:54 [DEBUG] Creating users table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Upgrade affiliation table
+2018/08/04 21:52:54 [DEBUG] Creating affiliations table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Upgrade certificates table
+2018/08/04 21:52:54 [DEBUG] Creating certificates table if it does not exist
+2018/08/04 21:52:54 [DEBUG] Initializing identity registry
+2018/08/04 21:52:54 [DEBUG] Initialized DB identity registry
+2018/08/04 21:52:54 [DEBUG] DB: Get properties [identity.level affiliation.level certificate.level]
+2018/08/04 21:52:54 [DEBUG] Checking database levels 'map[affiliation.level:0 certificate.level:0 identity.level:0]' against server levels '&{Identity:1 Affiliation:1 Certificate:1 Credential:1 RAInfo:1 Nonce:1}'
+2018/08/04 21:52:54 [DEBUG] Loading identity table
+2018/08/04 21:52:54 [DEBUG] Loading identity 'org1-admin-ca'
+2018/08/04 21:52:54 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 21:52:54 [DEBUG] Max enrollment value verification - User specified max enrollment: 0, CA max enrollment: -1
+2018/08/04 21:52:54 [DEBUG] DB: Add identity org1-admin-ca
+2018/08/04 21:52:55 [DEBUG] Successfully added identity org1-admin-ca to the database
+2018/08/04 21:52:55 [DEBUG] Registered identity: { Name:**** Pass:**** Type:client Affiliation: MaxEnrollments:-1 Attrs:map[hf.Registrar.Roles:* hf.Registrar.DelegateRoles:* hf.Revoker:1 hf.IntermediateCA:1 hf.GenCRL:1 hf.Registrar.Attributes:* hf.AffiliationMgr:1]  }
+2018/08/04 21:52:55 [DEBUG] Successfully loaded identity table
+2018/08/04 21:52:55 [DEBUG] Loading affiliations table
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org2
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org2' added
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org2.department1
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org2.department1' added
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org1
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org1' added
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org1.department1
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org1.department1' added
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org1.department2
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org1.department2' added
+2018/08/04 21:52:55 [DEBUG] Successfully loaded affiliations table
+2018/08/04 21:52:55 [DEBUG] Checking and performing migration, if needed
+2018/08/04 21:52:55 [DEBUG] Updating database level to &{Identity:1 Affiliation:1 Certificate:1 Credential:1 RAInfo:1 Nonce:1}
+2018/08/04 21:52:55 [INFO] Initialized sqlite3 database at /etc/hyperledger/fabric-ca/fabric-ca-server.db
+2018/08/04 21:52:55 [DEBUG] Initializing enrollment signer
+2018/08/04 21:52:55 [DEBUG] validating configuration
+2018/08/04 21:52:55 [DEBUG] validate local profile
+2018/08/04 21:52:55 [DEBUG] profile is valid
+2018/08/04 21:52:55 [DEBUG] validate local profile
+2018/08/04 21:52:55 [DEBUG] profile is valid
+2018/08/04 21:52:55 [DEBUG] validate local profile
+2018/08/04 21:52:55 [DEBUG] profile is valid
+2018/08/04 21:52:55 [DEBUG] CA initialization successful
+2018/08/04 21:52:55 [INFO] The issuer key was successfully stored. The public key is at: /etc/hyperledger/fabric-ca/IssuerPublicKey, secret key is at: /etc/hyperledger/fabric-ca/msp/keystore/IssuerSecretKey
+2018/08/04 21:52:55 [INFO] The revocation key was successfully stored. The public key is at: /etc/hyperledger/fabric-ca/IssuerRevocationPublicKey, private key is at: /etc/hyperledger/fabric-ca/msp/keystore/IssuerRevocationPrivateKey
+2018/08/04 21:52:55 [INFO] Home directory for default CA: /etc/hyperledger/fabric-ca
+2018/08/04 21:52:55 [DEBUG] Closing server DBs
+2018/08/04 21:52:55 [INFO] Initialization was successful
+2018/08/04 21:52:55 [INFO] Configuration file location: /etc/hyperledger/fabric-ca/fabric-ca-server-config.yaml
+2018/08/04 21:52:55 [INFO] Starting server in home directory: /etc/hyperledger/fabric-ca
+2018/08/04 21:52:55 [INFO] Server Version: 1.2.0-stable
+2018/08/04 21:52:55 [INFO] Server Levels: &{Identity:1 Affiliation:1 Certificate:1 Credential:1 RAInfo:1 Nonce:1}
+2018/08/04 21:52:55 [DEBUG] Making server filenames absolute
+2018/08/04 21:52:55 [DEBUG] Initializing default CA in directory /etc/hyperledger/fabric-ca
+2018/08/04 21:52:55 [DEBUG] Init CA with home /etc/hyperledger/fabric-ca and config {Version:1.2.0-stable Cfg:{Identities:{AllowRemove:false} Affiliations:{AllowRemove:false}} CA:{Name: Keyfile: Certfile:ca-cert.pem Chainfile:ca-chain.pem} Signing:0xc42028df30 CSR:{CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:<nil> CA:0xc42028ea00 SerialNumber:} Registry:{MaxEnrollments:-1 Identities:[{ Name:**** Pass:**** Type:client Affiliation: MaxEnrollments:0 Attrs:map[hf.Registrar.Roles:* hf.Registrar.DelegateRoles:* hf.Revoker:1 hf.IntermediateCA:1 hf.GenCRL:1 hf.Registrar.Attributes:* hf.AffiliationMgr:1]  }]} Affiliations:map[org1:[department1 department2] org2:[department1]] LDAP:{ Enabled:false URL:ldap://****:****@<host>:<port>/<base> UserFilter:(uid=%s) GroupFilter:(memberUid=%s) Attribute:{[uid member] [{ }] map[groups:[{ }]]} TLS:{false [] { }}  } DB:{ Type:sqlite3 Datasource:fabric-ca-server.db TLS:{false [] { }}  } CSP:0xc42026ce40 Client:<nil> Intermediate:{ParentServer:{ URL: CAName:  } TLS:{Enabled:false CertFiles:[] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  }} CRL:{Expiry:24h0m0s} Idemix:{IssuerPublicKeyfile: IssuerSecretKeyfile: RevocationPublicKeyfile: RevocationPrivateKeyfile: RHPoolSize:0 NonceExpiration: NonceSweepInterval:}}
+2018/08/04 21:52:55 [DEBUG] CA Home Directory: /etc/hyperledger/fabric-ca
+2018/08/04 21:52:55 [DEBUG] Checking configuration file version '1.2.0-stable' against server version: '1.2.0-stable'
+2018/08/04 21:52:55 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc42026cea0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/04 21:52:55 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc42028dcf0 DummyKeystore:<nil>}
+2018/08/04 21:52:55 [DEBUG] Initialize key material
+2018/08/04 21:52:55 [DEBUG] Making CA filenames absolute
+2018/08/04 21:52:55 [INFO] The CA key and certificate already exist
+2018/08/04 21:52:55 [INFO] The key is stored by BCCSP provider 'SW'
+2018/08/04 21:52:55 [INFO] The certificate is at: /etc/hyperledger/fabric-ca/ca-cert.pem
+2018/08/04 21:52:55 [DEBUG] Loading CN from existing enrollment information
+2018/08/04 21:52:55 [DEBUG] Initializing DB
+2018/08/04 21:52:55 [DEBUG] Initializing 'sqlite3' database at '/etc/hyperledger/fabric-ca/fabric-ca-server.db'
+2018/08/04 21:52:55 [DEBUG] Using sqlite database, connect to database in home (/etc/hyperledger/fabric-ca/fabric-ca-server.db) directory
+2018/08/04 21:52:55 [DEBUG] Creating SQLite database (/etc/hyperledger/fabric-ca/fabric-ca-server.db) if it does not exist...
+2018/08/04 21:52:55 [DEBUG] Creating users table if it does not exist
+2018/08/04 21:52:55 [DEBUG] Creating affiliations table if it does not exist
+2018/08/04 21:52:55 [DEBUG] Creating certificates table if it does not exist
+2018/08/04 21:52:55 [DEBUG] Creating credentials table if it does not exist
+2018/08/04 21:52:55 [DEBUG] Creating revocation_authority_info table if it does not exist
+2018/08/04 21:52:55 [DEBUG] Creating nonces table if it does not exist
+2018/08/04 21:52:55 [DEBUG] Creating properties table if it does not exist
+2018/08/04 21:52:55 [DEBUG] Successfully opened sqlite3 DB
+2018/08/04 21:52:55 [DEBUG] Checking database schema...
+2018/08/04 21:52:55 [DEBUG] Update SQLite schema, if using outdated schema
+2018/08/04 21:52:55 [DEBUG] Initializing identity registry
+2018/08/04 21:52:55 [DEBUG] Initialized DB identity registry
+2018/08/04 21:52:55 [DEBUG] DB: Get properties [identity.level affiliation.level certificate.level]
+2018/08/04 21:52:55 [DEBUG] Checking database levels 'map[affiliation.level:1 certificate.level:1 identity.level:1]' against server levels '&{Identity:1 Affiliation:1 Certificate:1 Credential:1 RAInfo:1 Nonce:1}'
+2018/08/04 21:52:55 [DEBUG] Loading identity table
+2018/08/04 21:52:55 [DEBUG] Loading identity 'org1-admin-ca'
+2018/08/04 21:52:55 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 21:52:55 [DEBUG] Identity 'org1-admin-ca' already registered, loaded identity
+2018/08/04 21:52:55 [DEBUG] Successfully loaded identity table
+2018/08/04 21:52:55 [DEBUG] Loading affiliations table
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org1
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org1' already exists
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org1.department1
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org1.department1' already exists
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org1.department2
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org1.department2' already exists
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org2
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org2' already exists
+2018/08/04 21:52:55 [DEBUG] DB: Add affiliation org2.department1
+2018/08/04 21:52:55 [DEBUG] Affiliation 'org2.department1' already exists
+2018/08/04 21:52:55 [DEBUG] Successfully loaded affiliations table
+2018/08/04 21:52:55 [DEBUG] Checking and performing migration, if needed
+2018/08/04 21:52:55 [DEBUG] Updating database level to &{Identity:1 Affiliation:1 Certificate:1 Credential:1 RAInfo:1 Nonce:1}
+2018/08/04 21:52:55 [INFO] Initialized sqlite3 database at /etc/hyperledger/fabric-ca/fabric-ca-server.db
+2018/08/04 21:52:55 [DEBUG] Initializing enrollment signer
+2018/08/04 21:52:55 [DEBUG] validating configuration
+2018/08/04 21:52:55 [DEBUG] validate local profile
+2018/08/04 21:52:55 [DEBUG] profile is valid
+2018/08/04 21:52:55 [DEBUG] validate local profile
+2018/08/04 21:52:55 [DEBUG] profile is valid
+2018/08/04 21:52:55 [DEBUG] validate local profile
+2018/08/04 21:52:55 [DEBUG] profile is valid
+2018/08/04 21:52:55 [DEBUG] CA initialization successful
+2018/08/04 21:52:55 [INFO] Home directory for default CA: /etc/hyperledger/fabric-ca
+2018/08/04 21:52:55 [DEBUG] 1 CA instance(s) running on server
+2018/08/04 21:52:55 [DEBUG] TLS is enabled
+2018/08/04 21:52:55 [DEBUG] TLS enabled but no certificate or key provided, automatically generate TLS credentials
+2018/08/04 21:52:55 [DEBUG] TLS CSR: {CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:<nil> CA:<nil> SerialNumber:}
+2018/08/04 21:52:55 [DEBUG] GenCSR &{CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:<nil> CA:<nil> SerialNumber:}
+2018/08/04 21:52:55 [DEBUG] Initializing client with config: &{URL: MSPDir: TLS:{Enabled:false CertFiles:[] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:  } CSR:{CN: Names:[] Hosts:[] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type: Secret: MaxEnrollments:0 Affiliation: Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc42026ce40}
+2018/08/04 21:52:55 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc42026cea0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/04 21:52:55 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc42028dcf0 DummyKeystore:<nil>}
+2018/08/04 21:52:55 [INFO] generating key: &{A:ecdsa S:256}
+2018/08/04 21:52:55 [DEBUG] generate key from request: algo=ecdsa, size=256
+2018/08/04 21:52:55 [INFO] encoded CSR
+2018/08/04 21:52:55 [INFO] signed certificate with serial number 720240957388535876061594458842273357292668345753
+2018/08/04 21:52:55 [DEBUG] DB: Insert Certificate
+2018/08/04 21:52:55 [DEBUG] Saved serial number as hex 7e28b8b59a473da238a531d27c879603196a5d99
+2018/08/04 21:52:55 [DEBUG] saved certificate with serial number 720240957388535876061594458842273357292668345753
+2018/08/04 21:52:55 [DEBUG] TLS Certificate: /etc/hyperledger/fabric-ca/tls-cert.pem, TLS Key: 
+2018/08/04 21:52:55 [DEBUG] Client authentication type requested: noclientcert
+2018/08/04 21:52:55 [INFO] Listening on https://0.0.0.0:7054
+2018/08/04 21:54:35 [DEBUG] Received request for /enroll
+2018/08/04 21:54:35 [DEBUG] ca.Config: &{Version:1.2.0-stable Cfg:{Identities:{AllowRemove:false} Affiliations:{AllowRemove:false}} CA:{Name: Keyfile:/etc/hyperledger/fabric-ca/ca-key.pem Certfile:/etc/hyperledger/fabric-ca/ca-cert.pem Chainfile:/etc/hyperledger/fabric-ca/ca-chain.pem} Signing:0xc42028df30 CSR:{CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:<nil> CA:0xc42028ea00 SerialNumber:} Registry:{MaxEnrollments:-1 Identities:[{ Name:**** Pass:**** Type:client Affiliation: MaxEnrollments:0 Attrs:map[hf.AffiliationMgr:1 hf.Registrar.Roles:* hf.Registrar.DelegateRoles:* hf.Revoker:1 hf.IntermediateCA:1 hf.GenCRL:1 hf.Registrar.Attributes:*]  }]} Affiliations:map[org1:[department1 department2] org2:[department1]] LDAP:{ Enabled:false URL:ldap://****:****@<host>:<port>/<base> UserFilter:(uid=%s) GroupFilter:(memberUid=%s) Attribute:{[uid member] [{ }] map[groups:[{ }]]} TLS:{false [] { }}  } DB:{ Type:sqlite3 Datasource:/etc/hyperledger/fabric-ca/fabric-ca-server.db TLS:{false [] { }}  } CSP:0xc42026ce40 Client:<nil> Intermediate:{ParentServer:{ URL: CAName:  } TLS:{Enabled:false CertFiles:[] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  }} CRL:{Expiry:24h0m0s} Idemix:{IssuerPublicKeyfile:/etc/hyperledger/fabric-ca/IssuerPublicKey IssuerSecretKeyfile:/etc/hyperledger/fabric-ca/msp/keystore/IssuerSecretKey RevocationPublicKeyfile:/etc/hyperledger/fabric-ca/IssuerRevocationPublicKey RevocationPrivateKeyfile:/etc/hyperledger/fabric-ca/msp/keystore/IssuerRevocationPrivateKey RHPoolSize:1000 NonceExpiration:15s NonceSweepInterval:15m}}
+2018/08/04 21:54:35 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 21:54:35 [DEBUG] DB: Login user org1-admin-ca with max enrollments of -1 and state of 0
+2018/08/04 21:54:35 [DEBUG] DB: identity org1-admin-ca successfully logged in
+2018/08/04 21:54:35 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 21:54:35 [DEBUG] Processing sign request: id=org1-admin-ca, CommonName=org1-admin-ca, Subject=<nil>
+2018/08/04 21:54:35 [DEBUG] Request is not for a CA signing certificate
+2018/08/04 21:54:35 [DEBUG] Checking CSR fields to make sure that they do not exceed maximum character limits
+2018/08/04 21:54:35 [DEBUG] Finished processing sign request
+2018/08/04 21:54:35 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 21:54:35 [INFO] signed certificate with serial number 126220372617796437850665078286889022500709827455
+2018/08/04 21:54:35 [DEBUG] DB: Insert Certificate
+2018/08/04 21:54:35 [DEBUG] Saved serial number as hex 161bead16d60e35802abe38f98f19348af9b837f
+2018/08/04 21:54:35 [DEBUG] saved certificate with serial number 126220372617796437850665078286889022500709827455
+2018/08/04 21:54:35 [DEBUG] Successfully incremented state for identity org1-admin-ca to 1
+2018/08/04 21:54:35 [INFO] 172.18.0.3:39886 POST /enroll 201 0 "OK"
+2018/08/04 21:59:28 [DEBUG] Received request for /register
+2018/08/04 21:59:28 [DEBUG] Checking for revocation/expiration of certificate owned by 'org1-admin-ca'
+2018/08/04 21:59:28 [DEBUG] DB: Get certificate by serial (161bead16d60e35802abe38f98f19348af9b837f) and aki (ae47cffcad4325250fff1bc717b36b0dffa555f4)
+2018/08/04 21:59:28 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 21:59:28 [DEBUG] Successful token authentication of 'org1-admin-ca'
+2018/08/04 21:59:28 [DEBUG] Received registration request from org1-admin-ca: { Name:org1-admin Type:client Secret:**** MaxEnrollments:0 Affiliation:org1 Attributes:[{hf.Registrar.Roles client false} {hf.Registrar.Attributes * false} {hf.Revoker true false} {hf.GenCRL true false} {admin true true} {abac.init true true}] CAName:  }
+2018/08/04 21:59:28 [DEBUG] canRegister - Check to see if user 'org1-admin-ca' can register
+2018/08/04 21:59:28 [DEBUG] Checking to see if caller 'org1-admin-ca' can act on type 'client'
+2018/08/04 21:59:28 [DEBUG] Checking to see if caller 'org1-admin-ca' is a registrar
+2018/08/04 21:59:28 [DEBUG] Validating affiliation: org1
+2018/08/04 21:59:28 [DEBUG] Checking to see if affiliation 'org1' contains caller's affiliation ''
+2018/08/04 21:59:28 [DEBUG] Caller has root affiliation
+2018/08/04 21:59:28 [DEBUG] DB: Get affiliation org1
+2018/08/04 21:59:28 [DEBUG] Checking to see if registrar can register the requested attributes: [{Name:hf.Registrar.Roles Value:client ECert:false} {Name:hf.Registrar.Attributes Value:* ECert:false} {Name:hf.Revoker Value:true ECert:false} {Name:hf.GenCRL Value:true ECert:false} {Name:admin Value:true ECert:true} {Name:abac.init Value:true ECert:true}]
+2018/08/04 21:59:28 [DEBUG] Validating that registrar with the following values for hf.Registrar.Attributes '*' is authorized to register the requested attribute '&{Name:hf.Registrar.Roles Value:client ECert:false}'
+2018/08/04 21:59:28 [DEBUG] Checking if registrar can register attribute: hf.Registrar.Roles
+2018/08/04 21:59:28 [DEBUG] Performing authorization check...
+2018/08/04 21:59:28 [DEBUG] Checking if caller is authorized to register attribute 'hf.Registrar.Roles' with the requested value of '%!s(func() string=0x8c9970)'
+2018/08/04 21:59:28 [DEBUG] Requested attribute type is list
+2018/08/04 21:59:28 [DEBUG] Validating that registrar with the following values for hf.Registrar.Attributes '*' is authorized to register the requested attribute '&{Name:hf.Registrar.Attributes Value:* ECert:false}'
+2018/08/04 21:59:28 [DEBUG] Checking if registrar can register attribute: hf.Registrar.Attributes
+2018/08/04 21:59:28 [DEBUG] Performing authorization check...
+2018/08/04 21:59:28 [DEBUG] Checking if caller is authorized to register attribute 'hf.Registrar.Attributes' with the requested value of '%!s(func() string=0x8c9970)'
+2018/08/04 21:59:28 [DEBUG] Requested attribute type is list
+2018/08/04 21:59:28 [DEBUG] Perform ownshership check for requested 'hf.' attributes for the values of 'hf.Registrar.Attributes'
+2018/08/04 21:59:28 [DEBUG] Checking if registrar can register attribute: *
+2018/08/04 21:59:28 [DEBUG] Validating that registrar with the following values for hf.Registrar.Attributes '*' is authorized to register the requested attribute '&{Name:hf.Revoker Value:true ECert:false}'
+2018/08/04 21:59:28 [DEBUG] Checking if registrar can register attribute: hf.Revoker
+2018/08/04 21:59:28 [DEBUG] Performing authorization check...
+2018/08/04 21:59:28 [DEBUG] Checking if caller is authorized to register attribute 'hf.Revoker' with the requested value of '%!s(func() string=0x8c9970)'
+2018/08/04 21:59:28 [DEBUG] Requested attribute type is boolean
+2018/08/04 21:59:28 [DEBUG] Validating that registrar with the following values for hf.Registrar.Attributes '*' is authorized to register the requested attribute '&{Name:hf.GenCRL Value:true ECert:false}'
+2018/08/04 21:59:28 [DEBUG] Checking if registrar can register attribute: hf.GenCRL
+2018/08/04 21:59:28 [DEBUG] Performing authorization check...
+2018/08/04 21:59:28 [DEBUG] Checking if caller is authorized to register attribute 'hf.GenCRL' with the requested value of '%!s(func() string=0x8c9970)'
+2018/08/04 21:59:28 [DEBUG] Requested attribute type is boolean
+2018/08/04 21:59:28 [DEBUG] Validating that registrar with the following values for hf.Registrar.Attributes '*' is authorized to register the requested attribute '&{Name:admin Value:true ECert:true}'
+2018/08/04 21:59:28 [DEBUG] Checking if registrar can register attribute: admin
+2018/08/04 21:59:28 [DEBUG] Performing authorization check...
+2018/08/04 21:59:28 [DEBUG] Validating that registrar with the following values for hf.Registrar.Attributes '*' is authorized to register the requested attribute '&{Name:abac.init Value:true ECert:true}'
+2018/08/04 21:59:28 [DEBUG] Checking if registrar can register attribute: abac.init
+2018/08/04 21:59:28 [DEBUG] Performing authorization check...
+2018/08/04 21:59:28 [DEBUG] Registering user id: org1-admin
+2018/08/04 21:59:28 [DEBUG] Max enrollment value verification - User specified max enrollment: 0, CA max enrollment: -1
+2018/08/04 21:59:28 [DEBUG] DB: Getting identity org1-admin
+2018/08/04 21:59:28 [DEBUG] DB: Add identity org1-admin
+2018/08/04 21:59:28 [DEBUG] Successfully added identity org1-admin to the database
+2018/08/04 21:59:28 [INFO] 172.18.0.3:39888 POST /register 201 0 "OK"
+2018/08/04 22:00:35 [DEBUG] Received request for /cainfo
+2018/08/04 22:00:35 [INFO] 172.18.0.3:39890 POST /cainfo 200 0 "OK"
+2018/08/04 22:07:55 [DEBUG] Cleaning up expired nonces for CA ''
+2018/08/04 22:18:28 [DEBUG] Received request for /register
+2018/08/04 22:18:28 [DEBUG] Checking for revocation/expiration of certificate owned by 'org1-admin-ca'
+2018/08/04 22:18:28 [DEBUG] DB: Get certificate by serial (161bead16d60e35802abe38f98f19348af9b837f) and aki (ae47cffcad4325250fff1bc717b36b0dffa555f4)
+2018/08/04 22:18:28 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 22:18:28 [DEBUG] Successful token authentication of 'org1-admin-ca'
+2018/08/04 22:18:28 [DEBUG] Received registration request from org1-admin-ca: { Name:org1-peer0 Type:peer Secret:**** MaxEnrollments:0 Affiliation:org1 Attributes:[] CAName:  }
+2018/08/04 22:18:28 [DEBUG] canRegister - Check to see if user 'org1-admin-ca' can register
+2018/08/04 22:18:28 [DEBUG] Checking to see if caller 'org1-admin-ca' can act on type 'peer'
+2018/08/04 22:18:28 [DEBUG] Checking to see if caller 'org1-admin-ca' is a registrar
+2018/08/04 22:18:28 [DEBUG] Validating affiliation: org1
+2018/08/04 22:18:28 [DEBUG] Checking to see if affiliation 'org1' contains caller's affiliation ''
+2018/08/04 22:18:28 [DEBUG] Caller has root affiliation
+2018/08/04 22:18:28 [DEBUG] DB: Get affiliation org1
+2018/08/04 22:18:28 [DEBUG] Registering user id: org1-peer0
+2018/08/04 22:18:28 [DEBUG] Max enrollment value verification - User specified max enrollment: 0, CA max enrollment: -1
+2018/08/04 22:18:28 [DEBUG] DB: Getting identity org1-peer0
+2018/08/04 22:18:28 [DEBUG] DB: Add identity org1-peer0
+2018/08/04 22:18:28 [DEBUG] Successfully added identity org1-peer0 to the database
+2018/08/04 22:18:28 [INFO] 172.18.0.3:39892 POST /register 201 0 "OK"
+2018/08/04 22:18:52 [DEBUG] Received request for /register
+2018/08/04 22:18:52 [DEBUG] Checking for revocation/expiration of certificate owned by 'org1-admin-ca'
+2018/08/04 22:18:52 [DEBUG] DB: Get certificate by serial (161bead16d60e35802abe38f98f19348af9b837f) and aki (ae47cffcad4325250fff1bc717b36b0dffa555f4)
+2018/08/04 22:18:52 [DEBUG] DB: Getting identity org1-admin-ca
+2018/08/04 22:18:52 [DEBUG] Successful token authentication of 'org1-admin-ca'
+2018/08/04 22:18:52 [DEBUG] Received registration request from org1-admin-ca: { Name:org1-orderer Type:orderer Secret:**** MaxEnrollments:0 Affiliation:org1 Attributes:[] CAName:  }
+2018/08/04 22:18:52 [DEBUG] canRegister - Check to see if user 'org1-admin-ca' can register
+2018/08/04 22:18:52 [DEBUG] Checking to see if caller 'org1-admin-ca' can act on type 'orderer'
+2018/08/04 22:18:52 [DEBUG] Checking to see if caller 'org1-admin-ca' is a registrar
+2018/08/04 22:18:52 [DEBUG] Validating affiliation: org1
+2018/08/04 22:18:52 [DEBUG] Checking to see if affiliation 'org1' contains caller's affiliation ''
+2018/08/04 22:18:52 [DEBUG] Caller has root affiliation
+2018/08/04 22:18:52 [DEBUG] DB: Get affiliation org1
+2018/08/04 22:18:52 [DEBUG] Registering user id: org1-orderer
+2018/08/04 22:18:52 [DEBUG] Max enrollment value verification - User specified max enrollment: 0, CA max enrollment: -1
+2018/08/04 22:18:52 [DEBUG] DB: Getting identity org1-orderer
+2018/08/04 22:18:52 [DEBUG] DB: Add identity org1-orderer
+2018/08/04 22:18:52 [DEBUG] Successfully added identity org1-orderer to the database
+2018/08/04 22:18:52 [INFO] 172.18.0.3:39894 POST /register 201 0 "OK"
+2018/08/04 22:22:55 [DEBUG] Cleaning up expired nonces for CA ''
+2018/08/04 22:54:08 [DEBUG] Cleaning up expired nonces for CA ''
+2018/08/04 22:54:23 [DEBUG] Received request for /enroll
+2018/08/04 22:54:23 [DEBUG] ca.Config: &{Version:1.2.0-stable Cfg:{Identities:{AllowRemove:false} Affiliations:{AllowRemove:false}} CA:{Name: Keyfile:/etc/hyperledger/fabric-ca/ca-key.pem Certfile:/etc/hyperledger/fabric-ca/ca-cert.pem Chainfile:/etc/hyperledger/fabric-ca/ca-chain.pem} Signing:0xc42028df30 CSR:{CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:<nil> CA:0xc42028ea00 SerialNumber:} Registry:{MaxEnrollments:-1 Identities:[{ Name:**** Pass:**** Type:client Affiliation: MaxEnrollments:0 Attrs:map[hf.Revoker:1 hf.IntermediateCA:1 hf.GenCRL:1 hf.Registrar.Attributes:* hf.AffiliationMgr:1 hf.Registrar.Roles:* hf.Registrar.DelegateRoles:*]  }]} Affiliations:map[org1:[department1 department2] org2:[department1]] LDAP:{ Enabled:false URL:ldap://****:****@<host>:<port>/<base> UserFilter:(uid=%s) GroupFilter:(memberUid=%s) Attribute:{[uid member] [{ }] map[groups:[{ }]]} TLS:{false [] { }}  } DB:{ Type:sqlite3 Datasource:/etc/hyperledger/fabric-ca/fabric-ca-server.db TLS:{false [] { }}  } CSP:0xc42026ce40 Client:<nil> Intermediate:{ParentServer:{ URL: CAName:  } TLS:{Enabled:false CertFiles:[] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  }} CRL:{Expiry:24h0m0s} Idemix:{IssuerPublicKeyfile:/etc/hyperledger/fabric-ca/IssuerPublicKey IssuerSecretKeyfile:/etc/hyperledger/fabric-ca/msp/keystore/IssuerSecretKey RevocationPublicKeyfile:/etc/hyperledger/fabric-ca/IssuerRevocationPublicKey RevocationPrivateKeyfile:/etc/hyperledger/fabric-ca/msp/keystore/IssuerRevocationPrivateKey RHPoolSize:1000 NonceExpiration:15s NonceSweepInterval:15m}}
+2018/08/04 22:54:23 [DEBUG] DB: Getting identity org1-admin
+2018/08/04 22:54:23 [DEBUG] DB: Login user org1-admin with max enrollments of -1 and state of 0
+2018/08/04 22:54:23 [DEBUG] DB: identity org1-admin successfully logged in
+2018/08/04 22:54:23 [DEBUG] DB: Getting identity org1-admin
+2018/08/04 22:54:23 [DEBUG] Processing sign request: id=org1-admin, CommonName=org1-admin, Subject=<nil>
+2018/08/04 22:54:23 [DEBUG] Request is not for a CA signing certificate
+2018/08/04 22:54:23 [DEBUG] Checking CSR fields to make sure that they do not exceed maximum character limits
+2018/08/04 22:54:23 [DEBUG] Finished processing sign request
+2018/08/04 22:54:23 [DEBUG] DB: Getting identity org1-admin
+2018/08/04 22:54:23 [DEBUG] Attribute extension being added to certificate is: &{ID:[1 2 3 4 5 6 7 8 1] Critical:false Value:7b226174747273223a7b22616261632e696e6974223a2274727565222c2261646d696e223a2274727565222c2268662e416666696c696174696f6e223a226f726731222c2268662e456e726f6c6c6d656e744944223a226f7267312d61646d696e222c2268662e54797065223a22636c69656e74227d7d}
+2018/08/04 22:54:23 [DEBUG] Adding attribute extension to CSR: &{ID:[1 2 3 4 5 6 7 8 1] Critical:false Value:7b226174747273223a7b22616261632e696e6974223a2274727565222c2261646d696e223a2274727565222c2268662e416666696c696174696f6e223a226f726731222c2268662e456e726f6c6c6d656e744944223a226f7267312d61646d696e222c2268662e54797065223a22636c69656e74227d7d}
+2018/08/04 22:54:23 [INFO] signed certificate with serial number 107898834275616867467986278599833380759311584263
+2018/08/04 22:54:23 [DEBUG] DB: Insert Certificate
+2018/08/04 22:54:23 [DEBUG] Saved serial number as hex 12e659df60d4a31ab4c7a22e8ca9548f18258c07
+2018/08/04 22:54:23 [DEBUG] saved certificate with serial number 107898834275616867467986278599833380759311584263
+2018/08/04 22:54:23 [DEBUG] Successfully incremented state for identity org1-admin to 1
+2018/08/04 22:54:23 [INFO] 172.18.0.3:39896 POST /enroll 201 0 "OK"
+2018/08/04 22:55:34 [DEBUG] Received request for /enroll
+2018/08/04 22:55:34 [DEBUG] ca.Config: &{Version:1.2.0-stable Cfg:{Identities:{AllowRemove:false} Affiliations:{AllowRemove:false}} CA:{Name: Keyfile:/etc/hyperledger/fabric-ca/ca-key.pem Certfile:/etc/hyperledger/fabric-ca/ca-cert.pem Chainfile:/etc/hyperledger/fabric-ca/ca-chain.pem} Signing:0xc42028df30 CSR:{CN:org1-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[org1-ca] KeyRequest:<nil> CA:0xc42028ea00 SerialNumber:} Registry:{MaxEnrollments:-1 Identities:[{ Name:**** Pass:**** Type:client Affiliation: MaxEnrollments:0 Attrs:map[hf.IntermediateCA:1 hf.GenCRL:1 hf.Registrar.Attributes:* hf.AffiliationMgr:1 hf.Registrar.Roles:* hf.Registrar.DelegateRoles:* hf.Revoker:1]  }]} Affiliations:map[org1:[department1 department2] org2:[department1]] LDAP:{ Enabled:false URL:ldap://****:****@<host>:<port>/<base> UserFilter:(uid=%s) GroupFilter:(memberUid=%s) Attribute:{[uid member] [{ }] map[groups:[{ }]]} TLS:{false [] { }}  } DB:{ Type:sqlite3 Datasource:/etc/hyperledger/fabric-ca/fabric-ca-server.db TLS:{false [] { }}  } CSP:0xc42026ce40 Client:<nil> Intermediate:{ParentServer:{ URL: CAName:  } TLS:{Enabled:false CertFiles:[] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  }} CRL:{Expiry:24h0m0s} Idemix:{IssuerPublicKeyfile:/etc/hyperledger/fabric-ca/IssuerPublicKey IssuerSecretKeyfile:/etc/hyperledger/fabric-ca/msp/keystore/IssuerSecretKey RevocationPublicKeyfile:/etc/hyperledger/fabric-ca/IssuerRevocationPublicKey RevocationPrivateKeyfile:/etc/hyperledger/fabric-ca/msp/keystore/IssuerRevocationPrivateKey RHPoolSize:1000 NonceExpiration:15s NonceSweepInterval:15m}}
+2018/08/04 22:55:34 [DEBUG] DB: Getting identity org1-admin
+2018/08/04 22:55:34 [DEBUG] DB: Login user org1-admin with max enrollments of -1 and state of 1
+2018/08/04 22:55:34 [DEBUG] DB: identity org1-admin successfully logged in
+2018/08/04 22:55:34 [DEBUG] DB: Getting identity org1-admin
+2018/08/04 22:55:34 [DEBUG] Processing sign request: id=org1-admin, CommonName=org1-admin, Subject=<nil>
+2018/08/04 22:55:34 [DEBUG] Request is not for a CA signing certificate
+2018/08/04 22:55:34 [DEBUG] Checking CSR fields to make sure that they do not exceed maximum character limits
+2018/08/04 22:55:34 [DEBUG] Finished processing sign request
+2018/08/04 22:55:34 [DEBUG] DB: Getting identity org1-admin
+2018/08/04 22:55:34 [DEBUG] Attribute extension being added to certificate is: &{ID:[1 2 3 4 5 6 7 8 1] Critical:false Value:7b226174747273223a7b22616261632e696e6974223a2274727565222c2261646d696e223a2274727565222c2268662e416666696c696174696f6e223a226f726731222c2268662e456e726f6c6c6d656e744944223a226f7267312d61646d696e222c2268662e54797065223a22636c69656e74227d7d}
+2018/08/04 22:55:34 [DEBUG] Adding attribute extension to CSR: &{ID:[1 2 3 4 5 6 7 8 1] Critical:false Value:7b226174747273223a7b22616261632e696e6974223a2274727565222c2261646d696e223a2274727565222c2268662e416666696c696174696f6e223a226f726731222c2268662e456e726f6c6c6d656e744944223a226f7267312d61646d696e222c2268662e54797065223a22636c69656e74227d7d}
+2018/08/04 22:55:34 [INFO] signed certificate with serial number 216506539525666516289905679582659770570209022186
+2018/08/04 22:55:34 [DEBUG] DB: Insert Certificate
+2018/08/04 22:55:34 [DEBUG] Saved serial number as hex 25ec7d2f523dfabf3e1e3f277172d6639f48d0ea
+2018/08/04 22:55:34 [DEBUG] saved certificate with serial number 216506539525666516289905679582659770570209022186
+2018/08/04 22:55:34 [DEBUG] Successfully incremented state for identity org1-admin to 2
+2018/08/04 22:55:34 [INFO] 172.18.0.3:39898 POST /enroll 201 0 "OK"

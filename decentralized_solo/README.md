@@ -3,11 +3,19 @@ This network runs on a solo orderer (for each org) and static docker containers 
 
 ---
 ## NOTES
-In a decentralized service, each org needs its own CA and MSP hierarchy.
+- A "decentralized" service implies equality among members, but since we are using a solo Orderer, only one Orderer node can exist, so a single (in this case the first) organization will host the Orderer.
+- In any decentralized service, each org needs its own CA (Certificate Authority) to issue cryptographic materials.
 <br>
 <br>
-IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the docker compose files and the configtx file.
+- Most services (containers) also include a `*_auto.sh` file in their directory.  You can use these scripts (change the docker-compose file `command:` section) to more quickly setup the network.  The manual steps are listed below for educational purposes.
+<br>
+<br>
+- IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the `docker-compose.yaml` files and the `configtx.yaml` files.
+
 ---
+
+<br>
+<br>
 
 # SETUP - DOCKER NETWORK
 Start the network separately to ensure the network name is consistent in all secondary docker-compose files.
@@ -38,18 +46,40 @@ An MSP directory should have been created in the CA home directory (inside the C
 <br>        ├── IssuerRevocationPrivateKey
 <br>        └── IssuerSecretKey
 <br></pre>
-NOTE: Because we included the `fabric-ca-server-config.yaml` file (rather than allowing it to be auto-generated), the `ca.sh` script does not call `fabric-ca-server init`.  The `registry: identities:` section of the config file contains the bootstrap admin profile details.
-
 <br>
 
 **1.2) Start a Bash session in the CA service**
 >`docker exec -it org1-ca bash`
 
 #### The following step occurs inside the CA Bash session:
->**1.3) Copy the crypto material**
-><br>This will copy the certificate to the organization common folder for use among the org.  This file is listed in the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate (needed to `enroll` from the CLI).  You can also set this via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable.
->>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /data/org1-ca-cert.pem`
+>**1.3) Initialize the CA server**
+>>`fabric-ca-server init -b org1-admin-ca:adminpw >>/data/logs/ca.log 2>&1 &`
+>
+>The `>>...` redirect will hide the stdout and stderror from your command line.  You will need to open `ca.log` to check for errors.  You can change the `admin:adminpw` parameter to whatever admin username / password you want for the CA server admin.
+>
+>A `fabric-ca-server-config.yaml` file and root CA certificate `ca-cert.pem` will be created at the server home directory (set by `FABRIC_CA_SERVER_HOME` in the docker-compose file).  We will override many of these settings with environmental variables (the file will still show default settings).
+>
 ><br>
+>
+>**1.4) Copy the crypto material**
+>>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /data/org1-ca-cert.pem`
+>
+>This will copy the root CA certificate to the organization common folder for use among the org.  This file is needed to `enroll` from the CLI.  We will refer to this file in other services (containers) via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable.  You could also hard-code the filename in the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate.
+>
+><br>
+>
+>**1.5) Edit the CA Server Config File**
+>>`sed -i "/affiliations:/a \\   org1: []" $FABRIC_CA_SERVER_HOME/fabric-ca-server-config.yaml`
+>
+>I have not found a way to set the `affiliations:` section of the config file via environment variables, so we will manually edit that section.
+>
+><br>
+>
+>**1.6) Start the CA Server**
+>>`fabric-ca-server start >>/data/logs/ca.log 2>&1 &`
+>
+>Again, this will redirect all output to the log file.  Check `ca.log` and ensure that the service is listening on the default port (7054).
+>
 >
 >End the Bash session with `exit`
 
