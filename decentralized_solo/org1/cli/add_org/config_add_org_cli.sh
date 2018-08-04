@@ -6,7 +6,6 @@
 #
 
 # RUN IN org1 CLI
-set -x
 
 CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"
 
@@ -55,5 +54,4 @@ echo "========= Submit transaction from a different peer if needed ========= "
 cp update_in_envelope.pb /data/update_in_envelope.pb
 echo "========= Config transaction to add org2 sent to common directory =========== "
 
-set +x
 exit 0

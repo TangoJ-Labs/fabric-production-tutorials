@@ -83,7 +83,7 @@ trap finish EXIT
 logr "The docker 'run' container has started"
 
 log "*************************** LOAD VARS **************************"
-source .env
+source /etc/hyperledger/fabric/setup/.env
 
 log "********************* switchToAdminIdentity ********************"
 source /etc/hyperledger/fabric/setup/switchToAdmin.sh

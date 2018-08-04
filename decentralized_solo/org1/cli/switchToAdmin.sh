@@ -25,8 +25,12 @@ if [ ! -d /data/orgs/org1/admin ]; then
     mkdir -p /data/orgs/org1/msp/admincerts
     cp /data/orgs/org1/admin/msp/signcerts/cert.pem /data/orgs/org1/msp/admincerts/cert.pem
 
-    # Copy the admin config file
-    cp /etc/hyperledger/fabric/msp/config.yaml /data/orgs/org2/admin/msp/config.yaml
+    # # Copy the admin config file - ACTUALLY DON'T - MISSING OTHER SETTINGS & GETTING "OrganizationalUnit" error relating to MSP / CSR setup
+    # # CANNOT USE ".peer", ".client" ENDORSEMENT POLICY ON CHAINCODE UNTIL THIS IS FIXED (can use ".member")
+    # cp /etc/hyperledger/fabric/msp/config.yaml /data/orgs/org2/admin/msp/config.yaml
+
+    # MANUALLY copy back the config file AFTER editing
+    # cp /data/orgs/org1/admin/msp/config.yaml /etc/hyperledger/fabric/msp/config.yaml
 fi
 
 export CORE_PEER_MSPCONFIGPATH=/data/orgs/org1/admin/msp

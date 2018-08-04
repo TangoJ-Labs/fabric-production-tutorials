@@ -127,7 +127,6 @@ if [ "$?" -ne 0 ]; then
 fi
 
 log "Finished building channel artifacts"
-touch /data/logs/setup.successful
 
 
 # fabric-ca-client enroll -d -u https://org1-user1:userpw@org1-ca:7054
