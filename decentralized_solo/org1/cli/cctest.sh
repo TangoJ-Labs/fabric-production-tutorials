@@ -85,8 +85,8 @@ logr "The docker 'run' container has started"
 log "*************************** LOAD VARS **************************"
 source /etc/hyperledger/fabric/setup/.env
 
-log "********************* switchToAdminIdentity ********************"
-source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+log "********************* Admin Login ********************"
+source /etc/hyperledger/fabric/setup/login-admin.sh
 
 
 # Create the channel

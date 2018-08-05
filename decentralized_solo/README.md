@@ -10,6 +10,9 @@ This network runs on a solo orderer (for each org) and static docker containers 
 - Most services (containers) also include a `*_auto.sh` file in their directory.  You can use these scripts (change the docker-compose file `command:` section) to more quickly setup the network.  The manual steps are listed below for educational purposes.
 <br>
 <br>
+- We will create a complete MSP tree in the organization common directory (`/data` in our case).  This MSP tree will resemble the MSP tree created by `cryptogen` utility used in other Hyperledger Fabric examples.  This MSP tree is for educational purposes **ONLY**.  In production you will not create an entire MSP tree in one location exposing all private keys to misuse.  In production you will leave the private keys in each service (container), and only share the public certs when needed.  While we are creating the common MSP tree for educational purposes, we will also follow production protocol and create parallel directories to hold the shared public certificates.  Feel free to skip the steps to create the common MSP tree - we will not use that material (again, it is just for educational purposes in order to explain how using the CA service compares to the `cryptogen` utility used in most Hyperledger examples).
+<br>
+<br>
 - IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the `docker-compose.yaml` files and the `configtx.yaml` files.
 
 ---
@@ -35,18 +38,7 @@ Start the network separately to ensure the network name is consistent in all sec
 
 >`docker-compose up -d`
 
-An MSP directory should have been created in the CA home directory (inside the CA environment):
-<br><pre style="line-height: 0.7;">.
-<br>├── IssuerPublicKey
-<br>├── IssuerRevocationPublicKey
-<br>├── ca-cert.pem
-<br>└── msp
-<br>    └── keystore
-<br>        ├── {...}_sk
-<br>        ├── IssuerRevocationPrivateKey
-<br>        └── IssuerSecretKey
-<br></pre>
-<br>
+NOTE: If you explore the container filesystem, a server cert and key are created in a `.../fabric-ca-server` sibling directory to the home directory.  This material can be ignored for our purposes.  The CSR details on this material is default, and we will not use this crypto material for our network.
 
 **1.2) Start a Bash session in the CA service**
 >`docker exec -it org1-ca bash`
@@ -57,21 +49,42 @@ An MSP directory should have been created in the CA home directory (inside the C
 >
 >The `>>...` redirect will hide the stdout and stderror from your command line.  You will need to open `ca.log` to check for errors.  You can change the `admin:adminpw` parameter to whatever admin username / password you want for the CA server admin.
 >
->A `fabric-ca-server-config.yaml` file and root CA certificate `ca-cert.pem` will be created at the server home directory (set by `FABRIC_CA_SERVER_HOME` in the docker-compose file).  We will override many of these settings with environmental variables (the file will still show default settings).
+>A `fabric-ca-server-config.yaml` file, root CA certificate `ca-cert.pem`, and `.../keystore` directory with private keys will be created at the server home directory (set by `FABRIC_CA_SERVER_HOME` in the docker-compose file).  We will override many of the config file CSR settings with environmental variables (the config file will still show default settings).  The entire structure should resemble:
+>
+><pre style="line-height: 0.7;">
+>.
+>├── fabric-ca-server.db
+>├── fabric-ca-server-config.yaml
+>├── IssuerPublicKey
+>├── IssuerRevocationPublicKey
+>├── ca-cert.pem                        <--- We want to save this Root CA Cert to MSP tree
+>└── msp
+>    └── keystore
+>        ├── {...}_sk                   <--- We want to save this Root CA priv key to MSP tree
+>        ├── IssuerRevocationPrivateKey
+>        └── IssuerSecretKey
+></pre>
 >
 ><br>
 >
 >**1.4) Copy the crypto material**
->>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /data/org1-ca-cert.pem`
 >
->This will copy the root CA certificate to the organization common folder for use among the org.  This file is needed to `enroll` from the CLI.  We will refer to this file in other services (containers) via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable.  You could also hard-code the filename in the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate.
+>OPTIONAL: FULL MSP TREE
+>>`$FABRIC_CA_SERVER_HOME/setup/msp.sh`
+>
+>This will copy the Root CA certificate and associated private key to the common directory MSP tree.  Remember that this common directory MSP tree is for educational purposes and would not be created in a production environment.
+>
+>Copy the Root CA Cert ONLY to the common folder for production use.
+>>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /data/org1-root-ca-cert.pem`
+>
+>The Root CA Cert is needed to `enroll` from the CLI.  We will refer to this file in other services (containers) via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable.  You could also hard-code the filename in the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate.
 >
 ><br>
 >
 >**1.5) Edit the CA Server Config File**
 >>`sed -i "/affiliations:/a \\   org1: []" $FABRIC_CA_SERVER_HOME/fabric-ca-server-config.yaml`
 >
->I have not found a way to set the `affiliations:` section of the config file via environment variables, so we will manually edit that section.
+>The docs do not indicate a way to set the `affiliations:` section of the config file via environment variables, so we will manually edit that section.
 >
 ><br>
 >
