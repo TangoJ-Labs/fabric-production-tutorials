@@ -88,14 +88,13 @@ log "*************************** LOAD VARS **************************"
 source /etc/hyperledger/fabric/setup/.env
 
 log "********************* Admin Login ********************"
+##NOTE: MUST RUN login-admin.sh with ". /" to capture env vars
 . /etc/hyperledger/fabric/setup/login-admin.sh
-# . /etc/hyperledger/fabric/setup/switchToAdmin.sh
 
 
 # Create the channel
 log "********************** peer channel create *********************"
 logr "Creating channel 'mychannel' on org1-orderer ..."
-# peer channel create --logging-level=DEBUG -c mychannel -f $FABRIC_CFG_PATH/channel.tx $ORDERER_CONN_ARGS
 peer channel create --logging-level=DEBUG -c mychannel -f $MATERIALDIR/channel.tx $ORDERER_CONN_ARGS
 
 
@@ -124,7 +123,6 @@ done
 # Update the anchor peers (FOR ANCHOR PEERS ONLY)
 log "********************** peer channel update *********************"
 logr "Updating anchor peers for org1-peer0 ..."
-# peer channel update -c mychannel -f $FABRIC_CFG_PATH/org1-anchors.tx $ORDERER_CONN_ARGS
 peer channel update -c mychannel -f $MATERIALDIR/org1-anchors.tx $ORDERER_CONN_ARGS
 
 # Install chaincode on peer

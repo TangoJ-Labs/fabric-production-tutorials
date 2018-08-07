@@ -17,6 +17,9 @@ function printHelp() {
     echo "          -d: DELETE the current tls directory after copying"
 }
 
+# Reset the optargs
+OPTIND=1
+
 TLSDIR=""
 CRT=""
 KEY=""

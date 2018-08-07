@@ -15,6 +15,9 @@ function printHelp() {
     echo "          -m: MSP directory destination (e.g. /data/msp)"
 }
 
+# Reset the optargs
+OPTIND=1
+
 CERT=""
 MSPDIR=""
 while getopts ":c:m:" opt; do
@@ -39,12 +42,20 @@ if [ "$CERT" = "" ] || [ "$MSPDIR" = "" ]; then
     exit 1
 else
     # Create the tlscacert directory
-    if [ ! -d $MSPDIR/tlscacert ]; then
-        mkdir -p $MSPDIR/tlscacert
+    if [ ! -d $MSPDIR/tlscacerts ]; then
+        mkdir -p $MSPDIR/tlscacerts
     fi
-
     #Copy in the tlscacert
-    cp $CERT $MSPDIR/tlscacert
+    cp $CERT $MSPDIR/tlscacerts
+
+    # Create the tlsintermediatecerts directory, if needed
+    if [ -d $MSPDIR/intermediatecerts ]; then
+        if [ ! -d $MSPDIR/tlsintermediatecerts ]; then
+            mkdir -p $MSPDIR/tlsintermediatecerts
+        fi
+        #Copy in the tlsintermediatecerts
+        cp $MSPDIR/intermediatecerts/* $MSPDIR/tlsintermediatecerts
+    fi
 fi
 
 # Reset the optargs

@@ -29,11 +29,12 @@ docker exec -it org2-cli bash
 # The org2 CLI startup script should have created the needed artifacts (MSP tree)
 
 # Ensure the ORG ADMIN is enrolled and env vars are set
-source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+# source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+. /etc/hyperledger/fabric/setup/login-admin.sh
 
 # Move to the directory with the configtx.yaml file
 cd /etc/hyperledger/fabric/setup
-export FABRIC_CFG_PATH=$PWD #DIR FOR configtx.yaml WITH org2
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric/setup #DIR FOR configtx.yaml WITH org2
 configtxgen -channelID mychannel -printOrg org2 > org2.json
 
 # pass org2.json to common folder for use by authorizing org(s)
@@ -47,7 +48,8 @@ cp org2.json /data/org2.json
 docker exec -it org1-cli bash
 
 # Ensure the ORG ADMIN is enrolled and env vars are set
-source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+# source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+. /etc/hyperledger/fabric/setup/login-admin.sh
 
 #setOrdererGlobals
 source /etc/hyperledger/fabric/setup/.env
@@ -84,7 +86,8 @@ echo "============= Getting org2 onto the network =============="
 cd /etc/hyperledger/fabric/setup
 
 # Ensure the ORG ADMIN is enrolled and env vars are set
-source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+# source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+. /etc/hyperledger/fabric/setup/login-admin.sh
 
 #setOrdererGlobals
 source /etc/hyperledger/fabric/setup/.env
@@ -106,7 +109,8 @@ echo "========= org2 peer chaincode installed ========="
 docker exec -it org1-cli bash
 
 # Ensure the ORG ADMIN is enrolled and env vars are set
-source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+# source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+. /etc/hyperledger/fabric/setup/login-admin.sh
 
 #setOrdererGlobals
 source /etc/hyperledger/fabric/setup/.env
@@ -135,7 +139,8 @@ echo "========= org1 peer chaincode updated ========= "
 docker exec -it org2-cli bash
 
 # Ensure the ORG ADMIN is enrolled and env vars are set
-source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+# source /etc/hyperledger/fabric/setup/switchToAdmin.sh
+. /etc/hyperledger/fabric/setup/login-admin.sh
 
 #setOrdererGlobals
 source /etc/hyperledger/fabric/setup/.env

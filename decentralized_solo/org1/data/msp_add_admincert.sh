@@ -16,6 +16,9 @@ function printHelp() {
     echo "NOTE: the admincert is always renamed 'cert.pem'"
 }
 
+# Reset the optargs
+OPTIND=1
+
 CERT=""
 MSPDIR=""
 while getopts ":c:m:" opt; do
