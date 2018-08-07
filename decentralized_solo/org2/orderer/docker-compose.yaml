@@ -11,7 +11,7 @@ services:
     image: hyperledger/fabric-ca-orderer
     environment:
       - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/orderer
-      - FABRIC_CA_CLIENT_TLS_CERTFILES=/data/org2-ca-cert.pem
+      - FABRIC_CA_CLIENT_TLS_CERTFILES=/data/org2-root-ca-cert.pem
       
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
@@ -21,9 +21,9 @@ services:
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/data/org2-ca-cert.pem]
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/data/org2-root-ca-cert.pem]
       - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=true
-      - ORDERER_GENERAL_TLS_CLIENTROOTCAS=[/data/org2-ca-cert.pem]
+      - ORDERER_GENERAL_TLS_CLIENTROOTCAS=[/data/org2-root-ca-cert.pem]
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
       - ORDERER_DEBUG_BROADCASTTRACEDIR=data/logs
       

@@ -12,7 +12,11 @@ services:
     environment:
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric #Needed to find the configtx.yaml file for configtxgen processes
       - CORE_LOGGING_LEVEL=DEBUG
-    
+
+      # Affiliation is not used to limit users in this sample, so just put all identities in the same affiliation.
+      - FABRIC_CA_CLIENT_ID_AFFILIATION=org2
+      - CORE_LOGGING_GRPC=DEBUG
+
     volumes:
       - ./:/etc/hyperledger/fabric/setup
       # This directory map allows the CLI environment to access the passed CA crypto material:
@@ -22,5 +26,6 @@ services:
       - /Users/seanhart/go/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
       
     command: /bin/bash -c '/etc/hyperledger/fabric/setup/cli.sh 2>&1 | tee /data/logs/cli.log; sleep 99999'
+    # command: /bin/bash -c 'sleep 99999 2>&1 | tee /data/logs/cli.log'
     networks:
       - decentralized_solo

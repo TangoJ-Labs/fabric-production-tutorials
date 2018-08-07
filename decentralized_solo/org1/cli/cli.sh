@@ -100,6 +100,7 @@ log "******************* generateChannelArtifacts ********************"
 $FABRIC_CFG_PATH/setup/generate_channel_artifacts.sh
 
 # Move the genesis block to the common folder (for orderer start w/ ORDERER_GENERAL_GENESISFILE)
+##NOTE: Needed for org2 join - send to org2 common dir
 cp $FABRIC_CFG_PATH/genesis.block /data
 
 

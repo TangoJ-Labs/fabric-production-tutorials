@@ -404,3 +404,8 @@
 2018/08/07 07:58:42 [DEBUG] saved certificate with serial number 1756763186960802064893866161225574639102591395
 2018/08/07 07:58:42 [DEBUG] Successfully incremented state for identity org1-peer0 to 4
 2018/08/07 07:58:42 [INFO] 172.18.0.5:58296 POST /enroll 201 0 "OK"
+2018/08/07 08:13:06 [DEBUG] Cleaning up expired nonces for CA ''
+2018/08/07 08:28:06 [DEBUG] Cleaning up expired nonces for CA ''
+2018/08/07 08:43:06 [DEBUG] Cleaning up expired nonces for CA ''
+2018/08/07 08:58:06 [DEBUG] Cleaning up expired nonces for CA ''
+2018/08/07 09:13:06 [DEBUG] Cleaning up expired nonces for CA ''

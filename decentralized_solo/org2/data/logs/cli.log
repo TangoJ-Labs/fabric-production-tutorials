@@ -1,0 +1,179 @@
+##### 2018-08-07 08:40:45 ************************ ENROLL CA ADMIN ************************
+2018/08/07 08:40:45 [DEBUG] Home directory: /data/orgs/org2/ca
+2018/08/07 08:40:45 [INFO] Created a default configuration file at /data/orgs/org2/ca/fabric-ca-client-config.yaml
+2018/08/07 08:40:45 [DEBUG] Client configuration settings: &{URL:https://org2-admin-ca:adminpw@org2-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420390840}
+2018/08/07 08:40:45 [DEBUG] Entered runEnroll
+2018/08/07 08:40:45 [DEBUG] Enrolling { Name:org2-admin-ca Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:&{org2-admin-ca [{US North Carolina  Hyperledger Fabric }] [612cf4d37631] <nil> <nil> } Type:x509  }
+2018/08/07 08:40:45 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name:org2-admin-ca Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:&{org2-admin-ca [{US North Carolina  Hyperledger Fabric }] [612cf4d37631] <nil> <nil> } Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420390840}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4203908a0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc42042ca30 DummyKeystore:<nil>}
+2018/08/07 08:40:45 [INFO] TLS Enabled
+2018/08/07 08:40:45 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:45 [DEBUG] Client Cert File: 
+2018/08/07 08:40:45 [DEBUG] Client Key File: 
+2018/08/07 08:40:45 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:45 [DEBUG] GenCSR &{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:}
+2018/08/07 08:40:45 [INFO] generating key: &{A:ecdsa S:256}
+2018/08/07 08:40:45 [DEBUG] generate key from request: algo=ecdsa, size=256
+2018/08/07 08:40:45 [INFO] encoded CSR
+2018/08/07 08:40:45 [DEBUG] Sending request
+POST https://org2-ca:7054/enroll
+{"hosts":["612cf4d37631"],"certificate_request":"-----BEGIN CERTIFICATE REQUEST-----\nMIIBSjCB8QIBADBlMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xp\nbmExFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZGYWJyaWMxFjAUBgNV\nBAMTDW9yZzItYWRtaW4tY2EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARLHU0u\nDOccYN9JtO1VWC138Dy3aMNq52gOJ+RMd2JcyEmRiSYjeds2JRqsDesPmXpZOOrM\nDvAiMkrVotS/0ZekoCowKAYJKoZIhvcNAQkOMRswGTAXBgNVHREEEDAOggw2MTJj\nZjRkMzc2MzEwCgYIKoZIzj0EAwIDSAAwRQIhALdJo5RoILlO0/+3L4X9LzJU7FjO\nDX1d5S2FOdiL6bmuAiBQju8lWhZD8DeeyPjvtnyLPB4gKjqQ9MyujIvAp9jO8A==\n-----END CERTIFICATE REQUEST-----\n","profile":"","crl_override":"","label":"","NotBefore":"0001-01-01T00:00:00Z","NotAfter":"0001-01-01T00:00:00Z","CAName":""}
+2018/08/07 08:40:45 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/08/07 08:40:45 [DEBUG] Response body result: map[ServerInfo:map[CAName: CAChain:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNCVENDQWF1Z0F3SUJBZ0lVY1dKU1R3Sm94aVZmamdKelRlZVU1Mjgrd2o4d0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3lMV05oCk1CNFhEVEU0TURnd056QTNOVGt3TUZvWERUTXpNRGd3TXpBM05Ua3dNRm93WHpFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFUApNQTBHQTFVRUN4TUdSbUZpY21sak1SQXdEZ1lEVlFRREV3ZHZjbWN5TFdOaE1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUVDK1BBUXFRSmxlU2hzV2puZG9uV2svdG5UVHg0OTFQQUFDSWpFVmlPUDZSWlFkeloKdDZSVUtRUjlCNjFhWEp2TU1YblFEOFNvT0V6a1E3M1VMVUNDeTZORk1FTXdEZ1lEVlIwUEFRSC9CQVFEQWdFRwpNQklHQTFVZEV3RUIvd1FJTUFZQkFmOENBUUV3SFFZRFZSME9CQllFRk5SeEpxK2JPWUx0TWJ3ZzFtYnRlVUFLClBsdmRNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJUURaL3NYbEhDOTEvcjlKa3FsUUtPemZXaFBzSUYxUzNnNTQKb3pYV0FqSlJWUUlnUjRaRTlxN3hvem92eFNvNHBQTjRiVXcrYVhSWlp3cjZvc1NZNkVWY1psND0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo= Version:] Cert:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNQekNDQWVXZ0F3SUJBZ0lVZUR0T0RISnl0aHBjMWxlbk16TTRnTktDYUdnd0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3lMV05oCk1CNFhEVEU0TURnd056QTRNell3TUZvWERURTVNRGd3TnpBNE5ERXdNRm93WlRFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFUApNQTBHQTFVRUN4TUdZMnhwWlc1ME1SWXdGQVlEVlFRREV3MXZjbWN5TFdGa2JXbHVMV05oTUZrd0V3WUhLb1pJCnpqMENBUVlJS29aSXpqMERBUWNEUWdBRVN4MU5MZ3puSEdEZlNiVHRWVmd0ZC9BOHQyakRhdWRvRGlma1RIZGkKWE1oSmtZa21JM25iTmlVYXJBM3JENWw2V1RqcXpBN3dJakpLMWFMVXY5R1hwS041TUhjd0RnWURWUjBQQVFILwpCQVFEQWdlQU1Bd0dBMVVkRXdFQi93UUNNQUF3SFFZRFZSME9CQllFRkVIYXNwMHFwTjVyc3hPa2pDYkpuRGVhCmg5QnlNQjhHQTFVZEl3UVlNQmFBRk5SeEpxK2JPWUx0TWJ3ZzFtYnRlVUFLUGx2ZE1CY0dBMVVkRVFRUU1BNkMKRERZeE1tTm1OR1F6TnpZek1UQUtCZ2dxaGtqT1BRUURBZ05JQURCRkFpRUE4UVZWOHVFeS9NYkNkUW5kb1JPUgpKUkROYXlLUHVORE9UdkxCaUUxdmlpNENJSHZWc21uUUJpZzVzSU9jRWNYTGhzYWZpUVo4c2F2VFhkejdDMEN2Cld5TjgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=]
+2018/08/07 08:40:45 [DEBUG] newEnrollmentResponse org2-admin-ca
+2018/08/07 08:40:45 [INFO] Stored client certificate at /data/orgs/org2/ca/msp/signcerts/cert.pem
+2018/08/07 08:40:45 [INFO] Stored root CA certificate at /data/orgs/org2/ca/msp/cacerts/org2-ca-7054.pem
+##### 2018-08-07 08:40:45 ************************** REGISTRATION *************************
+##### 2018-08-07 08:40:45 Registering org2-orderer with org2-ca
+2018/08/07 08:40:45 [DEBUG] Home directory: /data/orgs/org2/ca
+2018/08/07 08:40:45 [INFO] Configuration file location: /data/orgs/org2/ca/fabric-ca-client-config.yaml
+2018/08/07 08:40:45 [DEBUG] Checking for enrollment
+2018/08/07 08:40:45 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-orderer Type:orderer Secret:ordererpw MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420252570}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4202525d0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200a4f90 DummyKeystore:<nil>}
+2018/08/07 08:40:45 [INFO] TLS Enabled
+2018/08/07 08:40:45 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:45 [DEBUG] Client Cert File: 
+2018/08/07 08:40:45 [DEBUG] Client Key File: 
+2018/08/07 08:40:45 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:45 [DEBUG] Client configuration settings: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/ca/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-orderer Type:orderer Secret:ordererpw MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420252570}
+2018/08/07 08:40:45 [DEBUG] Entered runRegister
+2018/08/07 08:40:45 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/ca/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-orderer Type:orderer Secret:ordererpw MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420252570}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4202525d0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200a4f90 DummyKeystore:<nil>}
+2018/08/07 08:40:45 [INFO] TLS Enabled
+2018/08/07 08:40:45 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:45 [DEBUG] Client Cert File: 
+2018/08/07 08:40:45 [DEBUG] Client Key File: 
+2018/08/07 08:40:45 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:45 [DEBUG] Loading identity: keyFile=/data/orgs/org2/ca/msp/keystore/key.pem, certFile=/data/orgs/org2/ca/msp/signcerts/cert.pem
+2018/08/07 08:40:45 [DEBUG] No credential found at /data/orgs/org2/ca/msp/user/SignerConfig: open /data/orgs/org2/ca/msp/user/SignerConfig: no such file or directory
+2018/08/07 08:40:45 [DEBUG] No Idemix credential found at /data/orgs/org2/ca/msp/user/SignerConfig
+2018/08/07 08:40:45 [DEBUG] Register { Name:org2-orderer Type:orderer Secret:**** MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:  }
+2018/08/07 08:40:45 [DEBUG] Adding token-based authorization header
+2018/08/07 08:40:45 [DEBUG] Sending request
+POST https://org2-ca:7054/register
+{"id":"org2-orderer","type":"orderer","secret":"ordererpw","affiliation":"org2"}
+2018/08/07 08:40:45 [DEBUG] Received response
+statusCode=500 (500 Internal Server Error)
+Error: Response from server: Error Code: 0 - Registration of 'org2-orderer' failed: Identity 'org2-orderer' is already registered
+
+##### 2018-08-07 08:40:45 Registering admin identity with org2-ca
+2018/08/07 08:40:45 [DEBUG] Home directory: /data/orgs/org2/ca
+2018/08/07 08:40:45 [INFO] Configuration file location: /data/orgs/org2/ca/fabric-ca-client-config.yaml
+2018/08/07 08:40:45 [DEBUG] Checking for enrollment
+2018/08/07 08:40:45 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-admin Type:client Secret:adminpw MaxEnrollments:0 Affiliation:org2 Attributes:[{Name:hf.Revoker Value:true ECert:false} {Name:hf.GenCRL Value:true ECert:false} {Name:admin Value:true ECert:true} {Name:abac.init Value:true ECert:true} {Name:hf.Registrar.Roles Value:client ECert:false} {Name:hf.Registrar.Attributes Value:* ECert:false}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc42005e660}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc42005e6c0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4201a5400 DummyKeystore:<nil>}
+2018/08/07 08:40:45 [INFO] TLS Enabled
+2018/08/07 08:40:45 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:45 [DEBUG] Client Cert File: 
+2018/08/07 08:40:45 [DEBUG] Client Key File: 
+2018/08/07 08:40:45 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:45 [DEBUG] Client configuration settings: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/ca/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-admin Type:client Secret:adminpw MaxEnrollments:0 Affiliation:org2 Attributes:[{Name:hf.Revoker Value:true ECert:false} {Name:hf.GenCRL Value:true ECert:false} {Name:admin Value:true ECert:true} {Name:abac.init Value:true ECert:true} {Name:hf.Registrar.Roles Value:client ECert:false} {Name:hf.Registrar.Attributes Value:* ECert:false}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc42005e660}
+2018/08/07 08:40:45 [DEBUG] Entered runRegister
+2018/08/07 08:40:45 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/ca/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-admin Type:client Secret:adminpw MaxEnrollments:0 Affiliation:org2 Attributes:[{Name:hf.Revoker Value:true ECert:false} {Name:hf.GenCRL Value:true ECert:false} {Name:admin Value:true ECert:true} {Name:abac.init Value:true ECert:true} {Name:hf.Registrar.Roles Value:client ECert:false} {Name:hf.Registrar.Attributes Value:* ECert:false}] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc42005e660}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc42005e6c0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4201a5400 DummyKeystore:<nil>}
+2018/08/07 08:40:45 [INFO] TLS Enabled
+2018/08/07 08:40:45 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:45 [DEBUG] Client Cert File: 
+2018/08/07 08:40:45 [DEBUG] Client Key File: 
+2018/08/07 08:40:45 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:45 [DEBUG] Loading identity: keyFile=/data/orgs/org2/ca/msp/keystore/key.pem, certFile=/data/orgs/org2/ca/msp/signcerts/cert.pem
+2018/08/07 08:40:45 [DEBUG] No credential found at /data/orgs/org2/ca/msp/user/SignerConfig: open /data/orgs/org2/ca/msp/user/SignerConfig: no such file or directory
+2018/08/07 08:40:45 [DEBUG] No Idemix credential found at /data/orgs/org2/ca/msp/user/SignerConfig
+2018/08/07 08:40:45 [DEBUG] Register { Name:org2-admin Type:client Secret:**** MaxEnrollments:0 Affiliation:org2 Attributes:[{hf.Revoker true false} {hf.GenCRL true false} {admin true true} {abac.init true true} {hf.Registrar.Roles client false} {hf.Registrar.Attributes * false}] CAName:  }
+2018/08/07 08:40:45 [DEBUG] Adding token-based authorization header
+2018/08/07 08:40:45 [DEBUG] Sending request
+POST https://org2-ca:7054/register
+{"id":"org2-admin","type":"client","secret":"adminpw","affiliation":"org2","attrs":[{"name":"hf.Revoker","value":"true"},{"name":"hf.GenCRL","value":"true"},{"name":"admin","value":"true","ecert":true},{"name":"abac.init","value":"true","ecert":true},{"name":"hf.Registrar.Roles","value":"client"},{"name":"hf.Registrar.Attributes","value":"*"}]}
+2018/08/07 08:40:45 [DEBUG] Received response
+statusCode=500 (500 Internal Server Error)
+Error: Response from server: Error Code: 0 - Registration of 'org2-admin' failed: Identity 'org2-admin' is already registered
+
+##### 2018-08-07 08:40:45 Registering org2-peer0 with org2-ca
+2018/08/07 08:40:45 [DEBUG] Home directory: /data/orgs/org2/ca
+2018/08/07 08:40:45 [INFO] Configuration file location: /data/orgs/org2/ca/fabric-ca-client-config.yaml
+2018/08/07 08:40:45 [DEBUG] Checking for enrollment
+2018/08/07 08:40:45 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-peer0 Type:peer Secret:peerpw MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200be600}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200be660 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200c8f20 DummyKeystore:<nil>}
+2018/08/07 08:40:45 [INFO] TLS Enabled
+2018/08/07 08:40:45 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:45 [DEBUG] Client Cert File: 
+2018/08/07 08:40:45 [DEBUG] Client Key File: 
+2018/08/07 08:40:45 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:45 [DEBUG] Client configuration settings: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/ca/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-peer0 Type:peer Secret:peerpw MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200be600}
+2018/08/07 08:40:45 [DEBUG] Entered runRegister
+2018/08/07 08:40:45 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/ca/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name:org2-peer0 Type:peer Secret:peerpw MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc4200be600}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4200be660 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:45 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4200c8f20 DummyKeystore:<nil>}
+2018/08/07 08:40:45 [INFO] TLS Enabled
+2018/08/07 08:40:45 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:45 [DEBUG] Client Cert File: 
+2018/08/07 08:40:45 [DEBUG] Client Key File: 
+2018/08/07 08:40:45 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:46 [DEBUG] Loading identity: keyFile=/data/orgs/org2/ca/msp/keystore/key.pem, certFile=/data/orgs/org2/ca/msp/signcerts/cert.pem
+2018/08/07 08:40:46 [DEBUG] No credential found at /data/orgs/org2/ca/msp/user/SignerConfig: open /data/orgs/org2/ca/msp/user/SignerConfig: no such file or directory
+2018/08/07 08:40:46 [DEBUG] No Idemix credential found at /data/orgs/org2/ca/msp/user/SignerConfig
+2018/08/07 08:40:46 [DEBUG] Register { Name:org2-peer0 Type:peer Secret:**** MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:  }
+2018/08/07 08:40:46 [DEBUG] Adding token-based authorization header
+2018/08/07 08:40:46 [DEBUG] Sending request
+POST https://org2-ca:7054/register
+{"id":"org2-peer0","type":"peer","secret":"peerpw","affiliation":"org2"}
+2018/08/07 08:40:46 [DEBUG] Received response
+statusCode=500 (500 Internal Server Error)
+Error: Response from server: Error Code: 0 - Registration of 'org2-peer0' failed: Identity 'org2-peer0' is already registered
+
+##### 2018-08-07 08:40:46 ***************************** MSP *******************************
+2018/08/07 08:40:46 [DEBUG] Home directory: /data/orgs/org2/ca
+2018/08/07 08:40:46 [INFO] Configuration file location: /data/orgs/org2/ca/fabric-ca-client-config.yaml
+2018/08/07 08:40:46 [DEBUG] Client configuration settings: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc42019c0f0}
+2018/08/07 08:40:46 [DEBUG] Entered runGetCACert
+2018/08/07 08:40:46 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:/data/orgs/org2/msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin-ca Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc42019c0f0}
+2018/08/07 08:40:46 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc42019c150 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:46 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc420197fc0 DummyKeystore:<nil>}
+2018/08/07 08:40:46 [INFO] TLS Enabled
+2018/08/07 08:40:46 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:46 [DEBUG] Client Cert File: 
+2018/08/07 08:40:46 [DEBUG] Client Key File: 
+2018/08/07 08:40:46 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:46 [DEBUG] Sending request
+POST https://org2-ca:7054/cainfo
+{}
+2018/08/07 08:40:46 [DEBUG] Received response
+statusCode=200 (200 OK)
+2018/08/07 08:40:46 [DEBUG] Response body result: map[CAName: CAChain:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNCVENDQWF1Z0F3SUJBZ0lVY1dKU1R3Sm94aVZmamdKelRlZVU1Mjgrd2o4d0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3lMV05oCk1CNFhEVEU0TURnd056QTNOVGt3TUZvWERUTXpNRGd3TXpBM05Ua3dNRm93WHpFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFUApNQTBHQTFVRUN4TUdSbUZpY21sak1SQXdEZ1lEVlFRREV3ZHZjbWN5TFdOaE1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUVDK1BBUXFRSmxlU2hzV2puZG9uV2svdG5UVHg0OTFQQUFDSWpFVmlPUDZSWlFkeloKdDZSVUtRUjlCNjFhWEp2TU1YblFEOFNvT0V6a1E3M1VMVUNDeTZORk1FTXdEZ1lEVlIwUEFRSC9CQVFEQWdFRwpNQklHQTFVZEV3RUIvd1FJTUFZQkFmOENBUUV3SFFZRFZSME9CQllFRk5SeEpxK2JPWUx0TWJ3ZzFtYnRlVUFLClBsdmRNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJUURaL3NYbEhDOTEvcjlKa3FsUUtPemZXaFBzSUYxUzNnNTQKb3pYV0FqSlJWUUlnUjRaRTlxN3hvem92eFNvNHBQTjRiVXcrYVhSWlp3cjZvc1NZNkVWY1psND0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo= Version:1.2.0-stable]
+2018/08/07 08:40:46 [INFO] Stored root CA certificate at /data/orgs/org2/msp/cacerts/org2-ca-7054.pem
+********************* LOG IN ADMIN ********************
+Enrolling admin 'org2-admin' with org2-ca ...
+2018/08/07 08:40:46 [DEBUG] Home directory: /data/orgs/org2/msp/user/admin
+2018/08/07 08:40:46 [INFO] Created a default configuration file at /data/orgs/org2/msp/user/admin/fabric-ca-client-config.yaml
+2018/08/07 08:40:46 [DEBUG] Client configuration settings: &{URL:https://org2-admin:adminpw@org2-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name: Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:<nil> Type:x509  } CSR:{CN:org2-admin Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420184870}
+2018/08/07 08:40:46 [DEBUG] Entered runEnroll
+2018/08/07 08:40:46 [DEBUG] Enrolling { Name:org2-admin Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:&{org2-admin [{US North Carolina  Hyperledger Fabric }] [612cf4d37631] <nil> <nil> } Type:x509  }
+2018/08/07 08:40:46 [DEBUG] Initializing client with config: &{URL:https://org2-ca:7054 MSPDir:msp TLS:{Enabled:true CertFiles:[/data/org2-root-ca-cert.pem] Client:{KeyFile: CertFile:}} Enrollment:{ Name:org2-admin Secret:**** CAName: AttrReqs:[] Profile: Label: CSR:&{org2-admin [{US North Carolina  Hyperledger Fabric }] [612cf4d37631] <nil> <nil> } Type:x509  } CSR:{CN:org2-admin Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:} ID:{Name: Type:client Secret: MaxEnrollments:0 Affiliation:org2 Attributes:[] CAName:} Revoke:{Name: Serial: AKI: Reason: CAName: GenCRL:false} CAInfo:{CAName:} CAName: CSP:0xc420184870}
+2018/08/07 08:40:46 [DEBUG] Initializing BCCSP: &{ProviderName:SW SwOpts:0xc4201848d0 PluginOpts:<nil> Pkcs11Opts:<nil>}
+2018/08/07 08:40:46 [DEBUG] Initializing BCCSP with software options &{SecLevel:256 HashFamily:SHA2 Ephemeral:false FileKeystore:0xc4204e0690 DummyKeystore:<nil>}
+2018/08/07 08:40:46 [INFO] TLS Enabled
+2018/08/07 08:40:46 [DEBUG] CA Files: [/data/org2-root-ca-cert.pem]
+2018/08/07 08:40:46 [DEBUG] Client Cert File: 
+2018/08/07 08:40:46 [DEBUG] Client Key File: 
+2018/08/07 08:40:46 [DEBUG] Client TLS certificate and/or key file not provided
+2018/08/07 08:40:46 [DEBUG] GenCSR &{CN:org2-admin Names:[{C:US ST:North Carolina L: O:Hyperledger OU:Fabric SerialNumber:}] Hosts:[612cf4d37631] KeyRequest:<nil> CA:<nil> SerialNumber:}
+2018/08/07 08:40:46 [INFO] generating key: &{A:ecdsa S:256}
+2018/08/07 08:40:46 [DEBUG] generate key from request: algo=ecdsa, size=256
+2018/08/07 08:40:46 [INFO] encoded CSR
+2018/08/07 08:40:46 [DEBUG] Sending request
+POST https://org2-ca:7054/enroll
+{"hosts":["612cf4d37631"],"certificate_request":"-----BEGIN CERTIFICATE REQUEST-----\nMIIBRzCB7gIBADBiMQswCQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xp\nbmExFDASBgNVBAoTC0h5cGVybGVkZ2VyMQ8wDQYDVQQLEwZGYWJyaWMxEzARBgNV\nBAMTCm9yZzItYWRtaW4wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR0G8Pkj7WA\nsvzvS8MN/2uf+TTpvO04MkUEkow/XrfbAPJJI3vhh7uiAns1QeyvvJyPydL33zA+\nX6ZW0BcLuNXEoCowKAYJKoZIhvcNAQkOMRswGTAXBgNVHREEEDAOggw2MTJjZjRk\nMzc2MzEwCgYIKoZIzj0EAwIDSAAwRQIhAJ5WJUdf6Nby0SQ7WRIrbmPnqm01FEWk\nyxpmqxkjFILiAiBTohjrSN4KZf9AXCQELc3j7IeZj2Be/Tzxx0Hz2w3hvQ==\n-----END CERTIFICATE REQUEST-----\n","profile":"","crl_override":"","label":"","NotBefore":"0001-01-01T00:00:00Z","NotAfter":"0001-01-01T00:00:00Z","CAName":""}
+2018/08/07 08:40:46 [DEBUG] Received response
+statusCode=201 (201 Created)
+2018/08/07 08:40:46 [DEBUG] Response body result: map[Cert:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMwVENDQW5pZ0F3SUJBZ0lVV3kvNHNVcXdTc1VxUXllUzdrNEtRNFhzL1J3d0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3lMV05oCk1CNFhEVEU0TURnd056QTRNell3TUZvWERURTVNRGd3TnpBNE5ERXdNRm93YnpFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFYwpNQTBHQTFVRUN4TUdZMnhwWlc1ME1Bc0dBMVVFQ3hNRWIzSm5NakVUTUJFR0ExVUVBeE1LYjNKbk1pMWhaRzFwCmJqQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VIQTBJQUJIUWJ3K1NQdFlDeS9POUx3dzMvYTUvNU5PbTgKN1RneVJRU1NqRDlldDlzQThra2plK0dIdTZJQ2V6VkI3Sys4bkkvSjB2ZmZNRDVmcGxiUUZ3dTQxY1NqZ2dFQQpNSUg5TUE0R0ExVWREd0VCL3dRRUF3SUhnREFNQmdOVkhSTUJBZjhFQWpBQU1CMEdBMVVkRGdRV0JCVFZFd2hhCm9oV08ySGsxQ0RSWEZud2M1ZFNyQ0RBZkJnTlZIU01FR0RBV2dCVFVjU2F2bXptQzdURzhJTlptN1hsQUNqNWIKM1RBWEJnTlZIUkVFRURBT2dndzJNVEpqWmpSa016YzJNekV3Z1lNR0NDb0RCQVVHQndnQkJIZDdJbUYwZEhKegpJanA3SW1GaVlXTXVhVzVwZENJNkluUnlkV1VpTENKaFpHMXBiaUk2SW5SeWRXVWlMQ0pvWmk1QlptWnBiR2xoCmRHbHZiaUk2SW05eVp6SWlMQ0pvWmk1RmJuSnZiR3h0Wlc1MFNVUWlPaUp2Y21jeUxXRmtiV2x1SWl3aWFHWXUKVkhsd1pTSTZJbU5zYVdWdWRDSjlmVEFLQmdncWhrak9QUVFEQWdOSEFEQkVBaUJNb0FvTlI2REt1WGNCWkhNegp3MHN6WVQ2Q2o4bVpnUkhhQ1grY3ZhbGdYd0lnSVozM3ZPS3lZeXI0UWxmQ3NUY29TeDM3VUtXNnBvUVNMUkxGCmZmUVVTeUU9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K ServerInfo:map[CAName: CAChain:LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNCVENDQWF1Z0F3SUJBZ0lVY1dKU1R3Sm94aVZmamdKelRlZVU1Mjgrd2o4d0NnWUlLb1pJemowRUF3SXcKWHpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJBd0RnWURWUVFERXdkdmNtY3lMV05oCk1CNFhEVEU0TURnd056QTNOVGt3TUZvWERUTXpNRGd3TXpBM05Ua3dNRm93WHpFTE1Ba0dBMVVFQmhNQ1ZWTXgKRnpBVkJnTlZCQWdURGs1dmNuUm9JRU5oY205c2FXNWhNUlF3RWdZRFZRUUtFd3RJZVhCbGNteGxaR2RsY2pFUApNQTBHQTFVRUN4TUdSbUZpY21sak1SQXdEZ1lEVlFRREV3ZHZjbWN5TFdOaE1Ga3dFd1lIS29aSXpqMENBUVlJCktvWkl6ajBEQVFjRFFnQUVDK1BBUXFRSmxlU2hzV2puZG9uV2svdG5UVHg0OTFQQUFDSWpFVmlPUDZSWlFkeloKdDZSVUtRUjlCNjFhWEp2TU1YblFEOFNvT0V6a1E3M1VMVUNDeTZORk1FTXdEZ1lEVlIwUEFRSC9CQVFEQWdFRwpNQklHQTFVZEV3RUIvd1FJTUFZQkFmOENBUUV3SFFZRFZSME9CQllFRk5SeEpxK2JPWUx0TWJ3ZzFtYnRlVUFLClBsdmRNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJUURaL3NYbEhDOTEvcjlKa3FsUUtPemZXaFBzSUYxUzNnNTQKb3pYV0FqSlJWUUlnUjRaRTlxN3hvem92eFNvNHBQTjRiVXcrYVhSWlp3cjZvc1NZNkVWY1psND0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo= Version:]]
+2018/08/07 08:40:46 [DEBUG] newEnrollmentResponse org2-admin
+2018/08/07 08:40:46 [INFO] Stored client certificate at /data/orgs/org2/msp/user/admin/msp/signcerts/cert.pem
+2018/08/07 08:40:46 [INFO] Stored root CA certificate at /data/orgs/org2/msp/user/admin/msp/cacerts/org2-ca-7054.pem
+ENROLLED AS: org2-admin

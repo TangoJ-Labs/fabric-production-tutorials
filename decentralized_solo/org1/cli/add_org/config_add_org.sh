@@ -40,7 +40,7 @@ configtxgen -channelID mychannel -printOrg org2 > org2.json
 # pass org2.json to common folder for use by authorizing org(s)
 cp org2.json /data/org2.json
 
-# MANUALLY TRANSFER JSON TO org1 directory with "add org" scripts
+#!!!!!!! MANUALLY TRANSFER JSON !!!!!!! to org1 directory with "add org" scripts
 
 
 #######################################################################
@@ -80,6 +80,7 @@ docker exec -it org2-cli bash
 
 echo "************************ CHECK CRYPTO ***************************"
 # Copy over the ORDERER CA CERT (or TLSCACERT, either one - should be the same)
+#!!!!!!!!! MANUALLY TRANSFER ORG 1 ROOT CA CERT !!!!!!!!! to org2 common dir
 
 echo "============= Getting org2 onto the network =============="
 # Move to the directory mapped to the local dir with the files needed
@@ -115,11 +116,11 @@ docker exec -it org1-cli bash
 #setOrdererGlobals
 source /etc/hyperledger/fabric/setup/.env
 
-peer chaincode install -n mycc -v 5.0 -l golang -p github.com/hyperledger/fabric-samples/chaincode/abac/go
+peer chaincode install -n mycc -v 2.0 -l golang -p github.com/hyperledger/fabric-samples/chaincode/abac/go
 echo "========= org1 peer chaincode installed ========= "
 
 # USE ".member" NOT ".peer" - need to figure out NodeOUs to use ".peer", ".client", etc
-peer chaincode upgrade -C mychannel -n mycc -v 5.0 -c '{"Args":["init","a","5000","b","8000"]}' -P "OR('org1MSP.member','org2MSP.member')" $ORDERER_CONN_ARGS
+peer chaincode upgrade -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","5000","b","8000"]}' -P "OR('org1MSP.member','org2MSP.member')" $ORDERER_CONN_ARGS
 
 # peer chaincode instantiate -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR('org1MSP.member')" $ORDERER_CONN_ARGS
 echo "========= org1 peer chaincode updated ========= "
@@ -152,6 +153,8 @@ peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
 peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' $ORDERER_CONN_ARGS
 
 
+
+
 # Get tls certs for the needed peers
 fabric-ca-client enroll -d --enrollment.profile tls -u https://org2-admin:adminpw@org1-ca:7054 --tls.certfiles /data/org1-ca-cert.pem -M /tmp/tls --csr.hosts org1-peer0
 
@@ -160,14 +163,14 @@ fabric-ca-client enroll -d --enrollment.profile tls -u https://org2-admin:adminp
 peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --clientauth --keyfile /data/tls/org1-peer0-tls-client.key --certfile /data/tls/org1-peer0-tls-client.crt --peerAddresses org2-peer0 --clientauth --keyfile /data/tls/org2-peer0-tls-client.key --certfile /data/tls/org2-peer0-tls-client.crt $ORDERER_CA_ARGS
 
 # Best outcome:
-peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/org1-ca-cert.pem --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/org2-ca-cert.pem $ORDERER_CA_ARGS
+peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/org1-ca-cert.pem --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/org2-root-ca-cert.pem $ORDERER_CA_ARGS
 # Still gives this error:
 Error: error getting channel (mychannel) orderer endpoint: error endorsing GetConfigBlock: rpc error: code = Unknown desc = access denied: channel [] creator org [org2MSP]
 
 
 peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/tls/org1-peer0-client.crt --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/tls/org2-peer0-tls-client.crt $ORDERER_CA_ARGS
 
-peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/org1-ca-cert.pem --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/org2-ca-cert.pem $ORDERER_CA_ARGS
+peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/org1-ca-cert.pem --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/org2-root-ca-cert.pem $ORDERER_CA_ARGS
 
 
 # Query chaincode on org2-peer0, check if the result is 80
@@ -184,6 +187,6 @@ docker exec -it org1-cli bash
 source /etc/hyperledger/fabric/setup/.env
 
 
-# peer channel fetch 1 /data/genesis.block -c mychannel -o org1-orderer:7050 --tls --cafile /data/org2-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt
+# peer channel fetch 1 /data/genesis.block -c mychannel -o org1-orderer:7050 --tls --cafile /data/org2-root-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt
 # peer channel fetch config /tmp/config_block.pb -c mychannel -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt
 # peer channel fetch config /tmp/config_block.pb -c mychannel -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt
