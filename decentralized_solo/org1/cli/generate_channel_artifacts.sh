@@ -12,6 +12,11 @@ fi
 ### CORE_PEER_LOCALMSPID
 ### CORE_PEER_MSPCONFIGPATH
 
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric
+export CORE_PEER_LOCALMSPID=org1MSP
+
+MATERIALDIR=$FABRIC_CFG_PATH
+# MATERIALDIR=/data
 
 # Copy the configtx.yaml file into the home directory
 cp $FABRIC_CFG_PATH/setup/configtx.yaml $FABRIC_CFG_PATH/configtx.yaml
@@ -21,26 +26,26 @@ if [ "$?" -ne 0 ]; then
   fatal "configtxgen tool not found. exiting"
 fi
 
-log "Generating orderer genesis block at /data/genesis.block"
+echo "Generating orderer genesis block at /data/genesis.block"
 # Note: For some unknown reason (at least for now) the block file can't be
 # named orderer.genesis.block or the orderer will fail to launch!
-configtxgen -profile OrgsOrdererGenesis -outputBlock /data/genesis.block
+configtxgen -profile OrgsOrdererGenesis -outputBlock $MATERIALDIR/genesis.block
 if [ "$?" -ne 0 ]; then
   fatal "Failed to generate orderer genesis block"
 fi
 
-log "Generating channel configuration transaction at /data/channel.tx"
-configtxgen -profile OrgsChannel -outputCreateChannelTx /data/channel.tx \
+echo "Generating channel configuration transaction at /data/channel.tx"
+configtxgen -profile OrgsChannel -outputCreateChannelTx $MATERIALDIR/channel.tx \
             -channelID mychannel
 if [ "$?" -ne 0 ]; then
   fatal "Failed to generate channel configuration transaction"
 fi
 
-log "Generating anchor peer update transaction for org1 at /data/orgs/org1/anchors.tx"
-configtxgen -profile OrgsChannel -outputAnchorPeersUpdate /data/orgs/org1/anchors.tx \
+echo "Generating anchor peer update transaction for org1 at /data/orgs/org1/anchors.tx"
+configtxgen -profile OrgsChannel -outputAnchorPeersUpdate $MATERIALDIR/org1-anchors.tx \
             -channelID mychannel -asOrg org1
 if [ "$?" -ne 0 ]; then
   fatal "Failed to generate anchor peer update for org1"
 fi
 
-log "Finished building channel artifacts"
+echo "Finished building channel artifacts"

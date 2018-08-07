@@ -21,6 +21,6 @@ services:
       - ./:/etc/hyperledger/fabric-ca/setup
       # This directory map allows the CLI environment to access the passed CA crypto material:
       - ./../data:/data
-    command: /bin/bash -c '/etc/hyperledger/fabric-ca/setup/ca.sh 2>&1 | tee /data/logs/ca.log; sleep 99999'
+    command: /bin/bash -c '/etc/hyperledger/fabric-ca/setup/ca_auto.sh 2>&1 | tee /data/logs/ca.log; sleep 99999'
     networks:
       - decentralized_solo

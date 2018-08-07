@@ -31,7 +31,10 @@ function log {
 
 # Generate server TLS cert and key pair for the peer
 fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer0:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer0
-# Copy the TLS key and cert locally
+
+#------------------------------------------------------------------------------------
+
+
 mkdir -p $FABRIC_CA_CLIENT_HOME/tls
 cp /tmp/tls/signcerts/* $CORE_PEER_TLS_CERT_FILE
 cp /tmp/tls/keystore/* $CORE_PEER_TLS_KEY_FILE
@@ -40,16 +43,15 @@ rm -rf /tmp/tls
 
 # Generate client TLS cert and key pair for the peer
 fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer0:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer0
-# Copy the TLS key and cert to the common directory
+# Copy the TLS key and cert to the common tls dir
 mkdir /data/tls || true
 cp /tmp/tls/signcerts/* $CORE_PEER_TLS_CLIENTCERT_FILE
 cp /tmp/tls/keystore/* $CORE_PEER_TLS_CLIENTKEY_FILE
 rm -rf /tmp/tls
 
-
-# Generate client TLS cert and key pair for the peer CLI
+# Generate client TLS cert and key pair for the peer
 fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer0:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer0
-# Copy the TLS key and cert to the common directory
+# Copy the TLS key and cert to the common tls dir
 mkdir /data/tls || true
 cp /tmp/tls/signcerts/* /data/tls/org1-peer0-cli-client.crt
 cp /tmp/tls/keystore/* /data/tls/org1-peer0-cli-client.key
@@ -72,7 +74,34 @@ fi
 mkdir -p $CORE_PEER_MSPCONFIGPATH/admincerts
 cp /data/orgs/org1/msp/admincerts/cert.pem $CORE_PEER_MSPCONFIGPATH/admincerts
 
+
+#------------------------------------------------------------------------------------
+
+# # Copy the TLS key and cert to the local tls dir
+# . /data/tls_add_crtkey.sh -d -p /tmp/tls -c $CORE_PEER_TLS_CERT_FILE -k $CORE_PEER_TLS_KEY_FILE
+
+# # Generate client TLS cert and key pair for the peer
+# fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer0:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer0
+# # Copy the TLS key and cert to the common tls dir
+# . /data/tls_add_crtkey.sh -d -p /tmp/tls -c $CORE_PEER_TLS_CLIENTCERT_FILE -k $CORE_PEER_TLS_CLIENTKEY_FILE
+
+# # Generate client TLS cert and key pair for the peer
+# fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer0:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer0
+# # Copy the TLS key and cert to the common tls dir
+# . /data/tls_add_crtkey.sh -d -p /tmp/tls -c /data/tls/org1-peer0-cli-client.crt -k /data/tls/org1-peer0-cli-client.key
+
+
+# # Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
+# fabric-ca-client enroll -d -u https://org1-peer0:peerpw@org1-ca:7054 -M $CORE_PEER_MSPCONFIGPATH
+
+# # Copy the admincert to the admin-ca msp tree
+# . /data/msp_add_admincert.sh -c /data/org1-admin-cert.pem -m $CORE_PEER_MSPCONFIGPATH
+
+# # Copy the tlscacert to the orderer msp tree
+# . /data/msp_add_tlscacert.sh -c $CORE_PEER_MSPCONFIGPATH/cacerts/* -m $CORE_PEER_MSPCONFIGPATH
+
+
 # Start the peer
 log "Starting peer 'org1-peer0' with MSP at '$CORE_PEER_MSPCONFIGPATH'"
-env | grep CORE
+# env | grep CORE
 peer node start

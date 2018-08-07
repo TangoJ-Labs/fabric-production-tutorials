@@ -14,6 +14,8 @@ RUN_FAIL_FILE=/data/logs/run.fail
 
 QUERY_TIMEOUT=15
 
+MATERIALDIR=/etc/hyperledger/fabric
+
 done=false
 function finish {
    if [ "$done" = true ]; then
@@ -86,13 +88,15 @@ log "*************************** LOAD VARS **************************"
 source /etc/hyperledger/fabric/setup/.env
 
 log "********************* Admin Login ********************"
-source /etc/hyperledger/fabric/setup/login-admin.sh
+. /etc/hyperledger/fabric/setup/login-admin.sh
+# . /etc/hyperledger/fabric/setup/switchToAdmin.sh
 
 
 # Create the channel
 log "********************** peer channel create *********************"
 logr "Creating channel 'mychannel' on org1-orderer ..."
-peer channel create --logging-level=DEBUG -c mychannel -f /data/channel.tx $ORDERER_CONN_ARGS
+# peer channel create --logging-level=DEBUG -c mychannel -f $FABRIC_CFG_PATH/channel.tx $ORDERER_CONN_ARGS
+peer channel create --logging-level=DEBUG -c mychannel -f $MATERIALDIR/channel.tx $ORDERER_CONN_ARGS
 
 
 # Peers join the channel
@@ -120,7 +124,8 @@ done
 # Update the anchor peers (FOR ANCHOR PEERS ONLY)
 log "********************** peer channel update *********************"
 logr "Updating anchor peers for org1-peer0 ..."
-peer channel update -c mychannel -f /data/orgs/org1/anchors.tx $ORDERER_CONN_ARGS
+# peer channel update -c mychannel -f $FABRIC_CFG_PATH/org1-anchors.tx $ORDERER_CONN_ARGS
+peer channel update -c mychannel -f $MATERIALDIR/org1-anchors.tx $ORDERER_CONN_ARGS
 
 # Install chaincode on peer
 log "******************** peer chaincode install ********************"
@@ -136,6 +141,7 @@ peer chaincode instantiate -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","
 # Query chaincode
 log "********************* peer chaincode query *********************"
 chaincodeQuery 100
+# peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
 
 # Invoke chaincode on the 1st peer of the 1st org
 log "******************** peer chaincode inkoke *********************"

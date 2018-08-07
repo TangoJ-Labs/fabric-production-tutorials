@@ -75,12 +75,130 @@ TLS file paris for mutual TLS communication
 [reflection]: https://i.ytimg.com/vi/Y6d-fRMJObI/maxresdefault.jpg "Reflection Attack"
 
 
+<br>
+<br>
+<br>
 
+# Production MSP Structure - Nodes (Servers / Containers) Separated (Draft)
+
+### CA
+<pre style="line-height: 0.7;">
+FABRIC_CA_SERVER_HOME (org1-ca)
+├── fabric-ca-server.db
+├── fabric-ca-server-config.yaml
+├── IssuerPublicKey
+├── IssuerRevocationPublicKey
+├── ca-cert.pem
+└── msp
+    └── keystore
+        ├── {...}_sk
+        ├── IssuerRevocationPrivateKey
+        └── IssuerSecretKey
+</pre>
+<br>
+
+### CLI
+<pre style="line-height: 0.7;">
+FABRIC_CA_CLIENT_HOME (org1-cli)
+├── org1
+│   ├── ca
+│   │   └── msp                                 <--- from org1-admin-ca enroll
+│   ├── fabric-ca-client-config.yaml
+│   ├── msp                                     <--- from "fabric-ca-client getcacert"
+│   │   ├── admincerts                          <--- MANUAL: copy org1-admin cert
+│   │   ├── cacerts                             <--- from "fabric-ca-client getcacert"
+│   │   ├── keystore
+│   │   ├── signcerts
+│   │   ├── tlscacerts                          <--- MANUAL: copy cacerts dir contents
+│   │   └── user
+│   │       ├── org1-admin
+│   │       │   ├── fabric-ca-client-config.yaml
+│   │       │   └── msp
+│   │       │       ├── admincerts              <--- MANUAL: copy org1-admin cert (configtxgen uses CORE_PEER_MSPCONFIGPATH)
+│   │       │       ├── cacerts                 <--- matches Root CA Cert
+│   │       │       ├── keystore                <--- org1-admin private key
+│   │       │       ├── signcerts               <--- org1-admin public cert
+│   │       │       └── user                    <--- empty (auto-created)
+│   │       └── org1-user-test
+│   │           ├── fabric-ca-client-config.yaml
+│   │           └── msp
+│   │               ├── admincerts              <--- MANUAL: add an org admin cert
+│   │               ├── cacerts                 <--- matches Root CA Cert
+│   │               ├── keystore                <--- org1-user-test private key
+│   │               ├── signcerts               <--- org1-user-test public cert
+│   │               └── user                    <--- empty (auto-created)
+│   └── tls
+│       
+└── org2
+    ├── ca
+    └── tls
+</pre>
+<br>
+
+### ORDERER
+<pre style="line-height: 0.7;">
+FABRIC_CA_CLIENT_HOME (org1-orderer)
+├── configtx.yaml
+├── core.yaml
+├── orderer.yaml
+├── msp
+│   ├── admincerts      <--- add an org admin cert (for orderer start)
+│   ├── cacerts
+│   ├── config.yaml
+│   ├── keystore
+│   ├── signcerts
+│   ├── tlscacerts      ?<--- copy cacerts dir contents
+│   └── tlsintermediatecerts
+└── tls                 ?<--- add tls crt and key (for orderer start)
+</pre>
+<br>
+
+### PEER
+<pre style="line-height: 0.7;">
+FABRIC_CA_CLIENT_HOME (org1-peer0)
+├── fabric-ca-client-config.yaml
+├── msp
+│   ├── admincerts      <--- add an org admin cert (for peer start)
+│   ├── cacerts
+│   ├── config.yaml
+│   ├── keystore
+│   ├── signcerts
+│   ├── tlscacerts      <--- copy cacerts dir contents
+│   └── user
+└── tls                 <--- add tls crt and key (for peer start)
+</pre>
+<br>
+
+### CLIENT
+<pre style="line-height: 0.7;">
+FABRIC_CA_CLIENT_HOME (org1-client1)
+├── org1-user1
+│   ├── fabric-ca-client-config.yaml
+│   ├── msp
+│   │   ├── cacerts
+│   │   ├── keystore
+│   │   ├── signcerts
+│   │   └── user
+│   └── tls
+└── org1-user2
+    ├── fabric-ca-client-config.yaml
+    ├── msp
+    │   ├── cacerts
+    │   ├── keystore
+    │   ├── signcerts
+    │   └── user
+    └── tls
+</pre>
+
+
+<br>
+<br>
+<br>
 
 
 ### First-Network MSP Directories:
 
-<pre>
+<pre style="line-height: 0.7;">
 .
 └── org1
    ├── ca
@@ -133,7 +251,7 @@ TLS file paris for mutual TLS communication
 
 ### First-Network MSP Structure:
 
-<pre>
+<pre style="line-height: 0.7;">
 .
 └── org1
    ├── ca
@@ -225,7 +343,7 @@ TLS file paris for mutual TLS communication
 
 ### First-Network MSP Structure w/ Detail:
 
-<pre>
+<pre style="line-height: 0.7;">
 .
 ├── ordererOrganizations
 │   └── example.com
@@ -360,115 +478,4 @@ TLS file paris for mutual TLS communication
                    ├── ca.crt                               <--- CERT: MII...w== -- Root TLS CA Cert
                    ├── client.crt                           <--- CERT: MII...f0= -- User TLS Cert: User1
                    └── client.key                           <---  KEY: MIG...1fm -- User TLS Cert priv key: User1
-</pre>
-
-
-<br>
-<br>
-<br>
-
-# Production MSP Structure - Nodes (Servers / Containers) Separated (Draft)
-
-### CA
-<pre style="line-height: 0.7;">
-FABRIC_CA_SERVER_HOME (org1-ca)
-├── fabric-ca-server.db
-├── fabric-ca-server-config.yaml
-├── IssuerPublicKey
-├── IssuerRevocationPublicKey
-├── ca-cert.pem
-└── msp
-    └── keystore
-        ├── {...}_sk
-        ├── IssuerRevocationPrivateKey
-        └── IssuerSecretKey
-</pre>
-<br>
-
-### CLI
-<pre>
-FABRIC_CA_CLIENT_HOME (org1-cli)
-├── org1
-│   ├── fabric-ca-client-config.yaml
-│   ├── msp                                     <--- from org1-admin-ca enroll
-│   │   ├── cacerts
-│   │   ├── keystore
-│   │   ├── signcerts
-│   │   └── user
-│   │       ├── org1-admin
-│   │       │   ├── fabric-ca-client-config.yaml
-│   │       │   └── msp
-│   │       │       ├── cacerts
-│   │       │       ├── keystore
-│   │       │       ├── signcerts
-│   │       │       └── user                    <--- empty
-│   │       └── org1-user-test
-│   │           ├── fabric-ca-client-config.yaml
-│   │           └── msp
-│   │               ├── admincerts
-│   │               ├── cacerts
-│   │               ├── keystore
-│   │               ├── signcerts
-│   │               └── user                    <--- empty
-│   ├── orderers
-│   │   └── orderer
-│   │       └── tls
-│   ├── peers
-│   │   └── org1-peer0
-│   │       └── tls
-│   └── tls
-│       
-└── org2
-    ├── ca
-    └── tls
-</pre>
-<br>
-
-### ORDERER
-<pre>
-FABRIC_CA_CLIENT_HOME (org1-orderer)
-├── fabric-ca-client-config.yaml
-├── msp
-│   ├── cacerts
-│   ├── config.yaml
-│   ├── keystore
-│   ├── signcerts
-│   └── user
-└── tls
-</pre>
-<br>
-
-### PEER
-<pre>
-FABRIC_CA_CLIENT_HOME (org1-peer0)
-├── fabric-ca-client-config.yaml
-├── msp
-│   ├── cacerts
-│   ├── config.yaml
-│   ├── keystore
-│   ├── signcerts
-│   └── user
-└── tls
-</pre>
-<br>
-
-### CLIENT
-<pre>
-FABRIC_CA_CLIENT_HOME (org1-client1)
-├── org1-user1
-│   ├── fabric-ca-client-config.yaml
-│   ├── msp
-│   │   ├── cacerts
-│   │   ├── keystore
-│   │   ├── signcerts
-│   │   └── user
-│   └── tls
-└── org1-user2
-    ├── fabric-ca-client-config.yaml
-    ├── msp
-    │   ├── cacerts
-    │   ├── keystore
-    │   ├── signcerts
-    │   └── user
-    └── tls
 </pre>

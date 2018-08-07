@@ -69,9 +69,6 @@ NOTE: If you explore the container filesystem, a server cert and key are created
 >
 >**1.4) Copy the crypto material**
 >
->OPTIONAL: FULL MSP TREE
->>`$FABRIC_CA_SERVER_HOME/setup/msp.sh`
->
 >This will copy the Root CA certificate and associated private key to the common directory MSP tree.  Remember that this common directory MSP tree is for educational purposes and would not be created in a production environment.
 >
 >Copy the Root CA Cert ONLY to the common folder for production use.
