@@ -27,8 +27,8 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/data/org1-root-ca-cert.pem
       - CORE_PEER_TLS_CLIENTAUTHREQUIRED=true
       - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/data/org1-root-ca-cert.pem
-      - CORE_PEER_TLS_CLIENTCERT_FILE=/data/tls/org1-peer0-client.crt
-      - CORE_PEER_TLS_CLIENTKEY_FILE=/data/tls/org1-peer0-client.key
+      - CORE_PEER_TLS_CLIENTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.crt
+      - CORE_PEER_TLS_CLIENTKEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.key
       
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false

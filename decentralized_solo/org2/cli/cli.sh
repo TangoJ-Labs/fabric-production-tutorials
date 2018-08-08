@@ -23,16 +23,18 @@ function fatal {
    exit 1
 }
 
+MSPPARENTDIR=$FABRIC_CFG_PATH/orgs/org2
+# MSPPARENTDIR=/data/orgs/org2
 
 #######################################################################
 ################################ CA ADMIN #############################
-log "************************ ENROLL CA ADMIN ************************"
+log "*********************** ENROLL CA ADMIN ***********************"
 
 export FABRIC_CA_CLIENT_TLS_CERTFILES=/data/org2-root-ca-cert.pem
-export FABRIC_CA_CLIENT_HOME=/data/orgs/org2/ca #$FABRIC_CFG_PATH/orgs/org2/ca
-if [ ! -d $FABRIC_CA_CLIENT_HOME ]; then
-  mkdir -p $FABRIC_CA_CLIENT_HOME
-fi
+
+mkdir -p $MSPPARENTDIR/ca/org2-admin-ca
+export FABRIC_CA_CLIENT_HOME=$MSPPARENTDIR/ca/org2-admin-ca
+
 # Enroll the CA Admin using the bootstrap CA profile (used when setting up the CA service)
 fabric-ca-client enroll -d -u https://org2-admin-ca:adminpw@org2-ca:7054
 
@@ -51,10 +53,7 @@ fabric-ca-client enroll -d -u https://org2-admin-ca:adminpw@org2-ca:7054
 
 #######################################################################
 ############################## REGISTRATION ###########################
-log "************************** REGISTRATION *************************"
-
-MSPDIR=$FABRIC_CFG_PATH
-MSPDIR=/data
+log "************************* REGISTRATION ************************"
 
 log "Registering org2-orderer with org2-ca"
 fabric-ca-client register -d --id.name org2-orderer --id.secret ordererpw --id.type orderer
@@ -67,14 +66,18 @@ fabric-ca-client register -d --id.name org2-admin --id.secret adminpw --id.attrs
 log "Registering org2-peer0 with org2-ca"
 fabric-ca-client register -d --id.name org2-peer0 --id.secret peerpw --id.type peer
 
+# Generate client TLS cert and key pair for the peer commands
+fabric-ca-client enroll -d --enrollment.profile tls -u https://org2-peer0:peerpw@org2-ca:7054 -M /tmp/tls --csr.hosts org2-peer0
+# Copy the TLS key and cert to the common tls dir
+/data/tls_add_crtkey.sh -d -p /tmp/tls -c $FABRIC_CFG_PATH/tls/org2-peer0-cli-client.crt -k $FABRIC_CFG_PATH/tls/org2-peer0-cli-client.key
 
 #######################################################################
 ################################## MSP ################################
-log "***************************** MSP *******************************"
+log "***************************** MSP *****************************"
 
 # -M option is WHERE TO LOOK FOR CURRENT MSP DIR (for authorization) based on home at current FABRIC_CA_CLIENT_HOME
 # SAME AS THE ROOT CA CERT
-fabric-ca-client getcacert -d -u https://org2-ca:7054 -M $MSPDIR/orgs/org2/msp
+fabric-ca-client getcacert -d -u https://org2-ca:7054 -M $MSPPARENTDIR/msp
 
 # Creates inside MSP target:
 #.
@@ -86,7 +89,7 @@ fabric-ca-client getcacert -d -u https://org2-ca:7054 -M $MSPDIR/orgs/org2/msp
 #    └── user
 
 # Copy the tlscacert to the admin-ca msp tree
-/data/msp_add_tlscacert.sh -c $MSPDIR/orgs/org2/msp/cacerts/* -m $MSPDIR/orgs/org2/msp
+/data/msp_add_tlscacert.sh -c $MSPPARENTDIR/msp/cacerts/* -m $MSPPARENTDIR/msp
 
 # Enroll the ORG ADMIN and populate the admincerts directory
 ##NOTE: MUST RUN login-admin.sh with ". /" to capture env vars

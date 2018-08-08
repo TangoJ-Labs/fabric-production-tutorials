@@ -53,11 +53,14 @@ if [ "$MODE" == "delete" ]; then
     echo "DELETING HLF GENERATED RESOURCES"
     
     # DELETE FILES
-    # remove orderer block and other channel configuration transactions and certs
-    rm -rf channel-artifacts/*.block channel-artifacts/*.tx crypto-config ./org3-artifacts/crypto-config/ channel-artifacts/org3.json
-    # remove the docker-compose yaml file that was customized to the example
-    rm -f docker-compose-e2e.yaml
+    rm -rf org*/data/logs/*
+    rm -rf org*/data/orgs
+    rm -rf org*/data/tls
+    rm -rf org*/data/*.pem
+    rm -rf org*/data/*.json
+    rm -rf org*/data/*.block
 
-    # verify results
-    ls -l
+    rm -rf org*/cli/add_org/*.pem
+    rm -rf org*/cli/add_org/*.json
+    rm -rf org*/cli/add_org/*.block
 fi

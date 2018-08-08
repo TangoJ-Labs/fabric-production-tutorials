@@ -9,8 +9,8 @@ echo "********************* LOG IN ADMIN ********************"
 # If the admincerts folder already exists, the admin is already signed in
 # IF YOU ENROLL AGAIN THE CERT WILL CHANGE - COULD CAUSE CHANNEL UPDATE ISSUES
 
-# MSPDIR=$FABRIC_CFG_PATH/orgs/org2/msp
-MSPDIR=/data/orgs/org2/msp
+MSPDIR=$FABRIC_CFG_PATH/orgs/org2/msp
+# MSPDIR=/data/orgs/org2/msp
 
 # export FABRIC_CA_CLIENT_HOME=$MSPDIR/user/org2-admin
 export FABRIC_CA_CLIENT_HOME=$MSPDIR/user/admin
@@ -33,18 +33,6 @@ if [ ! -d $FABRIC_CA_CLIENT_HOME ]; then
     # Copy the admin cert to the msp dir
     /data/msp_add_admincert.sh -c $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem -m $MSPDIR
 
-
-    #----------------------------------------------------------------
-
-    # # Copy the admin cert to the admin dir
-    # mkdir -p $FABRIC_CA_CLIENT_HOME/msp/admincerts
-    # cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/admincerts/cert.pem
-
-    # # Copy the admin cert to the msp dir
-    # mkdir -p $MSPDIR/admincerts
-    # cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $MSPDIR/admincerts/cert.pem
-
-    #----------------------------------------------------------------
 
     # # Copy the tlscacert to the admin-ca msp tree
     # /data/msp_add_tlscacert.sh -c $FABRIC_CA_CLIENT_HOME/msp/cacerts/* -m $FABRIC_CA_CLIENT_HOME/msp

@@ -7,7 +7,9 @@ Organizations:
   - &org2
     Name: org2
     ID: org2MSP
-    MSPDir: /data/orgs/org2/msp
+    # If FABRIC_CFG_PATH is modified, change the below MSP directory
+    MSPDir: /etc/hyperledger/fabric/orgs/org2/msp
+    # MSPDir: /data/orgs/org2/msp
     AnchorPeers:
        - Host: org2-peer0
          Port: 7051

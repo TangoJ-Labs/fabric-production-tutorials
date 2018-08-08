@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-###### COPY org1 CA CERT TO org2 COMMON FOLDER (/data)
+###### COPY org1 CA CERT TO org2 COMMON DIRECTORY
 
 #######################################################################
 ################################ org2 CA ##############################
@@ -33,8 +33,9 @@ docker exec -it org2-cli bash
 . /etc/hyperledger/fabric/setup/login-admin.sh
 
 # Move to the directory with the configtx.yaml file
-cd /etc/hyperledger/fabric/setup
-export FABRIC_CFG_PATH=/etc/hyperledger/fabric/setup #DIR FOR configtx.yaml WITH org2
+cd /etc/hyperledger/fabric
+cp /etc/hyperledger/fabric/setup/configtx.yaml /etc/hyperledger/fabric/configtx.yaml
+export FABRIC_CFG_PATH=/etc/hyperledger/fabric #DIR FOR configtx.yaml WITH org2
 configtxgen -channelID mychannel -printOrg org2 > org2.json
 
 # pass org2.json to common folder for use by authorizing org(s)
@@ -168,7 +169,7 @@ peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}'
 Error: error getting channel (mychannel) orderer endpoint: error endorsing GetConfigBlock: rpc error: code = Unknown desc = access denied: channel [] creator org [org2MSP]
 
 
-peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/tls/org1-peer0-client.crt --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/tls/org2-peer0-tls-client.crt $ORDERER_CA_ARGS
+peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/tls/org1-peer0-cli-client.crt --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/tls/org2-peer0-tls-client.crt $ORDERER_CA_ARGS
 
 peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' --tls --peerAddresses org1-peer0:7051 --tlsRootCertFiles /data/org1-ca-cert.pem --peerAddresses org2-peer0:7051 --tlsRootCertFiles /data/org2-root-ca-cert.pem $ORDERER_CA_ARGS
 
@@ -187,6 +188,6 @@ docker exec -it org1-cli bash
 source /etc/hyperledger/fabric/setup/.env
 
 
-# peer channel fetch 1 /data/genesis.block -c mychannel -o org1-orderer:7050 --tls --cafile /data/org2-root-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt
-# peer channel fetch config /tmp/config_block.pb -c mychannel -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt
-# peer channel fetch config /tmp/config_block.pb -c mychannel -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt
+# peer channel fetch 1 /data/genesis.block -c mychannel -o org1-orderer:7050 --tls --cafile /data/org2-root-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-cli-client.crt
+# peer channel fetch config /tmp/config_block.pb -c mychannel -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-cli-client.crt
+# peer channel fetch config /tmp/config_block.pb -c mychannel -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-cli-client.crt
