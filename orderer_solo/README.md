@@ -4,17 +4,13 @@ This network runs on a solo orderer (hosted by one org) and static docker contai
 ---
 ## NOTES
 * A "decentralized" service implies equality among members, but since we are using a solo Orderer, only one Orderer node can exist, so a single (in this case the first) organization will host the Orderer.
-<br>
-<br>
+
 * In this Hyperledger network setup, each org needs its own CA (Certificate Authority) to issue cryptographic materials.
-<br>
-<br>
+
 * Most services (containers) also include a `*_auto.sh` file in their directory.  You can use these scripts (change the docker-compose file `command:` section) to more quickly setup the network.  The manual steps are listed below for educational purposes.  Try out the manual process to get a better feel for how the network components interact.
-<br>
-<br>
+
 * Most Hyperledger Fabric examples create a complete MSP tree in a shared directory (whether using the `cryptogen` utility or multiple CAs).  In production you will not create an entire MSP tree in one location exposing all private keys to misuse.  In production you will leave the private keys in each service (container), and only share the public certs when needed.  We will follow production protocol and keep almost all crypto material in each respective container, only sharing a minimal amount of public material.
-<br>
-<br>
+
 * IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the `docker-compose.yaml` and `configtx.yaml` files.
 
 ---
