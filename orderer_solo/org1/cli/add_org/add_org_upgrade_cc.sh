@@ -34,8 +34,9 @@ peer chaincode upgrade -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","5000
 ################################# TEST ################################
 # Check query & invoke
 peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
+sleep 3
 peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}' $ORDERER_CONN_ARGS
 # Sleep to allow the ledger to be updated
-sleep 3000
+sleep 3
 # Query again to check
 peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'

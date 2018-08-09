@@ -50,7 +50,7 @@ fabric-ca-client register -d --id.name org2-peer0 --id.secret peerpw --id.type p
 # Generate client TLS cert and key pair for the peer commands
 fabric-ca-client enroll -d --enrollment.profile tls -u https://org2-peer0:peerpw@org2-ca:7054 -M /tmp/tls --csr.hosts org2-peer0
 # Copy the TLS key and cert to the local tls dir
-/shared/utils/tls_add_crtkey.sh -d -p /tmp/tls -c $FABRIC_CFG_PATH/tls/org2-peer0-cli-client.crt -k $FABRIC_CFG_PATH/tls/org2-peer0-cli-client.key
+/shared/utils/tls_add_crtkey.sh -d -p /tmp/tls -c $FABRIC_CFG_PATH/orgs/org2/tls/org2-peer0-cli-client.crt -k $FABRIC_CFG_PATH/orgs/org2/tls/org2-peer0-cli-client.key
 
 #######################################################################
 ################################## MSP ################################
