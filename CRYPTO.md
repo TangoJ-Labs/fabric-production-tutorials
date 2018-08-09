@@ -1,5 +1,7 @@
 # Hyperledger Cryptographic Material & MSP Structure
 
+If you're looking for MSP info regarding the traditional MSP trees created by `cryptogen`, see [the last sections on this page](https://github.com/TangoJ-Labs/fabric-production-tutorials/blob/master/CRYPTO.md#hyperledgers-first-network-example---a-comparison).
+
 ## /MSP
 
 Here are the MSP trees created by this network.  Unlike other Hyperledger Fabric examples, these trees are separated between containers (could be servers in production), with minimal sharing of crypto material.  This resembles the network setup in a production environment.
