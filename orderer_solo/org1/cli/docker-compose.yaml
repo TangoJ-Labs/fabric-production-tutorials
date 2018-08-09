@@ -1,0 +1,31 @@
+version: '2'
+
+# The network should already exist, even if this is the first service(s) to start (see README step 0.1)
+networks:
+  orderer_solo:
+    external: true
+
+services:
+  org1-cli:
+    container_name: org1-cli
+    image: hyperledger/fabric-ca-tools
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric #Needed to find the configtx.yaml file for configtxgen processes
+      - CORE_LOGGING_LEVEL=DEBUG
+
+      # Affiliation is not used to limit users in this sample, so just put all identities in the same affiliation.
+      - FABRIC_CA_CLIENT_ID_AFFILIATION=org1
+      - CORE_LOGGING_GRPC=DEBUG
+    
+    volumes:
+      - ./:/etc/hyperledger/fabric/setup
+      # This directory map allows the CLI environment to access the passed CA crypto material:
+      - ./../shared:/shared
+      # Map the directories needed for the chaincode (file and processes):
+      - /Users/seanhart/fabric/fabric-samples:/opt/gopath/src/github.com/hyperledger/fabric-samples
+      - /Users/seanhart/go/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
+      
+    command: /bin/bash -c '/etc/hyperledger/fabric/setup/cli.sh 2>&1 | tee /shared/logs/cli.log; sleep 99999'
+    # command: /bin/bash -c '/etc/hyperledger/fabric/setup/cli_auto.sh 2>&1 | tee /shared/logs/cli.log; sleep 99999'
+    networks:
+      - orderer_solo

@@ -1,0 +1,38 @@
+version: '2'
+
+# The network should already exist, even if this is the first service(s) to start (see README step 0.1)
+networks:
+  orderer_solo:
+    external: true
+
+services:
+  org1-orderer:
+    container_name: org1-orderer
+    image: hyperledger/fabric-ca-orderer
+    environment:
+      - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/orderer
+      - FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/org1-root-ca-cert.pem
+      
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/shared/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=org1MSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/shared/org1-root-ca-cert.pem]
+      - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=true
+      - ORDERER_GENERAL_TLS_CLIENTROOTCAS=[/shared/org1-root-ca-cert.pem]
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_DEBUG_BROADCASTTRACEDIR=shared/logs
+
+      - CORE_LOGGING_GRPC=DEBUG
+      
+    command: /bin/bash -c '/etc/hyperledger/orderer/setup/orderer.sh 2>&1 | tee /shared/logs/orderer.log; sleep 99999'
+    # command: /bin/bash -c '/etc/hyperledger/orderer/setup/orderer_auto.sh 2>&1 | tee /shared/logs/orderer.log; sleep 99999'
+    volumes:
+      - ./:/etc/hyperledger/orderer/setup
+      - ./../shared:/shared
+    networks:
+      - orderer_solo

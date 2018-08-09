@@ -2,87 +2,17 @@
 
 ## /MSP
 
-Here is a common MSP structure.
+Here are the MSP trees created by this network.  Unlike other Hyperledger Fabric examples, these trees are separated between containers (could be servers in production), with minimal sharing of crypto material.  This resembles the network setup in a production environment.
 
 Keep in mind:
 >- The `/tls*` and `/admincerts` folders are manually created (first time the CLI is started - see first CLI startup steps)
 >
->- `/tls` certs are the respective (root or intermediate) PEM-encoded trusted cert for the orderering endpoint (if unchanged, same as the original `ca-cert.pem` from starting the CA that was sent to the org's common directory (e.g. `/data`).  This cert is the same as the `/cacerts/{...}.pem` cert).  IF THE CA CERT IS PLACED ON THE REJECTION LIST, THIS MUST BE UPDATED WITH THE NEW CA CERT.
+>- `/tls` certs are the respective (root or intermediate) PEM-encoded trusted cert for the orderering endpoint (if unchanged, same as the original `ca-cert.pem` from starting the CA that was sent to the org's shared directory (e.g. `/shared`).  This cert is the same as the `/cacerts/{...}.pem` cert).  IF THE CA CERT IS PLACED ON THE REJECTION LIST, THIS MUST BE UPDATED WITH THE NEW CA CERT.
 >
->- The `/admincerts` cert is the `/signcert/cert.pem` for the admin, when it was enrolled.  Because this folder is manually created, IT MUST BE UPDATED EVERY TIME THE ADMIN IS ENROLLED (since the `signcert/cert.pem` public cert will change for every `enroll` call)
-<pre>
-.
-└── org1
-    ├── admin
-    │   ├── fabric-ca-client-config.yaml <--- config file for enrolled user (only default values?)
-    │   └── msp
-    │       ├── admincerts
-    │       │   └── cert.pem         <--- Public cert for admin - paired to a private '_sk' key in /keystore - e.g. org1-admin)
-    │       ├── cacerts
-    │       │   └── org1-ca-7054.pem <--- PEM-encoded trusted certificate for the ordering endpoint
-    │       ├── keystore
-    │       │   ├── {...}_sk         <--- Private key (paired to a public cert.pem - e.g. org1-admin)
-    │       │   └── {...}_sk         <--- Private key (paired to a public cert.pem - e.g. org1-user1)
-    │       ├── signcerts
-    │       │   └── cert.pem         <--- Public cert (currently logged in (enrolled) user - paired to a private '_sk' key in /keystore - e.g. org1-user1 or org1-admin)
-    │       └── user
-    └── msp
-        ├── admincerts
-        │   └── cert.pem             <--- Public cert for admin - paired to a private '_sk' key in /keystore - e.g. org1-admin)
-        ├── cacerts
-        │   └── org1-ca-7054.pem     <--- PEM-encoded trusted certificate for the ordering endpoint
-        ├── keystore
-        ├── signcerts
-        ├── tlscacerts
-        │   └── org1-ca-7054.pem     <--- PEM-encoded trusted certificate for the ordering endpoint
-        └── user
-</pre>
-
-## /TLS
-TLS file paris for mutual TLS communication
->- The TLS directory may have numerous tls certs/keys at any one time.  They could even all be active at the same time. Pairs might have been placed on the rejection list (crl), and will no longer work.
->
->- These pairs were likely created during the peer startup procedures (see manual process steps), and were named manually, so keep track of which pairs match to which nodes.
->
->- New pairs can be created by using the `fabric-ca-client enroll --enrollment.profile tls ...` (see peer startup steps for examples).  They will be dumped in the directory specified in the `enroll` request, and must be manually copied and named to the org's common directory (e.g. `/data`) for mutual TLS communication.
-<pre>
-.
-├── org1-peer0-cli-client.crt  <--- `enroll` dumped this in specified `/signcerts` directory as a `.pem` file
-├── org1-peer0-cli-client.key  <--- `enroll` dumped this in specified `/keystore` directory as a `_sk` file
-├── org1-peer0-client.crt
-└── org1-peer0-client.key
-</pre>
-
-<br>
-<br>
-
-### Usage example:
-`peer chaincode invoke -C mychannel -n mychaincode -c '{"Args":["invoke","a","b","10"]}' -o org1-orderer:7050 --tls --cafile /data/org1-ca-cert.pem --clientauth --keyfile /data/tls/org1-peer0-client.key --certfile /data/tls/org1-peer0-client.crt`
-
-<br>
-<br>
-
-### More information:
-- Mutual TLS: https://www.codeproject.com/Articles/326574/An-Introduction-to-Mutual-SSL-Authentication
-![Mutual TLS][mtls]
-
-<br>
-
-- Mutual Authentication Vulnerability - Reflection Attack: https://www.youtube.com/watch?v=Y6d-fRMJObI
-![Reflection Attack][reflection]
-
-[mtls]: https://www.codeproject.com/KB/IP/326574/mutualssl_small.png "Mutual TLS"
-[reflection]: https://i.ytimg.com/vi/Y6d-fRMJObI/maxresdefault.jpg "Reflection Attack"
-
-
-<br>
-<br>
-<br>
-
-# Production MSP Structure - Nodes (Servers / Containers) Separated (Draft)
+>- The `/admincerts` cert is the `/signcert/cert.pem` for the admin, when it was enrolled.  Because this folder is manually created, IT MUST BE UPDATED EVERY TIME THE ADMIN IS ENROLLED (since the `signcert/cert.pem` public cert will change for every `enroll` request)
 
 ### CA
-<pre style="line-height: 0.7;">
+<pre style="line-height: 1.3;">
 FABRIC_CA_SERVER_HOME (org1-ca)
 ├── fabric-ca-server.db
 ├── fabric-ca-server-config.yaml
@@ -98,11 +28,12 @@ FABRIC_CA_SERVER_HOME (org1-ca)
 <br>
 
 ### CLI
-<pre style="line-height: 0.7;">
-FABRIC_CA_CLIENT_HOME (org1-cli)
+<pre style="line-height: 1.3;">
+FABRIC_CFG_PATH/orgs (org1-cli)
 ├── org1
 │   ├── ca
-│   │   └── msp                                 <--- from org1-admin-ca enroll
+│   │   └── org1-admin-ca
+│   │       └── msp                             <--- from org1-admin-ca enroll
 │   ├── fabric-ca-client-config.yaml
 │   ├── msp                                     <--- from "fabric-ca-client getcacert"
 │   │   ├── admincerts                          <--- MANUAL: copy org1-admin cert
@@ -127,50 +58,50 @@ FABRIC_CA_CLIENT_HOME (org1-cli)
 │   │               ├── keystore                <--- org1-user-test private key
 │   │               ├── signcerts               <--- org1-user-test public cert
 │   │               └── user                    <--- empty (auto-created)
-│   └── tls
+│   └── tls                                     <--- MANUAL: add the peer tls pair
 │       
 └── org2
-    ├── ca
+    ├── msp
+    │   ├── cacerts                             <--- MANUAL: add the org ca cert
+    │   ├── keystore                            <--- empty (auto-created)
+    │   ├── signcerts                           <--- empty (auto-created)
+    │   └── user                                <--- empty (auto-created)
     └── tls
 </pre>
 <br>
 
 ### ORDERER
-<pre style="line-height: 0.7;">
+<pre style="line-height: 1.3;">
 FABRIC_CA_CLIENT_HOME (org1-orderer)
-├── configtx.yaml
-├── core.yaml
-├── orderer.yaml
+├── fabric-ca-client-config.yaml
 ├── msp
-│   ├── admincerts      <--- add an org admin cert (for orderer start)
-│   ├── cacerts
-│   ├── config.yaml
-│   ├── keystore
-│   ├── signcerts
-│   ├── tlscacerts      ?<--- copy cacerts dir contents
-│   └── tlsintermediatecerts
-└── tls                 ?<--- add tls crt and key (for orderer start)
+│   ├── admincerts      <--- MANUAL: copy org1-admin cert (for orderer start)
+│   ├── cacerts         <--- matches Root CA Cert
+│   ├── keystore        <--- org1-orderer private key
+│   ├── signcerts       <--- org1-orderer public cert
+│   ├── tlscacerts      <--- MANUAL: copy cacerts dir content (for orderer start)
+│   └── user            <--- empty (auto-created)
+└── tls                 <--- MANUAL: add tls crt and key (for orderer start)
 </pre>
 <br>
 
 ### PEER
-<pre style="line-height: 0.7;">
+<pre style="line-height: 1.3;">
 FABRIC_CA_CLIENT_HOME (org1-peer0)
 ├── fabric-ca-client-config.yaml
 ├── msp
-│   ├── admincerts      <--- add an org admin cert (for peer start)
-│   ├── cacerts
-│   ├── config.yaml
-│   ├── keystore
-│   ├── signcerts
-│   ├── tlscacerts      <--- copy cacerts dir contents
-│   └── user
-└── tls                 <--- add tls crt and key (for peer start)
+│   ├── admincerts      <--- MANUAL: copy org1-admin cert (for peer start)
+│   ├── cacerts         <--- matches Root CA Cert
+│   ├── keystore        <--- org1-orderer private key
+│   ├── signcerts       <--- org1-orderer public cert
+│   ├── tlscacerts      <--- MANUAL: copy cacerts dir content (for peer start)
+│   └── user            <--- empty (auto-created)
+└── tls                 <--- MANUAL: add tls crt and key (for peer start)
 </pre>
 <br>
 
 ### CLIENT
-<pre style="line-height: 0.7;">
+<pre style="line-height: 1.3;">
 FABRIC_CA_CLIENT_HOME (org1-client1)
 ├── org1-user1
 │   ├── fabric-ca-client-config.yaml
@@ -190,15 +121,65 @@ FABRIC_CA_CLIENT_HOME (org1-client1)
     └── tls
 </pre>
 
+<br>
+<br>
+<br>
+
+## /TLS
+TLS file pairs for *mutual* TLS communication
+>- The TLS directory may have numerous tls certs/keys at any one time.  They could even all be active at the same time. Pairs might have been placed on the rejection list (crl), and will no longer work.
+>
+>- New pairs can be created by using the `fabric-ca-client enroll --enrollment.profile tls ...` (see peer startup steps for examples).  They will be dumped in the directory specified in the `enroll` request.
+>
+>- The Hyperledger examples seem to always create the TLS cert/key from the peer container and then pass the pair to the shared directory for use by the CLI when making `peer ...` requests.  This transfer is not needed, since the CLI can make the `fabric-ca-client enroll --enrollment.profile tls ...` request directly, and then save the TLS pair in a local directory.  Sharing via the shared directory is not needed in this case.
+
+### CLI Container: /tls
+<pre>
+.
+├── org1-peer0-cli-client.crt
+└── org1-peer0-cli-client.key
+</pre>
+
+### PEER Container: /tls
+<pre>
+.
+├── server.crt
+└── server.key
+</pre>
+
+<br>
+<br>
+
+### Usage example:
+`peer chaincode invoke -C mychannel -n mychaincode -c '{"Args":["invoke","a","b","10"]}' -o org1-orderer:7050 --tls --cafile /shared/org1-ca-cert.pem --clientauth --keyfile /etc/hyperledger/fabric/tls/org1-peer0-client.key --certfile /etc/hyperledger/fabric/tls/org1-peer0-client.crt`
+
+<br>
+<br>
+
+### More information:
+- Mutual TLS: https://www.codeproject.com/Articles/326574/An-Introduction-to-Mutual-SSL-Authentication
+![Mutual TLS][mtls]
+
+<br>
+
+- Mutual Authentication Vulnerability - Reflection Attack: https://www.youtube.com/watch?v=Y6d-fRMJObI
+![Reflection Attack][reflection]
+
+[mtls]: https://www.codeproject.com/KB/IP/326574/mutualssl_small.png "Mutual TLS"
+[reflection]: https://i.ytimg.com/vi/Y6d-fRMJObI/maxresdefault.jpg "Reflection Attack"
+
 
 <br>
 <br>
 <br>
 
+
+## Hyperledger's "First-Network" Example - a comparison
+Let's look at the [first-network](https://github.com/hyperledger/fabric-samples/tree/release-1.2/first-network) example provided by The Hyperledger Foundation to understand how a complete MSP tree is typically structured.
 
 ### First-Network MSP Directories:
 
-<pre style="line-height: 0.7;">
+<pre style="line-height: 1.3;">
 .
 └── org1
    ├── ca
@@ -251,7 +232,7 @@ FABRIC_CA_CLIENT_HOME (org1-client1)
 
 ### First-Network MSP Structure:
 
-<pre style="line-height: 0.7;">
+<pre style="line-height: 1.3;">
 .
 └── org1
    ├── ca
@@ -343,7 +324,7 @@ FABRIC_CA_CLIENT_HOME (org1-client1)
 
 ### First-Network MSP Structure w/ Detail:
 
-<pre style="line-height: 0.7;">
+<pre style="line-height: 1.3;">
 .
 ├── ordererOrganizations
 │   └── example.com
@@ -425,7 +406,7 @@ FABRIC_CA_CLIENT_HOME (org1-client1)
        │   │       ├── ca.crt                               <--- CERT: MII...w== -- Root TLS CA Cert
        │   │       ├── server.crt                           <--- CERT: MII...XA== -- Peer TLS Cert: peer0
        │   │       └── server.key                           <---  KEY: MIG...W+3 -- Peer TLS Cert priv key: peer0
-       │   └── peer1.org1.example.com
+       │   └── peer0.org1.example.com
        │       ├── msp
        │       │   ├── admincerts
        │       │   │   └── Admin@org1.example.com-cert.pem  <--- CERT: MII.../jA -- User Cert: Admin
@@ -433,15 +414,15 @@ FABRIC_CA_CLIENT_HOME (org1-client1)
        │       │   │   └── ca.org1.example.com-cert.pem     <--- CERT: MII...TOK -- Root CA
        │       │   ├── config.yaml
        │       │   ├── keystore
-       │       │   │   └── {...}_sk                         <---  KEY: MIG...xF8 -- Peer Cert priv key: peer1
+       │       │   │   └── {...}_sk                         <---  KEY: MIG...xF8 -- Peer Cert priv key: peer0
        │       │   ├── signcerts
-       │       │   │   └── peer1.org1.example.com-cert.pem  <--- CERT: MII...bgi -- Peer Cert: peer1
+       │       │   │   └── peer0.org1.example.com-cert.pem  <--- CERT: MII...bgi -- Peer Cert: peer0
        │       │   └── tlscacerts
        │       │       └── tlsca.org1.example.com-cert.pem  <--- CERT: MII...w== -- Root TLS CA Cert
        │       └── tls
        │           ├── ca.crt                               <--- CERT: MII...w== -- Root TLS CA Cert
-       │           ├── server.crt                           <--- CERT: MII...B/w -- Peer TLS Cert: peer1
-       │           └── server.key                           <---  KEY: MIG...0b1 -- Peer TLS Cert priv key: peer1
+       │           ├── server.crt                           <--- CERT: MII...B/w -- Peer TLS Cert: peer0
+       │           └── server.key                           <---  KEY: MIG...0b1 -- Peer TLS Cert priv key: peer0
        ├── tlsca
        │   ├── {...}_sk                                     <---  KEY: MIG...gYD -- Root TLS CA Cert priv key
        │   └── tlsca.org1.example.com-cert.pem              <--- CERT: MII...w== -- Root TLS CA Cert

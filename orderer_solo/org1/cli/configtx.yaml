@@ -1,0 +1,41 @@
+Organizations:
+  - &org1
+    Name: org1
+    ID: org1MSP
+    # If FABRIC_CFG_PATH is modified, change the below MSP directory
+    MSPDir: /etc/hyperledger/fabric/orgs/org1/msp
+    AnchorPeers:
+       - Host: org1-peer0
+         Port: 7051
+
+Application: &ApplicationDefaults
+    Organizations:
+
+Profiles:
+
+  OrgsOrdererGenesis:
+    Orderer:
+      OrdererType: solo
+      Addresses:
+        - org1-orderer:7050
+      BatchTimeout: 2s
+      BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+      Kafka:
+        Brokers:
+          - 127.0.0.1:9092
+      Organizations:
+        - *org1
+    Consortiums:
+      cSoloConsortium:
+        Organizations:
+          - *org1
+
+  OrgsChannel:
+    Consortium: cSoloConsortium
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *org1
