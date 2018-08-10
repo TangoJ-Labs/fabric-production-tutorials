@@ -130,12 +130,15 @@ FABRIC_CA_CLIENT_HOME (org1-client1)
 <br>
 
 ## /TLS
+
+---
 TLS file pairs for *mutual* TLS communication
->- The TLS directory may have numerous tls certs/keys at any one time.  They could even all be active at the same time. Pairs might have been placed on the rejection list (crl), and will no longer work.
->
->- New pairs can be created by using the `fabric-ca-client enroll --enrollment.profile tls ...` (see peer startup steps for examples).  They will be dumped in the directory specified in the `enroll` request.
->
->- The Hyperledger examples seem to always create the TLS cert/key from the peer container and then pass the pair to the shared directory for use by the CLI when making `peer ...` requests.  This transfer is not needed, since the CLI can make the `fabric-ca-client enroll --enrollment.profile tls ...` request directly, and then save the TLS pair in a local directory.  Sharing via the shared directory is not needed in this case.
+- The TLS directory may have numerous tls certs/keys at any one time.  They could even all be active at the same time. Pairs might have been placed on the rejection list (crl), and will no longer work.
+
+- New pairs can be created by using the `fabric-ca-client enroll --enrollment.profile tls ...` (see peer startup steps for examples).  They will be dumped in the directory specified in the `enroll` request.
+
+- The Hyperledger examples seem to always create the TLS cert/key from the peer container and then pass the pair to the shared directory for use by the CLI when making `peer ...` requests.  This transfer is not needed, since the CLI can make the `fabric-ca-client enroll --enrollment.profile tls ...` request directly, and then save the TLS pair in a local directory.  Sharing via the shared directory is not needed in this case.
+---
 
 ### CLI Container: /tls
 <pre>
