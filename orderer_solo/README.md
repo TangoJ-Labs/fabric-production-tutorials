@@ -85,10 +85,8 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.5) Edit the CA Server Config File**
->>`sed -i "/affiliations:/a \\   org1: []" $FABRIC_CA_SERVER_HOME/fabric-ca-server-config.yaml`
->
->The docs do not indicate a way to set the `affiliations:` section of the config file via environment variables, so we will manually edit that section.
+>**1.5) (Optional) Edit the CA Server Config File**
+><br>If you have minor changes you would like to make to the `fabric-ca-server-config.yaml` file, you can make those changes now.  If you would like to customize the entire config file and not rely on any default generation process during `init`, you can save a customized config file in the `FABRIC_CA_SERVER_HOME` directory before initialization and fabric-ca-server will use the custom file rather than generate a default.  For this example, we will use the default file and override some settings via the environmental variables.
 >
 ><br>
 >
@@ -312,7 +310,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.27) Enroll the orderer to get TLS & Certs**
+>**1.27) Enroll the peer to get TLS & Certs**
 ><br>Use the `--enrollment.profile` `tls` option to receive the TLS key & cert
 >>`fabric-ca-client enroll -d --enrollment.profile tls -u https://org1-peer0:peerpw@org1-ca:7054 -M /tmp/tls --csr.hosts org1-peer0`
 >

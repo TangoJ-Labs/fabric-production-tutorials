@@ -6,12 +6,14 @@ If you're looking for MSP info regarding the traditional MSP trees created by `c
 
 Here are the MSP trees created by this network.  Unlike other Hyperledger Fabric examples, these trees are separated between containers (could be servers in production), with minimal sharing of crypto material.  This resembles the network setup in a production environment.
 
+---
 Keep in mind:
->- The `/tls*` and `/admincerts` folders are manually created (first time the CLI is started - see first CLI startup steps)
->
->- `/tls` certs are the respective (root or intermediate) PEM-encoded trusted cert for the orderering endpoint (if unchanged, same as the original `ca-cert.pem` from starting the CA that was sent to the org's shared directory (e.g. `/shared`).  This cert is the same as the `/cacerts/{...}.pem` cert).  IF THE CA CERT IS PLACED ON THE REJECTION LIST, THIS MUST BE UPDATED WITH THE NEW CA CERT.
->
->- The `/admincerts` cert is the `/signcert/cert.pem` for the admin, when it was enrolled.  Because this folder is manually created, IT MUST BE UPDATED EVERY TIME THE ADMIN IS ENROLLED (since the `signcert/cert.pem` public cert will change for every `enroll` request)
+- The `/tls*` and `/admincerts` folders are manually created (first time the CLI is started - see first CLI startup steps)
+
+- `/tls` certs are the respective (root or intermediate) PEM-encoded trusted cert for the orderering endpoint (if unchanged, same as the original `ca-cert.pem` from starting the CA that was sent to the org's shared directory (e.g. `/shared`).  This cert is the same as the `/cacerts/{...}.pem` cert).  IF THE CA CERT IS PLACED ON THE REJECTION LIST, THIS MUST BE UPDATED WITH THE NEW CA CERT.
+
+- The `/admincerts` cert is the `/signcert/cert.pem` for the admin, when it was enrolled.  Because this folder is manually created, IT MUST BE UPDATED EVERY TIME THE ADMIN IS ENROLLED (since the `signcert/cert.pem` public cert will change for every `enroll` request)
+---
 
 ### CA
 <pre style="line-height: 1.3;">
