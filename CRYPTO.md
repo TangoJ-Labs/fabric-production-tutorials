@@ -96,8 +96,8 @@ FABRIC_CA_CLIENT_HOME (org1-peer0)
 ├── msp
 │   ├── admincerts      <--- MANUAL: copy org1-admin cert (for peer start)
 │   ├── cacerts         <--- matches Root CA Cert
-│   ├── keystore        <--- org1-orderer private key
-│   ├── signcerts       <--- org1-orderer public cert
+│   ├── keystore        <--- org1-peer private key
+│   ├── signcerts       <--- org1-peer public cert
 │   ├── tlscacerts      <--- MANUAL: copy cacerts dir content (for peer start)
 │   └── user            <--- empty (auto-created)
 └── tls                 <--- MANUAL: add tls crt and key (for peer start)
