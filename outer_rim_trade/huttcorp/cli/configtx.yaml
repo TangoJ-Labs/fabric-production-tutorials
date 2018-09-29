@@ -1,0 +1,41 @@
+Organizations:
+  - &huttcorp
+    Name: huttcorp
+    ID: huttcorpMSP
+    # If FABRIC_CFG_PATH is modified, change the below MSP directory
+    MSPDir: /etc/hyperledger/fabric/orgs/huttcorp/msp
+    AnchorPeers:
+       - Host: huttcorp-peer0
+         Port: 7051
+
+Application: &ApplicationDefaults
+    Organizations:
+
+Profiles:
+
+  OrgsOrdererGenesis:
+    Orderer:
+      OrdererType: solo
+      Addresses:
+        - huttcorp-orderer:7050
+      BatchTimeout: 2s
+      BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+      Kafka:
+        Brokers:
+          - 127.0.0.1:9092
+      Organizations:
+        - *huttcorp
+    Consortiums:
+      TriellusConsortium:
+        Organizations:
+          - *huttcorp
+
+  OrgsChannel:
+    Consortium: TriellusConsortium
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *huttcorp

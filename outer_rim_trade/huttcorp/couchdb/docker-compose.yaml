@@ -1,0 +1,25 @@
+version: '2'
+
+# The network should already exist, even if this is the first service(s) to start (see README step 0.1)
+networks:
+  outer_rim_trade:
+    external: true
+
+services:
+  huttcorp-couchdb:
+    container_name: huttcorp-couchdb
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COMPOSE_PROJECT_NAME=outer_rim_trade_project
+
+      - COUCHDB_USER=huttcorp-couchdb
+      - COUCHDB_PASSWORD=couchdb
+
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "5984:5984"
+    networks:
+      - outer_rim_trade

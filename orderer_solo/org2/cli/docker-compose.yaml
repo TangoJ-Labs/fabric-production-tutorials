@@ -10,6 +10,8 @@ services:
     container_name: org2-cli
     image: hyperledger/fabric-ca-tools
     environment:
+      - COMPOSE_PROJECT_NAME=orderer_solo_project
+      
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric #Needed to find the configtx.yaml file for configtxgen processes
       - CORE_LOGGING_LEVEL=DEBUG
 

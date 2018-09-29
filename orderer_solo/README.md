@@ -143,6 +143,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 ><br>
 >
+>For filekeyvaluestore (github.com/hyperledger/fabric-sdk-go/pkg/msp/filecertstore.go):
+>>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org1-admin-ca@org1-cert.pem`
+>
+>For certfileuserstore (github.com/hyperledger/fabric-sdk-go/pkg/msp/certfileuserstore.go):
+>>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org1-admin-ca@org1MSP-cert.pem`
+>
 >### **Registration** of orderer(s), peer(s), and user(s)
 >Registration adds an entry into the `fabric-ca-server.db` or LDAP
 >
@@ -251,7 +257,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >>`/shared/utils/msp_add_tlscacert.sh -c $ORDERER_GENERAL_LOCALMSPDIR/cacerts/* -m $ORDERER_GENERAL_LOCALMSPDIR`
 >
 >Copy the admincert to the orderer msp tree
->>`/shared/utils/msp_add_admincert.sh -c /shared/org1-admin-cert.pem -m $ORDERER_GENERAL_LOCALMSPDIR`
+>>`/shared/utils/msp_add_admincert.sh -c /shared/org1-admin@org1-cert.pem -m $ORDERER_GENERAL_LOCALMSPDIR`
 >
 ><br>
 >
@@ -306,7 +312,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >>`/shared/utils/msp_add_tlscacert.sh -c $CORE_PEER_MSPCONFIGPATH/cacerts/* -m $CORE_PEER_MSPCONFIGPATH`
 >
 >Copy the admincert to the peer msp tree
->>`/shared/utils/msp_add_admincert.sh -c /shared/org1-admin-cert.pem -m $CORE_PEER_MSPCONFIGPATH`
+>>`/shared/utils/msp_add_admincert.sh -c /shared/org1-admin@org1-cert.pem -m $CORE_PEER_MSPCONFIGPATH`
 >
 ><br>
 >
@@ -463,6 +469,13 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 ><br>
 >
+>For filekeyvaluestore (github.com/hyperledger/fabric-sdk-go/pkg/msp/filecertstore.go):
+>>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org2-admin-ca@org2-cert.pem`
+>
+>For certfileuserstore (github.com/hyperledger/fabric-sdk-go/pkg/msp/certfileuserstore.go):
+>>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org2-admin-ca@org2MSP-cert.pem`
+>
+>
 >### **Registration** of orderer(s), peer(s), and user(s)
 >Registration adds an entry into the `fabric-ca-server.db` or LDAP
 >
@@ -561,7 +574,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >>`/shared/utils/msp_add_tlscacert.sh -c $CORE_PEER_MSPCONFIGPATH/cacerts/* -m $CORE_PEER_MSPCONFIGPATH`
 >
 >Copy the admincert to the peer msp tree
->>`/shared/utils/msp_add_admincert.sh -c /shared/org2-admin-cert.pem -m $CORE_PEER_MSPCONFIGPATH`
+>>`/shared/utils/msp_add_admincert.sh -c /shared/org2-admin@org2-cert.pem -m $CORE_PEER_MSPCONFIGPATH`
 >
 ><br>
 >
@@ -597,7 +610,6 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >Reset the env vars & profile:
 >>`source /etc/hyperledger/fabric/setup/.env`
 <br>`. /etc/hyperledger/fabric/setup/login-admin.sh`
-<br>`CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"`
 >
 ><br>
 >

@@ -10,6 +10,8 @@ services:
     container_name: org1-orderer
     image: hyperledger/fabric-ca-orderer
     environment:
+      - COMPOSE_PROJECT_NAME=orderer_solo_project
+      
       - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/orderer
       - FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/org1-root-ca-cert.pem
       

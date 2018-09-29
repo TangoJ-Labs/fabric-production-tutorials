@@ -53,16 +53,16 @@ if [ "$MODE" == "delete" ]; then
     echo "DELETING HLF GENERATED RESOURCES"
     
     # DELETE FILES
-    rm -rf org*/shared/logs/*
-    rm -rf org*/shared/orgs
-    rm -rf org*/shared/tls
-    rm -rf org*/shared/*.pb
-    rm -rf org*/shared/*.pem
-    rm -rf org*/shared/*.json
-    rm -rf org*/shared/*.block
+    rm -rf ./*/*/shared/logs/*
+    rm -rf ./*/*/shared/orgs
+    rm -rf ./*/*/shared/tls
+    rm -rf ./*/*/shared/*.pb
+    rm -rf ./*/*/shared/*.pem
+    rm -rf ./*/*/shared/*.json
+    rm -rf ./*/*/shared/*.block
 
-    rm -rf org*/cli/add_org/*.pb
-    rm -rf org*/cli/add_org/*.pem
-    rm -rf org*/cli/add_org/*.json
-    rm -rf org*/cli/add_org/*.block
+    rm -rf ./*/*/cli/add_org/*.pb
+    rm -rf ./*/*/cli/add_org/*.pem
+    rm -rf ./*/*/cli/add_org/*.json
+    rm -rf ./*/*/cli/add_org/*.block
 fi

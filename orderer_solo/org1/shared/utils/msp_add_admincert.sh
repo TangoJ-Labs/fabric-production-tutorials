@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright Viskous Corporation
+# Copyright TangoJ Labs, LLC
 #
 # Apache-2.0
 #
@@ -49,6 +49,8 @@ else
 
     #Copy in the admincert
     cp $CERT $MSPDIR/admincerts/cert.pem
+    cp $CERT $MSPDIR/admincerts/org1-admin@org1-cert.pem #MSP CORRECTION
+    cp $CERT $MSPDIR/admincerts/org1-admin@org1MSP-cert.pem #MSP CORRECTION
 fi
 
 # Reset the optargs

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright Viskous Corporattion
+# Copyright TangoJ Labs, LLC
 #
 # Apache-2.0
 #
@@ -13,7 +13,7 @@ fabric-ca-client enroll -d -u https://org1-peer0:peerpw@org1-ca:7054 -M $CORE_PE
 # Copy the tlscacert to the orderer msp tree
 /shared/utils/msp_add_tlscacert.sh -c $CORE_PEER_MSPCONFIGPATH/cacerts/* -m $CORE_PEER_MSPCONFIGPATH
 # Copy the admincert to the admin-ca msp tree
-/shared/utils/msp_add_admincert.sh -c /shared/org1-admin-cert.pem -m $CORE_PEER_MSPCONFIGPATH
+/shared/utils/msp_add_admincert.sh -c /shared/org1-admin@org1-cert.pem -m $CORE_PEER_MSPCONFIGPATH #MSP CORRECTION
 
 
 # Generate server TLS cert and key pair for the peer commands (if executed from peer container)

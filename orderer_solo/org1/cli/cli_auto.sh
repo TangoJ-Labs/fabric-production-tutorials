@@ -34,6 +34,12 @@ fabric-ca-client enroll -d -u https://org1-admin-ca:adminpw@org1-ca:7054
 #    │   └── cert.pem
 #    └── user
 
+########## Copy the signcerts file to follow all needed MSP naming rules for the SDK ##########
+# For filekeyvaluestore (github.com/hyperledger/fabric-sdk-go/pkg/msp/filecertstore.go):
+cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org1-admin-ca@org1-cert.pem #MSP CORRECTION
+# For certfileuserstore (github.com/hyperledger/fabric-sdk-go/pkg/msp/certfileuserstore.go):
+cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org1-admin-ca@org1MSP-cert.pem #MSP CORRECTION
+
 
 #######################################################################
 ############################## REGISTRATION ###########################

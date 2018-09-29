@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright Viskous Corporattion
+# Copyright TangoJ Labs, LLC
 #
 # Apache-2.0
 #

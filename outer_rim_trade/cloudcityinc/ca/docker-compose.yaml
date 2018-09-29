@@ -1,0 +1,31 @@
+version: '2'
+
+# The network should already exist, even if this is the first service(s) to start (see README step 0.1)
+networks:
+  outer_rim_trade:
+    external: true
+
+services:
+  cloudcityinc-ca:
+    container_name: cloudcityinc-ca
+    image: hyperledger/fabric-ca
+    environment:
+      - COMPOSE_PROJECT_NAME=outer_rim_trade_project
+      
+      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
+      - FABRIC_CA_SERVER_CA_NAME=cloudcityinc-ca
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_CSR_CN=cloudcityinc-ca
+      - FABRIC_CA_SERVER_CSR_HOSTS=cloudcityinc-ca
+      - FABRIC_CA_SERVER_DEBUG=true
+      
+    volumes:
+      - ./:/etc/hyperledger/fabric-ca/setup
+      # This directory map allows the CLI environment to access the passed CA crypto material:
+      - ./../shared:/shared
+    command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca/setup/ca.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
+    # command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca/setup/ca_auto.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
+    ports:
+      - 8054:7054 #change host port if running on same host as org1
+    networks:
+      - outer_rim_trade

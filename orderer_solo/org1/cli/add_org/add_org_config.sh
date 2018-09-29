@@ -8,7 +8,7 @@
 # RUN IN org1 CLI
 
 # Specify the chaincode package location:
-CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"
+# CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"
 
 
 #######################################################################

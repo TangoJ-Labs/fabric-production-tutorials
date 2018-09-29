@@ -11,6 +11,8 @@ services:
     container_name: org1-ca
     image: hyperledger/fabric-ca
     environment:
+      - COMPOSE_PROJECT_NAME=orderer_solo_project
+
       - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
       - FABRIC_CA_SERVER_TLS_ENABLED=true
       - FABRIC_CA_SERVER_CSR_CN=org1-ca
@@ -21,7 +23,7 @@ services:
       - ./:/etc/hyperledger/fabric-ca/setup
       # This directory map allows the CLI environment to access the passed CA crypto material:
       - ./../shared:/shared
-    command: /bin/bash -c '/etc/hyperledger/fabric-ca/setup/ca.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
-    # command: /bin/bash -c '/etc/hyperledger/fabric-ca/setup/ca_auto.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
+    command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca/setup/ca.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
+    # command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca/setup/ca_auto.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
     networks:
       - orderer_solo

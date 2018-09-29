@@ -37,39 +37,41 @@ FABRIC_CFG_PATH/orgs (org1-cli)
 ├── org1
 │   ├── ca
 │   │   └── org1-admin-ca
-│   │       └── msp                             <--- from org1-admin-ca enroll
+│   │       └── msp                         <--- from org1-admin-ca enroll
 │   ├── fabric-ca-client-config.yaml
-│   ├── msp                                     <--- from "fabric-ca-client getcacert"
-│   │   ├── admincerts                          <--- MANUAL: copy org1-admin cert
-│   │   ├── cacerts                             <--- from "fabric-ca-client getcacert"
+│   ├── msp                                 <--- from "fabric-ca-client getcacert"
+│   │   ├── admincerts                      <--- MANUAL: copy org1-admin cert
+│   │   ├── cacerts                         <--- from "fabric-ca-client getcacert"
 │   │   ├── keystore
 │   │   ├── signcerts
-│   │   ├── tlscacerts                          <--- MANUAL: copy cacerts dir contents
+│   │   ├── tlscacerts                      <--- MANUAL: copy cacerts dir contents
 │   │   └── user
-│   │       ├── org1-admin
-│   │       │   ├── fabric-ca-client-config.yaml
-│   │       │   └── msp
-│   │       │       ├── admincerts              <--- MANUAL: copy org1-admin cert (configtxgen uses CORE_PEER_MSPCONFIGPATH)
-│   │       │       ├── cacerts                 <--- matches Root CA Cert
-│   │       │       ├── keystore                <--- org1-admin private key
-│   │       │       ├── signcerts               <--- org1-admin public cert
-│   │       │       └── user                    <--- empty (auto-created)
-│   │       └── org1-user-test
-│   │           ├── fabric-ca-client-config.yaml
-│   │           └── msp
-│   │               ├── admincerts              <--- MANUAL: add an org admin cert
-│   │               ├── cacerts                 <--- matches Root CA Cert
-│   │               ├── keystore                <--- org1-user-test private key
-│   │               ├── signcerts               <--- org1-user-test public cert
-│   │               └── user                    <--- empty (auto-created)
-│   └── tls                                     <--- MANUAL: add the peer tls pair
+│   │
+│   ├── users
+│   │   ├── org1-admin
+│   │   │   ├── fabric-ca-client-config.yaml
+│   │   │   └── msp
+│   │   │       ├── admincerts              <--- MANUAL: copy org1-admin cert (configtxgen uses CORE_PEER_MSPCONFIGPATH)
+│   │   │       ├── cacerts                 <--- matches Root CA Cert
+│   │   │       ├── keystore                <--- org1-admin private key
+│   │   │       ├── signcerts               <--- org1-admin public cert
+│   │   │       └── user                    <--- empty (auto-created)
+│   │   └── org1-user-test
+│   │       ├── fabric-ca-client-config.yaml
+│   │       └── msp
+│   │           ├── admincerts              <--- MANUAL: add an org admin cert
+│   │           ├── cacerts                 <--- matches Root CA Cert
+│   │           ├── keystore                <--- org1-user-test private key
+│   │           ├── signcerts               <--- org1-user-test public cert
+│   │           └── user                    <--- empty (auto-created)
+│   └── tls                                 <--- MANUAL: add the peer tls pair
 │       
 └── org2
     ├── msp
-    │   ├── cacerts                             <--- MANUAL: add the org ca cert
-    │   ├── keystore                            <--- empty (auto-created)
-    │   ├── signcerts                           <--- empty (auto-created)
-    │   └── user                                <--- empty (auto-created)
+    │   ├── cacerts                         <--- MANUAL: add the org ca cert
+    │   ├── keystore                        <--- empty (auto-created)
+    │   ├── signcerts                       <--- empty (auto-created)
+    │   └── user                            <--- empty (auto-created)
     └── tls
 </pre>
 <br>
@@ -96,33 +98,11 @@ FABRIC_CA_CLIENT_HOME (org1-peer0)
 ├── msp
 │   ├── admincerts      <--- MANUAL: copy org1-admin cert (for peer start)
 │   ├── cacerts         <--- matches Root CA Cert
-│   ├── keystore        <--- org1-orderer private key
-│   ├── signcerts       <--- org1-orderer public cert
+│   ├── keystore        <--- org1-peer private key
+│   ├── signcerts       <--- org1-peer public cert
 │   ├── tlscacerts      <--- MANUAL: copy cacerts dir content (for peer start)
 │   └── user            <--- empty (auto-created)
 └── tls                 <--- MANUAL: add tls crt and key (for peer start)
-</pre>
-<br>
-
-### CLIENT
-<pre style="line-height: 1.3;">
-FABRIC_CA_CLIENT_HOME (org1-client1)
-├── org1-user1
-│   ├── fabric-ca-client-config.yaml
-│   ├── msp
-│   │   ├── cacerts
-│   │   ├── keystore
-│   │   ├── signcerts
-│   │   └── user
-│   └── tls
-└── org1-user2
-    ├── fabric-ca-client-config.yaml
-    ├── msp
-    │   ├── cacerts
-    │   ├── keystore
-    │   ├── signcerts
-    │   └── user
-    └── tls
 </pre>
 
 <br>

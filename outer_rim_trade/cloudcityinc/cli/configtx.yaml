@@ -1,0 +1,14 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+Organizations:
+  - &cloudcityinc
+    Name: cloudcityinc
+    ID: cloudcityincMSP
+    # If FABRIC_CFG_PATH is modified, change the below MSP directory
+    MSPDir: /etc/hyperledger/fabric/orgs/cloudcityinc/msp
+    AnchorPeers:
+       - Host: cloudcityinc-peer0
+         Port: 7051

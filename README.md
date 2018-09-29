@@ -1,5 +1,7 @@
 # Hyperledger Fabric Production Setup Tutorials
 
+**SEP 2018 UPDATE**: Please note the changes to the MSP trees (specifically the `/users` directory tree)
+
 Most Hyperledger Fabric examples provide highly automated network setup scripts that do not handle cryptographic data in a way that resembles a production environment with isolated organizations, differing setup timelines, etc.
 
 ### This repository provides tutorials for ***intentionally manual*** network setup procedures.  These packages are *not* intended for a quick startup, but to provide:
@@ -10,8 +12,11 @@ Most Hyperledger Fabric examples provide highly automated network setup scripts 
 <br>
 
 ---
-## The [/orderer_solo](./orderer_solo) example is functional.
-- This example includes the minimum steps necessary to set up two isolated organizations on one network with a single channel and chaincode.  Setup occurs sequentially, NOT simultaneously, mimicking a production environment with organizations operating separately on different setup timelines.
+## The [/outer_rim_trade](./outer_rim_trade) tutorial creates a space-based trade network using a single orderer.
+- TEST A BROWSER INTERFACE using the Go SDK and a React.js front-end.  Transfer credits between users via the GUI interface.
+
+## The [/orderer_solo](./orderer_solo) example now includes updated MSP tree structures.
+- This example includes the steps necessary to set up two isolated organizations on one network with a single channel.  Setup occurs sequentially, NOT simultaneously, mimicking a production environment with organizations operating separately on different setup timelines.
 
 ## The [/orderer_scalable](./orderer_scalable) example is under construction.
 
@@ -29,7 +34,6 @@ Most Hyperledger Fabric examples provide highly automated network setup scripts 
 <br>
 
 ## PLANNED UPGRADES:
-- SDK examples (golang)
 - Kafka (w/ Docker Swarm) network
 - `configtx.yaml` v1.2 (with Profile section, etc.)
 - NodeOU utilization for use of ".peer", ".client", etc. in endorsement policy

@@ -1,0 +1,69 @@
+version: '2'
+
+# The network should already exist, even if this is the first service(s) to start (see README step 0.1)
+networks:
+  outer_rim_trade:
+    external: true
+
+services:
+  cloudcityinc-peer0:
+    container_name: cloudcityinc-peer0
+    image: hyperledger/fabric-ca-peer
+    environment:
+      - COMPOSE_PROJECT_NAME=outer_rim_trade_project
+      
+      - FABRIC_CA_CLIENT_HOME=/opt/gopath/src/github.com/hyperledger/fabric/peer
+      - FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/cloudcityinc-root-ca-cert.pem
+      
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_GRPC=DEBUG
+      
+      - CORE_PEER_ID=cloudcityinc-peer0
+      - CORE_PEER_ADDRESS=cloudcityinc-peer0:7051
+      - CORE_PEER_LOCALMSPID=cloudcityincMSP
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp
+      
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/shared/cloudcityinc-root-ca-cert.pem
+
+      - CORE_PEER_TLS_CLIENTAUTHREQUIRED=true
+      - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/shared/cloudcityinc-root-ca-cert.pem
+      - CORE_PEER_TLS_CLIENTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.crt
+      - CORE_PEER_TLS_CLIENTKEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.key
+
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=cloudcityinc-peer0:7051
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+
+      - CORE_CHAINCODE_DEPLOYTIMEOUT=300s
+      - CORE_CHAINCODE_STARTUPTIMEOUT=300s
+
+      # Database settings
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=cloudcityinc-couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=cloudcityinc-couchdb
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=couchdb
+
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      # networkmode name format: ${COMPOSE_PROJECT_NAME}_${NETWORK}
+      # (Compose Project Name is typically the directory name containing the compose file)
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=outer_rim_trade
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash -c '/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/peer0.sh 2>&1 | tee /shared/logs/peer0.log; sleep 99999'
+    # command: /bin/bash -c '/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/peer0_auto.sh 2>&1 | tee /shared/logs/peer0.log; sleep 99999'
+    volumes:
+      - ./:/opt/gopath/src/github.com/hyperledger/fabric/peer/setup
+      - ./../shared:/shared
+      - /var/run:/host/var/run
+    ports:
+      - 8051:7051 #change host port if running on same host as org1
+      - 8053:7053 #change host port if running on same host as org1
+    networks:
+      - outer_rim_trade
