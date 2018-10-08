@@ -1,6 +1,6 @@
 # Hyperledger Fabric Production Setup Tutorials
 
-**OCT 2018 UPDATE**: NodeOU and confixtx.yaml v1.2 features have been added (with ".peer" endorsement policy used)
+**OCT 2018 UPDATE**: NodeOU and configtx.yaml v1.2 features have been added (with ".peer" endorsement policy used)
 <br>**SEP 2018 UPDATE**: Please note the changes to the MSP trees (specifically the `/users` directory tree)
 
 Most Hyperledger Fabric examples provide highly automated network setup scripts that do not handle cryptographic data in a way that resembles a production environment with isolated organizations, differing setup timelines, etc.
