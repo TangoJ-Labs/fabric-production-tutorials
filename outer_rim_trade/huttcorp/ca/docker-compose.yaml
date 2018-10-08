@@ -15,29 +15,11 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca
       - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca
       - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca-server
-
-      # - FABRIC_CA_SERVER_DEBUG=true #v1809
-      # - FABRIC_CA_SERVER_CA_NAME=huttcorp-ca #v1809
-      # - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/huttcorp-ca-cert.pem
-      # - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/huttcorp-ca-cert.key
-
-      # - FABRIC_CA_SERVER_TLS_ENABLED=true #v1809
-      # - FABRIC_CA_SERVER_TLS_CERTFILES
-      # - FABRIC_CA_SERVER_TLS_CLIENTAUTH_TYPE
-      # - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/tls/peer/server.crt
-      # - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/tls/peer/server.key
-
-      # - FABRIC_CA_SERVER_CSR_CN=huttcorp-ca #v1809
-      # - FABRIC_CA_SERVER_CSR_HOSTS=huttcorp-ca #v1809
-
-      # - FABRIC_CA_SERVER_CFG_AFFILIATIONS_ALLOWREMOVE=true
-      # - FABRIC_CA_SERVER_CFG_IDENTITIES_ALLOWREMOVE=true
       
     volumes:
       - ./:/etc/hyperledger/fabric-ca-server/setup
       # This directory map allows the CLI environment to access the passed CA crypto material:
       - ./../shared:/shared
-    # command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca-server/setup/ca.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
     command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca-server/setup/ca_auto.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
     ports:
       - 7054:7054

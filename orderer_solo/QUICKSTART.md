@@ -1,6 +1,6 @@
 # Quickstart Instructions
 
-If you're still learning about Hyperledger Fabric, please try the manual process at least once - it's a great way to "feel" around the network components and understand how they interact.  Watch the output and skim the log files for even more detail.
+If you're still learning about Hyperledger Fabric, please try the manual process at least once - it's a great way to learn the network components and understand how they interact.  Watch the output and skim the log files for even more detail.
 
 <br>
 

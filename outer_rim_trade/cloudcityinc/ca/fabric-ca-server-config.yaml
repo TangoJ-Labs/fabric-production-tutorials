@@ -31,7 +31,8 @@ registry:
      - name: cloudcityinc-admin-ca
        pass: adminpw
        type: admin
-       affiliation:
+       # Affiliation is not used to limit users in this sample, so just put all identities in the same affiliation.
+       affiliation: cloudcityinc
        attrs:
           hf.Registrar.Roles: "*"
           hf.Registrar.DelegateRoles: "*"

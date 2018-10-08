@@ -27,8 +27,5 @@ cp $FABRIC_CA_SERVER_HOME/msp/keystore/*_sk $FABRIC_CA_SERVER_HOME/cloudcityinc-
 # cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /shared/cloudcityinc-root-ca-cert.pem #v1809
 cp $FABRIC_CA_SERVER_HOME/cloudcityinc-ca-cert.pem /shared/cloudcityinc-root-ca-cert.pem
 
-# # Add the org affiliation
-# sed -i "/affiliations:/a \\   cloudcityinc: []" $FABRIC_CA_SERVER_HOME/fabric-ca-server-config.yaml #v1809
-
 # Start the CA Server
 fabric-ca-server start

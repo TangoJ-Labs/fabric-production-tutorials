@@ -25,6 +25,7 @@ csr:
 id:
   name:
   type:
+  # Affiliation is not used to limit users in this sample, so just put all identities in the same affiliation.
   affiliation: cloudcityinc
   maxenrollments: 0
   attributes:

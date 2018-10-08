@@ -33,7 +33,8 @@ registry:
      - name: huttcorp-admin-ca
        pass: adminpw
        type: admin #admin #peer #client
-       affiliation: #huttcorp.peer
+       # Affiliation is not used to limit users in this sample, so just put all identities in the same affiliation.
+       affiliation: huttcorp
        attrs:
           hf.Registrar.Roles: "*"
           hf.Registrar.DelegateRoles: "*"

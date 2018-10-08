@@ -14,9 +14,6 @@ services:
       
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric #Needed to find the configtx.yaml file for configtxgen processes
       - CORE_LOGGING_LEVEL=DEBUG
-
-      # Affiliation is not used to limit users in this sample, so just put all identities in the same affiliation.
-      # - FABRIC_CA_CLIENT_ID_AFFILIATION=huttcorp #v1809
       - CORE_LOGGING_GRPC=DEBUG
     
     volumes:
@@ -28,7 +25,6 @@ services:
       - ./../shared/chaincode/wallet:/opt/gopath/src/chaincode/wallet
       - ./../shared/chaincode/user:/opt/gopath/src/chaincode/user
       
-    # command: /bin/bash -c '/etc/hyperledger/fabric/setup/cli.sh 2>&1 | tee /shared/logs/cli.log; sleep 99999'
     command: /bin/bash -c '/etc/hyperledger/fabric/setup/cli_auto.sh 2>&1 | tee /shared/logs/cli.log; sleep 99999'
     ports:
       - 3000:3000

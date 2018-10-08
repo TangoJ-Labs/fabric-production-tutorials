@@ -18,7 +18,7 @@ rm $FABRIC_CA_SERVER_HOME/ca-cert.pem
 rm -R $FABRIC_CA_SERVER_HOME/msp
 
 # Initialize the CA server - this will create the "fabric-ca-server-config.yaml" file
-fabric-ca-server init #-b huttcorp-admin-ca:adminpw #--cafiles $FABRIC_CA_SERVER_HOME/setup/csr.json [FATAL] Initialization failure: No CA name provided in CA configuration file.
+fabric-ca-server init #-b huttcorp-admin-ca:adminpw
 
 # Copy the created certificate key to the home directory (the certificate was created with "init")
 # This is just for convenience and is not mandatory
@@ -27,9 +27,6 @@ cp $FABRIC_CA_SERVER_HOME/msp/keystore/*_sk $FABRIC_CA_SERVER_HOME/huttcorp-ca-c
 # Copy the root CA's signing certificate to the shared directory to be used by others
 # cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /shared/huttcorp-root-ca-cert.pem #v1809
 cp $FABRIC_CA_SERVER_HOME/huttcorp-ca-cert.pem /shared/huttcorp-root-ca-cert.pem
-
-# # Add the org affiliation
-# sed -i "/affiliations:/a \\   huttcorp: []" $FABRIC_CA_SERVER_HOME/fabric-ca-server-config.yaml #v1809
 
 # Start the CA Server
 fabric-ca-server start
