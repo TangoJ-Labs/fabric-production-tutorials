@@ -16,8 +16,12 @@ echo "*********************** ENROLL CA ADMIN ***********************"
 
 export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/cloudcityinc-root-ca-cert.pem
 
-mkdir -p $FABRIC_CFG_PATH/orgs/cloudcityinc/ca/cloudcityinc-admin-ca
+# ENROLLING USER: Create directory, set Client Home to directory, copy config file into directory
+mkdir -p $FABRIC_CFG_PATH/orgs/cloudcityinc/ca/cloudcityinc-admin-ca/msp
 export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/cloudcityinc/ca/cloudcityinc-admin-ca
+cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME
+# Move the MSP config file to the CA Admin MSP directory
+cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml
 
 # Enroll the CA Admin using the bootstrap CA profile (used when setting up the CA service)
 fabric-ca-client enroll -d -u https://cloudcityinc-admin-ca:adminpw@cloudcityinc-ca:7054
@@ -51,7 +55,7 @@ echo "Registering admin identity with cloudcityinc-ca"
 fabric-ca-client register -d --id.name cloudcityinc-admin --id.secret adminpw --id.attrs "hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert"
 
 echo "Registering cloudcityinc-peer0 with cloudcityinc-ca"
-fabric-ca-client register -d --id.name cloudcityinc-peer0 --id.secret peerpw --id.type peer
+fabric-ca-client register -d --id.name cloudcityinc-peer0 --id.secret peerpw --id.type peer #id type "peer" necessary when using NodeOUs and an endorsement policy requiring "peer" endorsement
 
 # Generate client TLS cert and key pair for the peer commands
 fabric-ca-client enroll -d --enrollment.profile tls -u https://cloudcityinc-peer0:peerpw@cloudcityinc-ca:7054 -M /tmp/tls --csr.hosts cloudcityinc-peer0
@@ -81,6 +85,9 @@ fabric-ca-client getcacert -d -u https://cloudcityinc-ca:7054 -M $FABRIC_CFG_PAT
 
 #######################################################################
 ########################### JOIN CHANNEL PREP #########################
+
+# Move the MSP config file to the CA Admin MSP directory
+cp /shared/config.yaml $FABRIC_CFG_PATH/orgs/cloudcityinc/msp/config.yaml
 
 ##NOTE: MUST RUN login-admin.sh with ". /" to capture env vars
 

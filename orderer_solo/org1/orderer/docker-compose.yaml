@@ -24,8 +24,10 @@ services:
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/shared/org1-root-ca-cert.pem]
+
       - ORDERER_GENERAL_TLS_CLIENTAUTHREQUIRED=true
       - ORDERER_GENERAL_TLS_CLIENTROOTCAS=[/shared/org1-root-ca-cert.pem]
+
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
       - ORDERER_DEBUG_BROADCASTTRACEDIR=shared/logs
 

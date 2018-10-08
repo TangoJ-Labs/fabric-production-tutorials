@@ -1,12 +1,14 @@
 #!/bin/bash
 #
-# Copyright IBM Corp. All Rights Reserved.
+# Copyright TangoJ Labs, LLC
 #
-# SPDX-License-Identifier: Apache-2.0
+# Apache-2.0
 #
 
 echo "PEER START"
 
+# Before enrolling, the client config file needs to be added to the MSP parent directory
+cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME
 
 # Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
 fabric-ca-client enroll -d -u https://cloudcityinc-peer0:peerpw@cloudcityinc-ca:7054 -M $CORE_PEER_MSPCONFIGPATH
@@ -15,6 +17,8 @@ fabric-ca-client enroll -d -u https://cloudcityinc-peer0:peerpw@cloudcityinc-ca:
 # Copy the admincert to the admin-ca msp tree
 /shared/utils/msp_add_admincert.sh -c /shared/cloudcityinc-admin@cloudcityinc-cert.pem -m $CORE_PEER_MSPCONFIGPATH #MSP CORRECTION
 
+# Move the MSP config file to the MSP directory
+cp /shared/config.yaml $CORE_PEER_MSPCONFIGPATH/config.yaml
 
 # Generate server TLS cert and key pair for the peer commands (if executed from peer container)
 fabric-ca-client enroll -d --enrollment.profile tls -u https://cloudcityinc-peer0:peerpw@cloudcityinc-ca:7054 -M /tmp/tls --csr.hosts cloudcityinc-peer0

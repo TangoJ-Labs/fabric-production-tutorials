@@ -131,9 +131,10 @@ peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric-samples/c
 
 # Instantiate chaincode on peer with chaincode installed
 log "****************** peer chaincode instantiate ******************"
-logr "Instantiating chaincode on org1-peer0 with Policy: OR('org1MSP.member')..."
-# USE ".member" NOT ".peer" - need to figure out NodeOUs to use ".peer", ".client", etc
-peer chaincode instantiate -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR('org1MSP.member')" $ORDERER_CONN_ARGS
+logr "Instantiating chaincode on org1-peer0 with Policy: OR('org1MSP.peer')..."
+# can use either ".member" or ".peer" - NodeOUs are used in this example
+# peer chaincode instantiate -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR('org1MSP.member')" $ORDERER_CONN_ARGS
+peer chaincode instantiate -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR('org1MSP.peer')" $ORDERER_CONN_ARGS
 
 # Query chaincode
 log "********************* peer chaincode query *********************"

@@ -51,6 +51,7 @@ else
     # Always use the common dir for the Root CA Cert File (needed to be transferred anyway)
     export FABRIC_CA_CLIENT_TLS_CERTFILES=$CACERT
 
+    # ENROLLING USER: Create directory, set Client Home to directory, copy config file into directory (see below after directory check)
     export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/cloudcityinc/users/$USERNAME #MSP CORRECTION
 
     # If the user's msp folder already exists, the user has already been enrolled, so
@@ -58,6 +59,10 @@ else
     if [ ! -d $FABRIC_CA_CLIENT_HOME/msp ]; then
         echo "ENROLLING $USERNAME"
 
+        mkdir -p $FABRIC_CA_CLIENT_HOME/msp
+        cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME
+        cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml
+        
         fabric-ca-client enroll -d -u https://$USERNAME:$PASSWORD@cloudcityinc-ca:7054
         
 

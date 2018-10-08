@@ -16,7 +16,7 @@ services:
       - CORE_LOGGING_LEVEL=DEBUG
 
       # Affiliation is not used to limit users in this sample, so just put all identities in the same affiliation.
-      - FABRIC_CA_CLIENT_ID_AFFILIATION=org1
+      # - FABRIC_CA_CLIENT_ID_AFFILIATION=org1
       - CORE_LOGGING_GRPC=DEBUG
     
     volumes:

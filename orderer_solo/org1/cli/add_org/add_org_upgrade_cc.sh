@@ -29,7 +29,8 @@ peer chaincode install -n mycc -v 2.0 -l golang -p github.com/hyperledger/fabric
 
 # Upgrade the chaincode - use the same version as the chaincode just installed
 # USE ".member" NOT ".peer" - need to figure out NodeOUs to use ".peer", ".client", etc
-peer chaincode upgrade -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","5000","b","8000"]}' -P "OR('org1MSP.member','org2MSP.member')" $ORDERER_CONN_ARGS
+# peer chaincode upgrade -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","5000","b","8000"]}' -P "OR('org1MSP.member','org2MSP.member')" $ORDERER_CONN_ARGS
+peer chaincode upgrade -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","5000","b","8000"]}' -P "OR('org1MSP.peer','org2MSP.peer')" $ORDERER_CONN_ARGS
 
 ################################# TEST ################################
 # Check query & invoke

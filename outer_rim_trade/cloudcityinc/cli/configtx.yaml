@@ -9,6 +9,16 @@ Organizations:
     ID: cloudcityincMSP
     # If FABRIC_CFG_PATH is modified, change the below MSP directory
     MSPDir: /etc/hyperledger/fabric/orgs/cloudcityinc/msp
+    Policies: &cloudcityincPolicies
+        Readers:
+            Type: Signature
+            Rule: "OR('cloudcityincMSP.admin', 'cloudcityincMSP.peer', 'cloudcityincMSP.client')"
+        Writers:
+            Type: Signature
+            Rule: "OR('cloudcityincMSP.admin', 'cloudcityincMSP.peer', 'cloudcityincMSP.client')" #Including clients here so that the SDK identities can write
+        Admins:
+            Type: Signature
+            Rule: "OR('cloudcityincMSP.admin')"
     AnchorPeers:
        - Host: cloudcityinc-peer0
          Port: 7051

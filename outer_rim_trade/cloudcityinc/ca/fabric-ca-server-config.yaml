@@ -1,0 +1,152 @@
+version: 1.2.0-stable
+
+port: 7054
+debug: true
+crlsizelimit: 512000
+
+# noclientcert is used for normal TLS connections (single authentication - see https://security.stackexchange.com/questions/20803/how-does-ssl-tls-work)
+# RequireAndVerifyClientCert would be used for Mutual TLS, which is more secure, but more difficult to implement (see http://www.cafesoft.com/products/cams/ps/docs32/admin/SSLTLSPrimer.html)
+tls:
+  enabled: true
+  certfile:
+  keyfile:
+  clientauth:
+    type: noclientcert #RequireAndVerifyClientCert
+    certfiles: #/etc/hyperledger/fabric-ca-server/cloudcityinc-ca-cert.pem
+
+ca:
+  name: cloudcityinc-ca
+  keyfile: /etc/hyperledger/fabric-ca-server/cloudcityinc-ca-cert.key
+  certfile: /etc/hyperledger/fabric-ca-server/cloudcityinc-ca-cert.pem
+  chainfile:
+
+crl:
+  expiry: 24h
+
+# The registry section is mandatory if any other custom config file section is used
+# (otherwise the bootstrap cli option "-b" or environment variables do not override and user is not authorized access)
+registry:
+  maxenrollments: -1
+  identities:
+     - name: cloudcityinc-admin-ca
+       pass: adminpw
+       type: admin
+       affiliation:
+       attrs:
+          hf.Registrar.Roles: "*"
+          hf.Registrar.DelegateRoles: "*"
+          hf.Revoker: true
+          hf.IntermediateCA: true
+          hf.GenCRL: true
+          hf.Registrar.Attributes: "*"
+          hf.AffiliationMgr: true
+
+db:
+  type: sqlite3
+  datasource: fabric-ca-server.db
+  tls:
+      enabled: false
+      certfiles:
+      client:
+        certfile:
+        keyfile:
+
+ldap:
+   enabled: false
+   url: ldap://<adminDN>:<adminPassword>@<host>:<port>/<base>
+   tls:
+      certfiles:
+      client:
+         certfile:
+         keyfile:
+   attribute:
+      names: ['uid','member']
+      converters:
+         - name:
+           value:
+      maps:
+         groups:
+            - name:
+              value:
+
+affiliations:
+  cloudcityinc: []
+
+signing:
+    default:
+      usage:
+        - digital signature
+      expiry: 8760h
+    profiles:
+      ca:
+         usage:
+           - cert sign
+           - crl sign
+         expiry: 43800h
+         caconstraint:
+           isca: true
+           maxpathlen: 0
+      tls:
+         usage:
+            - signing
+            - key encipherment
+            - server auth
+            - client auth
+            - key agreement
+         expiry: 8760h
+
+# csr:
+#    cn: cloudcityinc-ca
+#    names:
+#       - C: US
+#         ST: "North Carolina"
+#         L:
+#         O: Hyperledger
+#         OU: Fabric
+#    hosts:
+#      - cloudcityinc-ca
+#    ca:
+#       expiry: 131400h
+#       pathlength: 1
+
+csr:
+   cn: cloudcityinc-ca
+   names:
+      - C: US
+        ST: Texas
+        L:
+        O: TangoJLabs
+        OU: ca
+   hosts:
+     - cloudcityinc-ca
+   ca:
+      expiry: 131400h
+      pathlength: 1
+
+bccsp:
+    default: SW
+    sw:
+        hash: SHA2
+        security: 256
+        filekeystore:
+            keystore: msp/keystore
+
+cacount:
+
+cafiles:
+
+intermediate:
+  parentserver:
+    url:
+    caname:
+
+  enrollment:
+    hosts:
+    profile:
+    label:
+
+  tls:
+    certfiles:
+    client:
+      certfile:
+      keyfile:

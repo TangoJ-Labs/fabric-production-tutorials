@@ -1,0 +1,46 @@
+
+url: https://org1-ca:7054
+
+mspdir: msp
+
+# "The client option is required only if mutual TLS is configured on the server." (https://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#enabling-tls)
+tls:
+  certfiles: /shared/org1-root-ca-cert.pem
+  client:
+    certfile:
+    keyfile:
+
+csr:
+  cn: org1-ca
+  serialnumber:
+  names:
+    - C: US
+      ST: State
+      L:
+      O: Org1
+      OU: client
+  hosts:
+    - org1-ca
+
+id:
+  name:
+  type:
+  affiliation: org1
+  maxenrollments: 0
+  attributes:
+   # - name:
+   #   value:
+
+enrollment:
+  profile:
+  label:
+
+caname:
+
+bccsp:
+    default: SW
+    sw:
+        hash: SHA2
+        security: 256
+        filekeystore:
+            keystore: msp/keystore

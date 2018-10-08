@@ -56,8 +56,8 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash -c '/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/peer0.sh 2>&1 | tee /shared/logs/peer0.log; sleep 99999'
-    # command: /bin/bash -c '/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/peer0_auto.sh 2>&1 | tee /shared/logs/peer0.log; sleep 99999'
+    # command: /bin/bash -c '/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/peer0.sh 2>&1 | tee /shared/logs/peer0.log; sleep 99999'
+    command: /bin/bash -c '/opt/gopath/src/github.com/hyperledger/fabric/peer/setup/peer0_auto.sh 2>&1 | tee /shared/logs/peer0.log; sleep 99999'
     volumes:
       - ./:/opt/gopath/src/github.com/hyperledger/fabric/peer/setup
       - ./../shared:/shared

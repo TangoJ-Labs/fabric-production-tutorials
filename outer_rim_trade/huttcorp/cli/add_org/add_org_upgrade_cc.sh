@@ -36,7 +36,8 @@ sleep 3
 
 # Upgrade the chaincode - use the same version as the chaincode just installed
 # USE ".member" NOT ".peer" - NodeOUs needed to use ".peer", ".client", etc
-peer chaincode upgrade -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member','cloudcityincMSP.member')" $ORDERER_CONN_ARGS -v 2.0
+# peer chaincode upgrade -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member','cloudcityincMSP.member')" $ORDERER_CONN_ARGS -v 2.0
+peer chaincode upgrade -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer','cloudcityincMSP.peer')" $ORDERER_CONN_ARGS -v 2.0
 # Sleep to allow the ledger to be updated
 sleep 3
 
@@ -49,7 +50,8 @@ sleep 3
 
 # Upgrade the chaincode - use the same version as the chaincode just installed
 # USE ".member" NOT ".peer" - NodeOUs needed to use ".peer", ".client", etc
-peer chaincode upgrade -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member','cloudcityincMSP.member')" $ORDERER_CONN_ARGS -v 2.0
+# peer chaincode upgrade -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member','cloudcityincMSP.member')" $ORDERER_CONN_ARGS -v 2.0
+peer chaincode upgrade -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer','cloudcityincMSP.peer')" $ORDERER_CONN_ARGS -v 2.0
 # Sleep to allow the ledger to be updated
 sleep 3
 

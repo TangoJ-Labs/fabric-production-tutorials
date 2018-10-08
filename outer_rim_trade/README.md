@@ -5,7 +5,7 @@ This network runs on a solo orderer (hosted by one org) and static docker contai
 ## NOTES
 * Most services (containers) also include a `*_auto.sh` file in their directory.  You can use these scripts (change the docker-compose file `command:` section) to more quickly setup the network.  The manual steps are listed below for educational purposes.  Try out the manual process to get a better feel for how the network components interact.
 
-* IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the `docker-compose.yaml` and `configtx.yaml` files.
+* IF YOU MODIFY THE ORG NAMES, change the commands in this tutorial as needed, and be sure to check the `docker-compose.yaml` and `configtx.yaml`, `fabric-ca-server-config.yaml`, `fabric-ca-client-config.yaml`, and `config.yaml` files.
 
 ---
 
@@ -45,12 +45,28 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 #### The following step occurs inside the huttcorp CA Bash session:
->**1.3) Initialize the CA server**
->>`fabric-ca-server init -b huttcorp-admin-ca:adminpw >>/shared/logs/ca.log 2>&1 &`
+>**1.3) Prepare the Server Config file**
+><br>Open the `fabric-ca-server-config.yaml` file in the CA directory and make any CA settings changes needed. Pay careful attention to the `registry:` and `csr:` sections.  You might also need to edit the OU config file (`config.yaml`) in the `/shared` directory.
 >
->The `>>...` redirect will hide the stdout and stderror from your command line.  You will need to open `ca.log` to check for errors.  You can change the "-b" bootstrap option (format: `admin:adminpw`) to whatever admin username / password you want for the CA server admin.
+><br>Create an msp directory for the msp tree and config file.
+>>`mkdir -p $FABRIC_CA_SERVER_HOME/msp`
 >
->A `fabric-ca-server-config.yaml` file, root CA certificate `ca-cert.pem`, and `.../keystore` directory with private keys will be created at the server home directory (set by `FABRIC_CA_SERVER_HOME` in the docker-compose file).  We will override many of the config file CSR settings with environmental variables (the config file will still show default settings).  The entire structure should resemble:
+>Copy over the Server Config file and the OU config file.
+>>`cp $FABRIC_CA_SERVER_HOME/setup/fabric-ca-server-config.yaml $FABRIC_CA_SERVER_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_SERVER_HOME/msp/config.yaml`
+>
+>Remove the old CA Cert to force the creation of a new one.
+>>`rm $FABRIC_CA_SERVER_HOME/ca-cert.pem`
+>
+><br>
+>
+>**1.4) Initialize the CA server**
+><br>We do not need to use the bootstrap `-b` option with the initial user login info. because we are using a custom Server Config file with those settings embedded.
+>>`fabric-ca-server init >>/shared/logs/ca.log 2>&1 &`
+>
+>The `>>...` redirect will hide the stdout and stderror from your command line.  You will need to open `ca.log` to check for errors.
+>
+>A root CA certificate `ca-cert.pem` and `.../keystore` directory with private keys will be created at the server home directory (set by `FABRIC_CA_SERVER_HOME` in the docker-compose file).  If you did not customize the `fabric-ca-server-config.yaml` file, you will need to override many of the config file CSR settings with environmental variables (the config file will be automatically created with default values if you did not include it).  The entire structure should resemble:
 >
 ><pre style="line-height: 1.3;">
 >.
@@ -72,20 +88,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.4) Copy the crypto material**
+>**1.5) Copy the crypto material**
 >
 >Copy the Root CA Cert ONLY to the shared folder for production use.
->>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /shared/huttcorp-root-ca-cert.pem`
+>>`cp $FABRIC_CA_SERVER_HOME/huttcorp-ca-cert.pem /shared/huttcorp-root-ca-cert.pem`
 >
->The Root CA Cert is needed to `enroll` from the CLI.  We will refer to this file in other services (containers) via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable.  You could also hard-code the filename in the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate.
->
-><br>
->
->**1.5) Edit the CA Server Config File**
-><br>Edit the "affiliations" section of the config file.  This can also be done manually in the file.  (Note: the below command is formatted differently to ensure extra spaces are captured.  You need to enter this with these extra spaces, or it will not be recognized in the config file)
->><pre>sed -i "/affiliations:/a \\   huttcorp: []" $FABRIC_CA_SERVER_HOME/fabric-ca-server-config.yaml</pre>
->
-><br>(Optional) If you have minor changes you would like to make to the `fabric-ca-server-config.yaml` file, you can make those changes now.  If you would like to customize the entire config file and not rely on any default generation process during `init`, you can save a customized config file in the `FABRIC_CA_SERVER_HOME` directory before initialization and fabric-ca-server will use the custom file rather than generate a default.  For this example, we will use the default file and override some settings via the environmental variables.
+>The Root CA Cert is needed to `enroll` from the CLI.  We will refer to this file in other services (containers) via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable OR the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate.
 >
 ><br>
 >
@@ -116,11 +124,15 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.9) Enroll the CA administrator**
+>**1.9) Prepare and Enroll the CA administrator**
 ><br>First, create the needed msp directory and set the environment variables needed.  The `$FABRIC_CFG_PATH` was set when the container was started (default: `/etc/hyperledger/fabric`)
 >>`export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/huttcorp-root-ca-cert.pem`
-><br>`mkdir -p $FABRIC_CFG_PATH/orgs/huttcorp/ca/huttcorp-admin-ca`
+><br>`mkdir -p $FABRIC_CFG_PATH/orgs/huttcorp/ca/huttcorp-admin-ca/msp`
 ><br>`export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/huttcorp/ca/huttcorp-admin-ca`
+>
+>Copy over the config files.  NOTE: check both for configuration changes (the Client Config file `csr:` section should match the Server Config file).
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml`
 >
 ><br>Enroll the CA admin:
 >>`fabric-ca-client enroll -d -u https://huttcorp-admin-ca:adminpw@huttcorp-ca:7054`
@@ -160,11 +172,13 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 >
 >**1.11) Register the orderer profile**
->>`fabric-ca-client register -d --id.name huttcorp-orderer --id.secret ordererpw --id.type orderer`
+><br>DO NOT USE "--id.type orderer" - it will be registered as having two OUs, causing an error.  You could use "client" since the configtx.yaml file includes "client" in the "Writers" category, but "peer" is always included, so safe to just classify as "peer"
+>>`fabric-ca-client register -d --id.name huttcorp-orderer --id.secret ordererpw --id.type peer`
 >
 ><br>
 >
 >**1.12) Register the peer profile**
+><br>"--id.type peer" necessary when using NodeOUs and an endorsement policy requiring "peer" endorsement
 >>`fabric-ca-client register -d --id.name huttcorp-peer0 --id.secret peerpw --id.type peer`
 >
 ><br>
@@ -200,6 +214,9 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >**1.16) Enroll the ORG ADMIN and populate the admincerts directory**
 ><br>Take a look at the comments in `login-admin.sh` in the CLI directory to understand how the enroll process and cert copying fills in the MSP tree.
 >
+><br>Before creating the admin msp tree via enrollment, copy over the config file
+>>`cp /shared/config.yaml $FABRIC_CFG_PATH/orgs/huttcorp/msp/config.yaml`
+>
 >**NOTE: MUST RUN `login-admin.sh` with ". /" to capture env vars**
 >>`. $FABRIC_CFG_PATH/setup/login-admin.sh`
 >
@@ -216,9 +233,6 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 >The `genesis.block`, `channel.tx`, and `anchors.tx` were created in and used from the `FABRIC_CFG_PATH` directory.
 >
->You might see the following warning from `configtxgen`.  This can be ignored for now - an update later will use the latest version of the `configtx.yaml` file to include the missing sections:
-><br>`WARN 003 Default policy emission is deprecated, please include policy specificiations for the application group in configtx.yaml`
-><br>
 >
 >Move the genesis block to the shared directory - this is needed to start the orderer (env var `ORDERER_GENERAL_GENESISFILE` in orderer)
 >>`cp $FABRIC_CFG_PATH/genesis.block /shared`
@@ -257,8 +271,10 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 >
 >**1.22) Enroll profile & fill MSP tree**
+><br>Before enrolling, the client config file needs to be added to the MSP parent directory
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
 >
->Enroll the orderer profile to get the orderer's enrollment certificate (default profile):
+>Enroll the orderer profile to get the orderer's enrollment certificate (default profile)
 >>`fabric-ca-client enroll -d -u https://huttcorp-orderer:ordererpw@huttcorp-ca:7054 -M $FABRIC_CA_CLIENT_HOME/msp`
 >
 >Copy the tlscacert to the orderer msp tree
@@ -266,6 +282,9 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 >Copy the admincert to the orderer msp tree
 >>`/shared/utils/msp_add_admincert.sh -c /shared/huttcorp-admin@huttcorp-cert.pem -m $ORDERER_GENERAL_LOCALMSPDIR`
+>
+>Move the MSP config file to the MSP directory
+>>`cp /shared/config.yaml $ORDERER_GENERAL_LOCALMSPDIR/config.yaml`
 >
 ><br>
 >
@@ -301,18 +320,18 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 **1.25) Start the huttcorp COUCHDB service**
 >`docker-compose -f huttcorp/couchdb/docker-compose.yaml up -d`
 
-<br><br>The default hyperledger couchdb container does not need customizing other than the environment variables in the docker compose file.
+<br>The default hyperledger couchdb container does not need customizing other than the environment variables in the docker compose file.
 
 <br>
 <br>
 
 ## HUTT CORP. ANCHOR PEER
-**1.27) Start the huttcorp PEER0 service**
+**1.26) Start the huttcorp PEER0 service**
 >`docker-compose -f huttcorp/peer0/docker-compose.yaml up -d`
 
 <br>
 
-**1.28) Start a Bash session in the huttcorp PEER0 service**
+**1.27) Start a Bash session in the huttcorp PEER0 service**
 >`docker exec -it huttcorp-peer0 bash`
 
 #### The following step occurs inside the huttcorp PEER0 Bash session:
@@ -320,7 +339,9 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.29) Enroll profile & fill MSP tree**
+>**1.28) Enroll profile & fill MSP tree**
+><br>Before enrolling, the client config file needs to be added to the MSP parent directory
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
 >
 >Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
 >>`fabric-ca-client enroll -d -u https://huttcorp-peer0:peerpw@huttcorp-ca:7054 -M $CORE_PEER_MSPCONFIGPATH`
@@ -331,9 +352,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >Copy the admincert to the peer msp tree
 >>`/shared/utils/msp_add_admincert.sh -c /shared/huttcorp-admin@huttcorp-cert.pem -m $CORE_PEER_MSPCONFIGPATH`
 >
+>Move the MSP config file to the MSP directory
+>>`cp /shared/config.yaml $CORE_PEER_MSPCONFIGPATH/config.yaml`
+>
 ><br>
 >
->**1.30) Enroll the peer to get TLS & Certs**
+>**1.29) Enroll the peer to get TLS & Certs**
 ><br>Use the `--enrollment.profile` `tls` option to receive the TLS key & cert
 >>`fabric-ca-client enroll -d --enrollment.profile tls -u https://huttcorp-peer0:peerpw@huttcorp-ca:7054 -M /tmp/tls --csr.hosts huttcorp-peer0`
 >
@@ -344,7 +368,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.31) Start the peer**
+>**1.30) Start the peer**
 >
 >>`peer node start >> /shared/logs/peer0.log 2>&1 &`
 >
@@ -362,7 +386,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 
 
 ## CHANNEL & CHAINCODE
-**1.32) Start the huttcorp CLI (tools) service**
+**1.31) Start the huttcorp CLI (tools) service**
 >`docker exec -it huttcorp-cli bash`
 
 #### The following steps occur inside the huttcorp CLI Bash session:
@@ -372,43 +396,43 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.33) Create the Channel**
+>**1.32) Create the Channel**
 >>`peer channel create --logging-level=DEBUG -c spicechannel -f $FABRIC_CFG_PATH/channel.tx $ORDERER_CONN_ARGS`
 >
 ><br>
 >
->**1.34) Join the Channel**
+>**1.33) Join the Channel**
 ><br>You might need to retry to join the channel several times
 >>`peer channel join -b spicechannel.block`
 >
 ><br>
 >
->**1.35) Update the Channel with the new Anchor Peer**
+>**1.34) Update the Channel with the new Anchor Peer**
 >>`peer channel update -c spicechannel -f $FABRIC_CFG_PATH/huttcorp-anchors.tx $ORDERER_CONN_ARGS`
 >
 ><br>
 >
->**1.36) Install the Wallet Chaincode on the new Anchor Peer**
+>**1.35) Install the Wallet Chaincode on the new Anchor Peer**
 >>`peer chaincode install -n ccWallet -p chaincode/wallet -v 1.0`
 >
 ><br>
 >
->**1.37) Instantiate the Wallet Chaincode on the new Anchor Peer**
->>`peer chaincode instantiate -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member')" $ORDERER_CONN_ARGS -v 1.0`
+>**1.36) Instantiate the Wallet Chaincode on the new Anchor Peer**
+>>`peer chaincode instantiate -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer')" $ORDERER_CONN_ARGS -v 1.0`
 >
 ><br>
 >
->**1.38) Install the User Chaincode on the new Anchor Peer**
+>**1.37) Install the User Chaincode on the new Anchor Peer**
 >>`peer chaincode install -n ccUser -p chaincode/user -v 1.0`
 >
 ><br>
 >
->**1.39) Instantiate the User Chaincode on the new Anchor Peer**
->>`peer chaincode instantiate -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member')" $ORDERER_CONN_ARGS -v 1.0`
+>**1.38) Instantiate the User Chaincode on the new Anchor Peer**
+>>`peer chaincode instantiate -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer')" $ORDERER_CONN_ARGS -v 1.0`
 >
 ><br>
 >
->**1.40) Test the Chaincode**
+>**1.39) Test the Chaincode**
 ><br>Create a new Wallet ledger entry (note that this will not create a User ledger entry)
 >>`peer chaincode invoke -C spicechannel -n ccWallet $ORDERER_CONN_ARGS -c '{"Args":["create","Jabba"]}'`
 >
@@ -424,7 +448,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.41) Start the Client App**
+>**1.40) Start the Client App**
 >
 >Packages need to be imported before running the Client App
 >>yes | go get -u github.com/hyperledger/fabric-sdk-go
@@ -464,19 +488,19 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >[GIN-debug] Listening and serving HTTP on :3000
 >```
 
-1.41.1) Open a browser and load http://localhost:3000 to view the app
+1.40.1) Open a browser and load http://localhost:3000 to view the app
 <br>NOTE: If you have previously set up the network and app, be sure to log out - saved session data will cause the appearance of being logged in without having created the account.
 <br><br>![app login](./readme_media/org1_app_login.png)
 
-1.41.2) Enter a username and password to log in or create a new account
+1.40.2) Enter a username and password to log in or create a new account
 <br>Note: the login process might take a few seconds if this is a new account
 <br><br>![app create account](./readme_media/org1_app_new_account.png)
 
-1.41.3) Deposit into the account
+1.40.3) Deposit into the account
 <br>In this example, Han just got a prepayment of 2,000 credits.  Enter 1,000 twice since the maximum single deposit amount is 1,000.
 <br><br>![app deposit](./readme_media/org1_app_deposit.png)
 
-1.41.4) Transfer to another account
+1.40.4) Transfer to another account
 <br>In this example, Han owes Jabba 10,000 credits with 20% interest.  Han decides to go ahead and transfer the 2,000 credits to appease Jabba.
 <br><br>![app transfer](./readme_media/org1_app_transfer.png)
 <br><br>![app transfer confirmation](./readme_media/org1_app_transfer2.png)
@@ -505,26 +529,36 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 **2.1) Start the cloudcityinc CA service**
 >`docker-compose -f cloudcityinc/ca/docker-compose.yaml up -d`
 
-<br>
-
 **2.2) Start a Bash session in the cloudcityinc CA service**
 >`docker exec -it cloudcityinc-ca bash`
 
 #### The following step occurs inside the cloudcityinc CA Bash session:
->**2.3) Initialize the CA server**
->>`fabric-ca-server init -b cloudcityinc-admin-ca:adminpw >>/shared/logs/ca.log 2>&1 &`
+>**2.3) Prepare the Server Config file**
+><br>Open the `fabric-ca-server-config.yaml` file in the CA directory and make any CA settings changes needed. Pay careful attention to the `registry:` and `csr:` sections.  You might also need to edit the OU config file (`config.yaml`) in the `/shared` directory.
+>
+>Create an msp directory for the msp tree and config file.
+>>`mkdir -p $FABRIC_CA_SERVER_HOME/msp`
+>
+>Copy over the Server Config file and the OU config file.
+>>`cp $FABRIC_CA_SERVER_HOME/setup/fabric-ca-server-config.yaml $FABRIC_CA_SERVER_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_SERVER_HOME/msp/config.yaml`
+>
+>Remove the old CA Cert to force the creation of a new one.
+>>`rm $FABRIC_CA_SERVER_HOME/ca-cert.pem`
 >
 ><br>
 >
->**2.4) Copy the crypto material**
+>**2.4) Initialize the CA server**
+><br>We do not need to use the bootstrap `-b` option with the initial user login info. because we are using a custom Server Config file with those settings embedded.
+>>`fabric-ca-server init >>/shared/logs/ca.log 2>&1 &`
+>
+><br>
+>
+>**2.5) Copy the crypto material**
 ><br>Copy the Root CA Cert ONLY to the shared folder for production use.
->>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /shared/cloudcityinc-root-ca-cert.pem`
+>>`cp $FABRIC_CA_SERVER_HOME/cloudcityinc-ca-cert.pem /shared/cloudcityinc-root-ca-cert.pem`
 >
 ><br>
->
->**2.5) Edit the CA Server Config File**
-><br>Edit the "affiliations" section of the config file.  This can also be done manually in the file.  (Note: the below command is formatted differently to ensure extra spaces are captured.  You need to enter this with these extra spaces, or it will not be recognized in the config file)
->><pre>sed -i "/affiliations:/a \\   cloudcityinc: []" $FABRIC_CA_SERVER_HOME/fabric-ca-server-config.yaml</pre>
 >
 >**2.6) Start the CA Server**
 >>`fabric-ca-server start >>/shared/logs/ca.log 2>&1 &`
@@ -556,8 +590,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >**2.9) Enroll the CA administrator**
 ><br>First, create the needed msp directory and set the environment variables needed.  The `$FABRIC_CFG_PATH` was set when the container was started (default: `/etc/hyperledger/fabric`)
 >>`export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/cloudcityinc-root-ca-cert.pem`
-><br>`mkdir -p $FABRIC_CFG_PATH/orgs/cloudcityinc/ca/cloudcityinc-admin-ca`
+><br>`mkdir -p $FABRIC_CFG_PATH/orgs/cloudcityinc/ca/cloudcityinc-admin-ca/msp`
 ><br>`export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/cloudcityinc/ca/cloudcityinc-admin-ca`
+>
+>Copy over the config files.  NOTE: check both for configuration changes (the Client Config file `csr:` section should match the Server Config file).
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml`
 >
 ><br>Enroll the CA admin:
 >>`fabric-ca-client enroll -d -u https://cloudcityinc-admin-ca:adminpw@cloudcityinc-ca:7054`
@@ -576,18 +614,18 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >### **Registration** of orderer(s), peer(s), and user(s)
 >Registration adds an entry into the `fabric-ca-server.db` or LDAP
 >
->**2.9) Register the org administrator**
+>**2.10) Register the org administrator**
 ><br>The admin identity has the "admin" attribute which is added to ECert by default.  The other attributes are needed for this example chaincode settings.  Register the admin:
 >>`fabric-ca-client register -d --id.name cloudcityinc-admin --id.secret adminpw --id.attrs "hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert"`
 >
 ><br>
 >
->**2.10) Register the peer profile**
+>**2.11) Register the peer profile**
 >>`fabric-ca-client register -d --id.name cloudcityinc-peer0 --id.secret peerpw --id.type peer`
 >
 ><br>
 >
->**2.13) Generate client TLS cert and key pair for the peer commands**
+>**2.12) Generate client TLS cert and key pair for the peer commands**
 >>`fabric-ca-client enroll -d --enrollment.profile tls -u https://cloudcityinc-peer0:peerpw@cloudcityinc-ca:7054 -M /tmp/tls --csr.hosts cloudcityinc-peer0`
 >
 >Copy the TLS key and cert to the local tls directory
@@ -595,25 +633,28 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.14) Create the MSP directory tree**
+>**2.13) Create the MSP directory tree**
 ><br>Get the root ca cert again and auto-create the Cloud City Inc. MSP tree
 >>`fabric-ca-client getcacert -d -u https://cloudcityinc-ca:7054 -M $FABRIC_CFG_PATH/orgs/cloudcityinc/msp`
 >
 ><br>
 >
->**2.15) Copy the tlscacert to the admin-ca msp tree**
+>**2.14) Copy the tlscacert to the admin-ca msp tree**
 >>`/shared/utils/msp_add_tlscacert.sh -c $FABRIC_CFG_PATH/orgs/cloudcityinc/msp/cacerts/* -m $FABRIC_CFG_PATH/orgs/cloudcityinc/msp`
+>
+>Move the MSP config file to the CA Admin MSP directory
+>>`cp /shared/config.yaml $FABRIC_CFG_PATH/orgs/cloudcityinc/msp/config.yaml`
 >
 ><br>
 >
->**2.16) Enroll the ORG ADMIN and populate the admincerts directory**
+>**2.15) Enroll the ORG ADMIN and populate the admincerts directory**
 ><br>NOTE: MUST RUN `login-admin.sh` with ". /" to capture env vars
 >>`source /etc/hyperledger/fabric/setup/.env`
 <br>`. $FABRIC_CFG_PATH/setup/login-admin.sh`
 >
 ><br>
 >
->**2.17) Use the configtxgen tool to generate the org info JSON to join the channel**
+>**2.16) Use the configtxgen tool to generate the org info JSON to join the channel**
 ><br>Move the configtx.yaml file to the FABRIC_CFG_PATH directory (see docker compose env vars)
 >>`cp /etc/hyperledger/fabric/setup/configtx.yaml /etc/hyperledger/fabric/configtx.yaml`
 >
@@ -626,13 +667,13 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.11) Register a default user to initialize the SDK**
+>**2.17) Register a default user to initialize the SDK**
 >>`fabric-ca-client register -d --id.name cloudcityinc-sdk --id.secret sdkpw`
 >><br>`. $FABRIC_CFG_PATH/setup/login.sh -u cloudcityinc-sdk -p sdkpw -c /shared/cloudcityinc-root-ca-cert.pem`
 >
 ><br>
 >
->**2.12) (OPTIONAL) Register a user**
+>**2.18) (OPTIONAL) Register a user**
 >>`fabric-ca-client register -d --id.name cloudcityinc-lobot --id.secret userpw`
 >
 ><br>
@@ -643,19 +684,19 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 ## MANUAL TRANSFER
-**2.18) MANUAL TRANSFER Cloud City Inc. -> Hutt Corp.**
+**2.19) MANUAL TRANSFER Cloud City Inc. -> Hutt Corp.**
 - Copy created `.json` file to huttcorp `/shared` directory
 
 <br>
 
-**2.19) MANUAL TRANSFER Hutt Corp. -> Cloud City Inc.**
+**2.20) MANUAL TRANSFER Hutt Corp. -> Cloud City Inc.**
 - Copy `huttcorp-root-ca-cert.pem` to cloudcityinc `/shared` directory
 
 <br>
 <br>
 
 ## CLOUD CITY INC. COUCHDB
-**2.20) Start the cloudcityinc COUCHDB service**
+**2.21) Start the cloudcityinc COUCHDB service**
 >`docker-compose -f cloudcityinc/couchdb/docker-compose.yaml up -d`
 
 <br>The default hyperledger couchdb container does not need customizing other than the environment variables in the docker compose file.
@@ -664,12 +705,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 ## CLOUD CITY INC. ANCHOR PEER
-**2.21) Start the cloudcityinc PEER0 service**
+**2.22) Start the cloudcityinc PEER0 service**
 >`docker-compose -f cloudcityinc/peer0/docker-compose.yaml up -d`
 
 <br>
 
-**2.22) Start a Bash session in the cloudcityinc PEER0 service**
+**2.23) Start a Bash session in the cloudcityinc PEER0 service**
 >`docker exec -it cloudcityinc-peer0 bash`
 
 #### The following step occurs inside the cloudcityinc PEER0 Bash session:
@@ -677,7 +718,9 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.23) Enroll profile & fill MSP tree**
+>**2.24) Enroll profile & fill MSP tree**
+><br>Before enrolling, the client config file needs to be added to the MSP parent directory
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
 >
 >Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
 >>`fabric-ca-client enroll -d -u https://cloudcityinc-peer0:peerpw@cloudcityinc-ca:7054 -M $CORE_PEER_MSPCONFIGPATH`
@@ -688,9 +731,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >Copy the admincert to the peer msp tree
 >>`/shared/utils/msp_add_admincert.sh -c /shared/cloudcityinc-admin@cloudcityinc-cert.pem -m $CORE_PEER_MSPCONFIGPATH`
 >
+>Move the MSP config file to the MSP directory
+>>`cp /shared/config.yaml $CORE_PEER_MSPCONFIGPATH/config.yaml`
+>
 ><br>
 >
->**2.24) Enroll the orderer to get TLS & Certs**
+>**2.25) Enroll the orderer to get TLS & Certs**
 ><br>Use the `--enrollment.profile` `tls` option to receive the TLS key & cert
 >>`fabric-ca-client enroll -d --enrollment.profile tls -u https://cloudcityinc-peer0:peerpw@cloudcityinc-ca:7054 -M /tmp/tls --csr.hosts cloudcityinc-peer0`
 >
@@ -699,7 +745,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.25) Start the peer**
+>**2.26) Start the peer**
 >
 >>`peer node start >> /shared/logs/peer0.log 2>&1 &`
 >
@@ -715,16 +761,19 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 ## HUTT CORP. CLI - UPGRADE CHAINCODE
-**2.26) Start a Bash session in the huttcorp CLI service**
+**2.27) Start a Bash session in the huttcorp CLI service**
 <br>Switch back to the huttcorp terminal window (or `docker exec -it huttcorp-cli bash` into the huttcorp CLI if needed).  You might need to `Ctrl+c` to stop the client app from listening on the port).
 
 #### The following step occurs inside the huttcorp CLI Bash session:
->**2.27) Install jq (command-line JSON processor)**
+>Move to the root directory, otherwise temporary files will clutter the client app directory
+>>`cd /`
+>
+>**2.28) Install jq (command-line JSON processor)**
 >>`apt-get -y update && apt-get -y install jq`
 >
 ><br>
 >
->**2.28) Fetch the config block for the channel**
+>**2.29) Fetch the config block for the channel**
 >>`peer channel fetch config config_block.pb -c spicechannel $ORDERER_CONN_ARGS`
 >
 >Convert it to json (output to `config.json`)
@@ -732,7 +781,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.29) Create Config Update Envelope**
+>**2.30) Create Config Update Envelope**
 ><br>Modify the configuration to append Cloud City Inc.
 >>`jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"cloudcityinc":.[1]}}}}}' config.json /shared/cloudcityinc.json > modified_config.json`
 >
@@ -746,7 +795,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.30) Sign the Update Envelope**
+>**2.31) Sign the Update Envelope**
 >>`peer channel signconfigtx -f update_in_envelope.pb`
 >
 >Copy the envelope to the common directory and pass to other authorizing admins (if needed)
@@ -754,43 +803,43 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.31) Update Channel**
+>**2.32) Update Channel**
 ><br>After ALL needed admins have signed the update envelope, update the channel
 >>`peer channel update -f update_in_envelope.pb -c spicechannel $ORDERER_CONN_ARGS`
 >
 ><br>
 >
->**2.32) Install Wallet Chaincode**
+>**2.33) Install Wallet Chaincode**
 ><br>Be sure to iterate the chaincode version before installation
 >>`peer chaincode install -n ccWallet -p chaincode/wallet -v 2.0`
 >
 ><br>
 >
->**2.33) Upgrade Wallet Chaincode**
+>**2.34) Upgrade Wallet Chaincode**
 ><br>NOTES:
 >- Be sure to use the same chaincode version used on the install
->- Use ".member" NOT ".peer" - a later update will use NodeOUs to enable use of ".peer", ".client", etc.
+>- You can use ".member" as well as ".peer" - we have used the v1.2 settings with NodeOU, so restricting endorsement to peers should work.
 >
->>`peer chaincode upgrade -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member','cloudcityincMSP.member')" $ORDERER_CONN_ARGS -v 2.0`
+>>`peer chaincode upgrade -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer','cloudcityincMSP.peer')" $ORDERER_CONN_ARGS -v 2.0`
 >
 ><br>
 >
->**2.32) Install User Chaincode**
+>**2.35) Install User Chaincode**
 ><br>Be sure to iterate the chaincode version before installation
 >>`peer chaincode install -n ccUser -p chaincode/user -v 2.0`
 >
 ><br>
 >
->**2.33) Upgrade User Chaincode**
+>**2.36) Upgrade User Chaincode**
 ><br>NOTES:
 >- Be sure to use the same chaincode version used on the install
->- Use ".member" NOT ".peer" - a later update will use NodeOUs to enable use of ".peer", ".client", etc.
+>- You can use ".member" as well as ".peer" - we have used the v1.2 settings with NodeOU, so restricting endorsement to peers should work.
 >
->>`peer chaincode upgrade -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member','cloudcityincMSP.member')" $ORDERER_CONN_ARGS -v 2.0`
+>>`peer chaincode upgrade -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer','cloudcityincMSP.peer')" $ORDERER_CONN_ARGS -v 2.0`
 >
 ><br>
 >
->**2.34) Test Chaincode**
+>**2.37) Test Chaincode**
 ><br>First run a query to check the current ledger value
 >>`peer chaincode invoke -C spicechannel -n ccWallet $ORDERER_CONN_ARGS -c '{"Args":["query","Jabba"]}'`
 >
@@ -801,7 +850,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.35) Start Client App**
+>**2.38) Start Client App**
 >Move back to the client app directory and restart the client app service
 >>`cd /etc/hyperledger/fabric/setup/client`
 >
@@ -813,7 +862,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ## CLOUD CITY INC. CLI - INSTALL CHAINCODE
 <br>Switch back to the Cloud City Inc. terminal window
 
-**2.36) Start a Bash session in the cloudcityinc CLI service**
+**2.39) Start a Bash session in the cloudcityinc CLI service**
 >`docker exec -it cloudcityinc-cli bash`
 
 #### The following step occurs inside the cloudcityinc CLI Bash session:
@@ -823,30 +872,31 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.37) Fetch the config block for the channel**
+>**2.40) Fetch the config block for the channel**
 >>`peer channel fetch 0 spicechannel.block -c spicechannel $ORDERER_CONN_ARGS`
 >
 ><br>
 >
->**2.38) Join the channel**
+>**2.41) Join the channel**
 >>`peer channel join -b spicechannel.block`
 >
 ><br>
 >
->**2.39) Install Wallet Chaincode**
+>**2.42) Install Wallet Chaincode**
 ><br>Be sure to match the chaincode version with the other org chaincode install
 >>`peer chaincode install -n ccWallet -p chaincode/wallet -v 2.0`
 >
 ><br>
 >
->**2.40) Install User Chaincode**
+>**2.43) Install User Chaincode**
 ><br>Be sure to match the chaincode version with the other org chaincode install
 >>`peer chaincode install -n ccUser -p chaincode/user -v 2.0`
 >
 ><br>
 >
->**2.41) Test Chaincode**
+>**2.44) Test Chaincode**
 ><br>First run a query to check the current ledger value
+><br>NOTE: This might take a minute since the new chaincode settings need to take effect on this org's nodes
 >>`peer chaincode invoke -C spicechannel -n ccWallet $ORDERER_CONN_ARGS -c '{"Args":["create","CloudCity"]}'`
 >
 >Run an invoke to change the value
@@ -859,7 +909,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 
 <br>
 
-<br>2.41.1) View the Cloud City Inc. CouchDB World State entries by going to http://localhost:6984/_utils
+<br>2.44.1) View the Cloud City Inc. CouchDB World State entries by going to http://localhost:6984/_utils
 <br>NOTE: This port was exposed in the "cloudcityinc-couchdb" `docker-compose.yaml` file.  Due to security concerns, the port should not be exposed in production.
 <br><br>You will need to log in using the username / password used in the couchdb container.  The default is:
 <br>username: cloudcityinc-couchdb
@@ -869,7 +919,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 
 <br>
 
-**2.42) CLOUD CITY INC. CLIENT APP**
+**2.45) CLOUD CITY INC. CLIENT APP**
 #### The following step occurs inside the cloudcityinc CLI Bash session:
 >Packages need to be imported before running the Client App
 >>yes | go get -u github.com/hyperledger/fabric-sdk-go
@@ -892,14 +942,14 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>yes | apt-get update
 ><br>yes | apt-get install iputils-ping
 >
->2.42.1) Move to the client app directory and start the client app service (on :3001 port this time)
+>2.45.1) Move to the client app directory and start the client app service (on :3001 port this time)
 >>`cd /etc/hyperledger/fabric/setup/client`
 >
 >>`go run main.go`
 
-2.42.2) Open a new browser session (such as a private session) and load http://localhost:3001 to view the app
+2.45.2) Open a new browser session (such as a private session) and load http://localhost:3001 to view the app
 
-2.42.3) Log into the Cloud City Inc. client app
+2.45.3) Log into the Cloud City Inc. client app
 <br>NOTE: This example app does not restrict access to a client app by organization, but new accounts created via the client app will assign the client app's organization to that new User (for example, creating a new account via the http://localhost:3001 app will create a new User for cloudcityinc)
 
 <br>You can see Cloud City Inc.'s World State data includes all ledger data.

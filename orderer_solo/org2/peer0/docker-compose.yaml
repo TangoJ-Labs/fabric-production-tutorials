@@ -27,6 +27,7 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/shared/org2-root-ca-cert.pem
+
       - CORE_PEER_TLS_CLIENTAUTHREQUIRED=true
       - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/shared/org2-root-ca-cert.pem
       - CORE_PEER_TLS_CLIENTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/tls/server.crt
@@ -36,6 +37,9 @@ services:
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=org2-peer0:7051
       - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+
+      - CORE_CHAINCODE_DEPLOYTIMEOUT=300s
+      - CORE_CHAINCODE_STARTUPTIMEOUT=300s
 
       # the following setting starts chaincode containers on the same
       # bridge network as the peers

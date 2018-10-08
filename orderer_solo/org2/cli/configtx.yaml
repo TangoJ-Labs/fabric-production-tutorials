@@ -9,6 +9,16 @@ Organizations:
     ID: org2MSP
     # If FABRIC_CFG_PATH is modified, change the below MSP directory
     MSPDir: /etc/hyperledger/fabric/orgs/org2/msp
+    Policies: &org2Policies
+        Readers:
+            Type: Signature
+            Rule: "OR('org2MSP.admin', 'org2MSP.peer', 'org2MSP.client')"
+        Writers:
+            Type: Signature
+            Rule: "OR('org2MSP.admin', 'org2MSP.peer')"
+        Admins:
+            Type: Signature
+            Rule: "OR('org2MSP.admin')"
     AnchorPeers:
        - Host: org2-peer0
          Port: 7051

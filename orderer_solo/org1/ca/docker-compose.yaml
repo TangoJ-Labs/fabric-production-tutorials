@@ -13,17 +13,20 @@ services:
     environment:
       - COMPOSE_PROJECT_NAME=orderer_solo_project
 
-      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca
-      - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_CSR_CN=org1-ca
-      - FABRIC_CA_SERVER_CSR_HOSTS=org1-ca
-      - FABRIC_CA_SERVER_DEBUG=true
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca
+      - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca
+      - FABRIC_CA_SERVER_HOME=/etc/hyperledger/fabric-ca-server
+
+      # - FABRIC_CA_SERVER_TLS_ENABLED=true
+      # - FABRIC_CA_SERVER_CSR_CN=org1-ca
+      # - FABRIC_CA_SERVER_CSR_HOSTS=org1-ca
+      # - FABRIC_CA_SERVER_DEBUG=true
       
     volumes:
-      - ./:/etc/hyperledger/fabric-ca/setup
+      - ./:/etc/hyperledger/fabric-ca-server/setup
       # This directory map allows the CLI environment to access the passed CA crypto material:
       - ./../shared:/shared
-    command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca/setup/ca.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
-    # command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca/setup/ca_auto.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
+    command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca-server/setup/ca.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
+    # command: /bin/bash -c 'mkdir /shared/logs; /etc/hyperledger/fabric-ca-server/setup/ca_auto.sh 2>&1 | tee /shared/logs/ca.log; sleep 99999'
     networks:
       - orderer_solo

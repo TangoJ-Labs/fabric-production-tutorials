@@ -1,0 +1,46 @@
+
+url: https://cloudcityinc-ca:7054
+
+mspdir: msp
+
+# "The client option is required only if mutual TLS is configured on the server." (https://hyperledger-fabric-ca.readthedocs.io/en/latest/users-guide.html#enabling-tls)
+tls:
+  certfiles: /shared/cloudcityinc-root-ca-cert.pem
+  client:
+    certfile:
+    keyfile:
+
+csr:
+  cn: cloudcityinc-ca
+  serialnumber:
+  names:
+    - C: US
+      ST: Texas
+      L:
+      O: TangoJLabs
+      OU: client
+  hosts:
+    - cloudcityinc-ca
+
+id:
+  name:
+  type:
+  affiliation: cloudcityinc
+  maxenrollments: 0
+  attributes:
+   # - name:
+   #   value:
+
+enrollment:
+  profile:
+  label:
+
+caname:
+
+bccsp:
+    default: SW
+    sw:
+        hash: SHA2
+        security: 256
+        filekeystore:
+            keystore: msp/keystore

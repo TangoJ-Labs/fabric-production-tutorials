@@ -20,29 +20,36 @@ cp $FABRIC_CFG_PATH/setup/configtx.yaml $FABRIC_CFG_PATH/configtx.yaml
 
 which configtxgen
 if [ "$?" -ne 0 ]; then
-  fatal "configtxgen tool not found. exiting"
+  echo "configtxgen tool not found. exiting"
+  exit 1
 fi
 
 echo "Generating orderer genesis block at $FABRIC_CFG_PATH/genesis.block"
 # Note: For some unknown reason (at least for now) the block file can't be
 # named orderer.genesis.block or the orderer will fail to launch!
-configtxgen -profile OrgsOrdererGenesis -outputBlock $FABRIC_CFG_PATH/genesis.block
+# To understand the difference between the orderer (system) channel and the application channel
+# naming, see this thread: https://lists.hyperledger.org/g/fabric/topic/17549890
+configtxgen -profile OrgsOrdererGenesis -outputBlock $FABRIC_CFG_PATH/genesis.block \
+            -channelID spicechannelorderers
 if [ "$?" -ne 0 ]; then
-  fatal "Failed to generate orderer genesis block"
+  echo "Failed to generate orderer genesis block"
+  exit 1
 fi
 
 echo "Generating channel configuration transaction at $FABRIC_CFG_PATH/channel.tx"
 configtxgen -profile OrgsChannel -outputCreateChannelTx $FABRIC_CFG_PATH/channel.tx \
             -channelID spicechannel
 if [ "$?" -ne 0 ]; then
-  fatal "Failed to generate channel configuration transaction"
+  echo "Failed to generate channel configuration transaction"
+  exit 1
 fi
 
 echo "Generating anchor peer update transaction for huttcorp at $FABRIC_CFG_PATH/huttcorp-anchors.tx"
 configtxgen -profile OrgsChannel -outputAnchorPeersUpdate $FABRIC_CFG_PATH/huttcorp-anchors.tx \
             -channelID spicechannel -asOrg huttcorp
 if [ "$?" -ne 0 ]; then
-  fatal "Failed to generate anchor peer update for huttcorp"
+  echo "Failed to generate anchor peer update for huttcorp"
+  exit 1
 fi
 
 echo "Finished building channel artifacts"

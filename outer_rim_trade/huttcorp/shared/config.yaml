@@ -1,0 +1,26 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+OrganizationalUnitIdentifiers:
+  - Certificate: "cacerts/huttcorp-ca-7054.pem"
+    OrganizationalUnitIdentifier: "client"
+  - Certificate: "cacerts/huttcorp-ca-7054.pem"
+    OrganizationalUnitIdentifier: "peer"
+  # - Certificate: "cacerts/huttcorp-ca-7054.pem"
+  #   OrganizationalUnitIdentifier: "orderer"
+  # - Certificate: "cacerts/huttcorp-ca-7054.pem"
+  #   OrganizationalUnitIdentifier: "admin"
+  # - Certificate: "cacerts/huttcorp-ca-7054.pem"
+  #   OrganizationalUnitIdentifier: "ca"
+
+NodeOUs:
+  Enable: true
+  ClientOUIdentifier:
+    # if Certificate is empty, then the certifier identifier will not be enforced
+    Certificate: "cacerts/huttcorp-ca-7054.pem"
+    OrganizationalUnitIdentifier: "client"
+  PeerOUIdentifier:
+    Certificate: "cacerts/huttcorp-ca-7054.pem"
+    OrganizationalUnitIdentifier: "peer"

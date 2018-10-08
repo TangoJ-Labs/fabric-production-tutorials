@@ -33,8 +33,8 @@ services:
 
       - CORE_LOGGING_GRPC=DEBUG
       
-    command: /bin/bash -c '/etc/hyperledger/orderer/setup/orderer.sh 2>&1 | tee /shared/logs/orderer.log; sleep 99999'
-    # command: /bin/bash -c '/etc/hyperledger/orderer/setup/orderer_auto.sh 2>&1 | tee /shared/logs/orderer.log; sleep 99999'
+    # command: /bin/bash -c '/etc/hyperledger/orderer/setup/orderer.sh 2>&1 | tee /shared/logs/orderer.log; sleep 99999'
+    command: /bin/bash -c '/etc/hyperledger/orderer/setup/orderer_auto.sh 2>&1 | tee /shared/logs/orderer.log; sleep 99999'
     volumes:
       - ./:/etc/hyperledger/orderer/setup
       - ./../shared:/shared

@@ -9,6 +9,7 @@ echo "********************* LOG IN ADMIN ********************"
 # If the admincerts folder already exists, the admin is already signed in
 # IF YOU ENROLL AGAIN THE CERT WILL CHANGE - COULD CAUSE CHANNEL UPDATE ISSUES
 
+# ENROLLING USER: Create directory, set Client Home to directory, copy config file into directory (see below after directory check)
 export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/cloudcityinc/users/cloudcityinc-admin #MSP CORRECTION
 
 # Always use the common dir for the Root CA Cert File (needed to be transferred anyway)
@@ -17,6 +18,10 @@ export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/cloudcityinc-root-ca-cert.pem
 if [ ! -d $FABRIC_CA_CLIENT_HOME ]; then
     echo "Enrolling admin 'cloudcityinc-admin' with cloudcityinc-ca ..."
 
+    mkdir -p $FABRIC_CA_CLIENT_HOME/msp
+    cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME
+    cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml
+    
     fabric-ca-client enroll -d -u https://cloudcityinc-admin:adminpw@cloudcityinc-ca:7054
 
     ########## Copy the signcerts file to follow all needed MSP naming rules for the SDK ##########

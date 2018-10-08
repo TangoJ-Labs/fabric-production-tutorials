@@ -16,13 +16,15 @@ echo "*********************** ENROLL CA ADMIN ***********************"
 
 export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/huttcorp-root-ca-cert.pem
 
-mkdir -p $FABRIC_CFG_PATH/orgs/huttcorp/ca/huttcorp-admin-ca
+# ENROLLING USER: Create directory, set Client Home to directory, copy config file into directory
+mkdir -p $FABRIC_CFG_PATH/orgs/huttcorp/ca/huttcorp-admin-ca/msp
 export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/huttcorp/ca/huttcorp-admin-ca
+cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME
+# Move the MSP config file to the CA Admin MSP directory
+cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml
 
 # Enroll the CA Admin using the bootstrap CA profile (used when setting up the CA service)
 fabric-ca-client enroll -d -u https://huttcorp-admin-ca:adminpw@huttcorp-ca:7054
-
-# fabric-ca-client enroll -d --enrollment.profile tls -u https://huttcorp-admin-ca:adminpw@huttcorp-ca:7054 -M /tmp/tls/huttcorp-admin-ca
 
 # Creates inside FABRIC_CA_CLIENT_HOME:
 #...orgs/huttcorp/ca/huttcorp-admin-ca
@@ -42,10 +44,13 @@ cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/sign
 # For certfileuserstore (github.com/hyperledger/fabric-sdk-go/pkg/msp/certfileuserstore.go):
 cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/huttcorp-admin-ca@huttcorpMSP-cert.pem #MSP CORRECTION
 
+# # Get some tls certs to use to send commands to the CA server
+# fabric-ca-client enroll -d --enrollment.profile tls -u https://huttcorp-admin-ca:adminpw@huttcorp-ca:7054 -M /tmp/tls/huttcorp-admin-ca
 
 #######################################################################
 ############################## REGISTRATION ###########################
 echo "************************* REGISTRATION ************************"
+# The fabric-ca-client register command uses the options: --id.name (becomes cert CN:) --id.type (becomes cert OU:)
 
 echo "Registering admin identity with huttcorp-ca"
 # The admin identity has the "admin" attribute which is added to ECert by default
@@ -53,9 +58,13 @@ echo "Registering admin identity with huttcorp-ca"
 fabric-ca-client register -d --id.name huttcorp-admin --id.secret adminpw --id.attrs "hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert"
 
 echo "Registering huttcorp-orderer with huttcorp-ca"
-fabric-ca-client register -d --id.name huttcorp-orderer --id.secret ordererpw --id.type orderer
+# DO NOT USE "--id.type orderer" - it will be registered as having two OUs, causing an error
+# Could use "client" since the configtx.yaml file includes "client" in the "Writers" category, 
+# but peer is always included, so safe to just classify as "peer"
+fabric-ca-client register -d --id.name huttcorp-orderer --id.secret ordererpw --id.type peer 
 
 echo "Registering huttcorp-peer0 with huttcorp-ca"
+# "--id.type peer" necessary when using NodeOUs and an endorsement policy requiring "peer" endorsement
 fabric-ca-client register -d --id.name huttcorp-peer0 --id.secret peerpw --id.type peer
 
 # Generate client TLS cert and key pair for the peer commands
@@ -83,6 +92,9 @@ fabric-ca-client getcacert -d -u https://huttcorp-ca:7054 -M $FABRIC_CFG_PATH/or
 # Copy the tlscacert to the huttcorp msp tree
 /shared/utils/msp_add_tlscacert.sh -c $FABRIC_CFG_PATH/orgs/huttcorp/msp/cacerts/* -m $FABRIC_CFG_PATH/orgs/huttcorp/msp
 
+# Move the MSP config file to the CA Admin MSP directory
+cp /shared/config.yaml $FABRIC_CFG_PATH/orgs/huttcorp/msp/config.yaml
+
 # Enroll the ORG ADMIN and populate the admincerts directory
 ##NOTE: MUST RUN login-admin.sh with ". /" to capture env vars
 . $FABRIC_CFG_PATH/setup/login-admin.sh
@@ -100,14 +112,6 @@ cp $FABRIC_CFG_PATH/genesis.block /shared
 
 
 #######################################################################
-################################ SDK PREP #############################
-
-echo "Registering huttcorp-sdk default user with huttcorp-ca"
-fabric-ca-client register -d --id.name huttcorp-sdk --id.secret sdkpw
-. $FABRIC_CFG_PATH/setup/login.sh -u huttcorp-sdk -p sdkpw -c /shared/huttcorp-root-ca-cert.pem
-
-
-#######################################################################
 #######################################################################
 ################################ OPTIONAL #############################
 #######################################################################
@@ -120,6 +124,14 @@ fabric-ca-client register -d --id.name huttcorp-sdk --id.secret sdkpw
 
 # fabric-ca-client register -d --id.name huttcorp-bFortuna --id.secret userpw
 # . $FABRIC_CFG_PATH/setup/login.sh -u huttcorp-bFortuna -p userpw -c /shared/huttcorp-root-ca-cert.pem
+
+
+#######################################################################
+################################ SDK PREP #############################
+
+echo "Registering huttcorp-sdk default user with huttcorp-ca"
+fabric-ca-client register -d --id.name huttcorp-sdk --id.secret sdkpw --id.type client
+. $FABRIC_CFG_PATH/setup/login.sh -u huttcorp-sdk -p sdkpw -c /shared/huttcorp-root-ca-cert.pem
 
 # Prep for SDK
 yes | go get -u github.com/hyperledger/fabric-sdk-go

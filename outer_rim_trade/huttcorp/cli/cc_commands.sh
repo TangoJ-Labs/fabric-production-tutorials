@@ -38,7 +38,8 @@ peer chaincode install -n ccWallet -p chaincode/wallet -v 1.0
 sleep 3
 
 # Instantiate chaincode on peer(s) with chaincode installed
-peer chaincode instantiate -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member')" $ORDERER_CONN_ARGS -v 1.0
+# peer chaincode instantiate -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member')" $ORDERER_CONN_ARGS -v 1.0
+peer chaincode instantiate -C spicechannel -n ccWallet -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer')" $ORDERER_CONN_ARGS -v 1.0
 # Sleep to allow the ledger to be updated
 sleep 3
 
@@ -50,7 +51,8 @@ peer chaincode install -n ccUser -p chaincode/user -v 1.0
 sleep 3
 
 # Instantiate chaincode on peer(s) with chaincode installed
-peer chaincode instantiate -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member')" $ORDERER_CONN_ARGS -v 1.0
+# peer chaincode instantiate -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.member')" $ORDERER_CONN_ARGS -v 1.0
+peer chaincode instantiate -C spicechannel -n ccUser -c '{"Args":["init",""]}' -P "OR('huttcorpMSP.peer')" $ORDERER_CONN_ARGS -v 1.0
 # Sleep to allow the ledger to be updated
 sleep 3
 

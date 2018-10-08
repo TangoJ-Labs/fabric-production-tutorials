@@ -3,7 +3,7 @@ This network runs on a solo orderer (hosted by one org) and static docker contai
 
 ---
 ## NOTES
-* A "decentralized" service implies equality among members, but since we are using a solo Orderer, only one Orderer node can exist, so a single (in this case the first) organization will host the Orderer.
+* A "decentralized service" implies equality among members, but since we are using a solo Orderer, only one Orderer node can exist, so a single (in this case the first) organization will host the Orderer.
 
 * In this Hyperledger network setup, each org needs its own CA (Certificate Authority) to issue cryptographic materials.
 
@@ -48,13 +48,29 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 <br>
 
-#### The following step occurs inside the org1 CA Bash session:
->**1.3) Initialize the CA server**
->>`fabric-ca-server init -b org1-admin-ca:adminpw >>/shared/logs/ca.log 2>&1 &`
+#### The following steps occur inside the org1 CA Bash session:
+>**1.3) Prepare the Server Config file**
+><br>Open the `fabric-ca-server-config.yaml` file in the CA directory and make any CA settings changes needed. Pay careful attention to the `registry:` and `csr:` sections.  You might also need to edit the OU config file (`config.yaml`) in the `/shared` directory.
 >
->The `>>...` redirect will hide the stdout and stderror from your command line.  You will need to open `ca.log` to check for errors.  You can change the `admin:adminpw` parameter to whatever admin username / password you want for the CA server admin.
+><br>Create an msp directory for the msp tree and config file.
+>>`mkdir -p $FABRIC_CA_SERVER_HOME/msp`
 >
->A `fabric-ca-server-config.yaml` file, root CA certificate `ca-cert.pem`, and `.../keystore` directory with private keys will be created at the server home directory (set by `FABRIC_CA_SERVER_HOME` in the docker-compose file).  We will override many of the config file CSR settings with environmental variables (the config file will still show default settings).  The entire structure should resemble:
+>Copy over the Server Config file and the OU config file.
+>>`cp $FABRIC_CA_SERVER_HOME/setup/fabric-ca-server-config.yaml $FABRIC_CA_SERVER_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_SERVER_HOME/msp/config.yaml`
+>
+>Remove the old CA Cert to force the creation of a new one.
+>>`rm $FABRIC_CA_SERVER_HOME/ca-cert.pem`
+>
+><br>
+>
+>**1.4) Initialize the CA server**
+><br>We do not need to use the bootstrap `-b` option with the initial user login info. because we are using a custom Server Config file with those settings embedded.
+>>`fabric-ca-server init >>/shared/logs/ca.log 2>&1 &`
+>
+>The `>>...` redirect will hide the stdout and stderror from your command line.  You will need to open `ca.log` to check for errors.
+>
+>A root CA certificate `ca-cert.pem` and `.../keystore` directory with private keys will be created at the server home directory (set by `FABRIC_CA_SERVER_HOME` in the docker-compose file).  If you did not customize the `fabric-ca-server-config.yaml` file, you will need to override many of the config file CSR settings with environmental variables (the config file will be automatically created with default values if you did not include it).  The entire structure should resemble:
 >
 ><pre style="line-height: 1.3;">
 >.
@@ -63,7 +79,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >├── IssuerPublicKey
 >├── IssuerRevocationPublicKey
 >├── tls-cert.pem
->├── ca-cert.pem            <--- If you used Cryptogen instead, it would save this Root CA Cert to shared MSP tree
+>├── org1-ca-cert.pem      <--- If you used Cryptogen instead, it would save this Root CA Cert to shared MSP tree
 >└── msp
 >    ├── cacerts
 >    ├── keystore
@@ -76,17 +92,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.4) Copy the crypto material**
+>**1.5) Copy the crypto material**
 >
 >Copy the Root CA Cert ONLY to the shared folder for production use.
->>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /shared/org1-root-ca-cert.pem`
+>>`cp $FABRIC_CA_SERVER_HOME/org1-ca-cert.pem /shared/org1-root-ca-cert.pem`
 >
->The Root CA Cert is needed to `enroll` from the CLI.  We will refer to this file in other services (containers) via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable.  You could also hard-code the filename in the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate.
->
-><br>
->
->**1.5) (Optional) Edit the CA Server Config File**
-><br>If you have minor changes you would like to make to the `fabric-ca-server-config.yaml` file, you can make those changes now.  If you would like to customize the entire config file and not rely on any default generation process during `init`, you can save a customized config file in the `FABRIC_CA_SERVER_HOME` directory before initialization and fabric-ca-server will use the custom file rather than generate a default.  For this example, we will use the default file and override some settings via the environmental variables.
+>The Root CA Cert is needed to `enroll` from the CLI and we will refer to this file in other services (containers) via the `FABRIC_CA_CLIENT_TLS_CERTFILES` environment variable for TLS connections.  You could also hard-code the filename in the CLI config file (fabric-ca-client-config.yaml) in the `tls: certfiles:` section to include the cert as a trusted root certificate.
 >
 ><br>
 >
@@ -117,11 +128,15 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.9) Enroll the CA administrator**
+>**1.9) Set Environment, Add Config files, and Enroll the CA administrator**
 ><br>First, create the needed msp directory and set the environment variables needed.  The `$FABRIC_CFG_PATH` was set when the container was started (default: `/etc/hyperledger/fabric`)
->>`mkdir -p $FABRIC_CFG_PATH/orgs/org1/ca/org1-admin-ca`
-><br>`export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/org1-root-ca-cert.pem`
+>>`export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/org1-root-ca-cert.pem`
+><br>`mkdir -p $FABRIC_CFG_PATH/orgs/org1/ca/org1-admin-ca/msp`
 ><br>`export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/org1/ca/org1-admin-ca`
+>
+>Add the needed config files
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml`
 >
 ><br>Enroll the CA admin:
 >>`fabric-ca-client enroll -d -u https://org1-admin-ca:adminpw@org1-ca:7054`
@@ -143,11 +158,15 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 ><br>
 >
+>(Optional) If you plan to use the SDK, you'll need to include other naming versions of the cert:
+>
 >For filekeyvaluestore (github.com/hyperledger/fabric-sdk-go/pkg/msp/filecertstore.go):
 >>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org1-admin-ca@org1-cert.pem`
 >
 >For certfileuserstore (github.com/hyperledger/fabric-sdk-go/pkg/msp/certfileuserstore.go):
 >>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org1-admin-ca@org1MSP-cert.pem`
+>
+><br>
 >
 >### **Registration** of orderer(s), peer(s), and user(s)
 >Registration adds an entry into the `fabric-ca-server.db` or LDAP
@@ -159,11 +178,13 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 >
 >**1.11) Register the orderer profile**
->>`fabric-ca-client register -d --id.name org1-orderer --id.secret ordererpw --id.type orderer`
+><br>DO NOT USE "--id.type orderer" - it will be registered as having two OUs, causing an error.  You could use "client" if the configtx.yaml file includes "clients" in the "Writers" category, but peer should always be included, so safe to just classify as "peer"
+>>`fabric-ca-client register -d --id.name org1-orderer --id.secret ordererpw --id.type peer`
 >
 ><br>
 >
 >**1.12) Register the peer profile**
+><br>"--id.type peer" necessary when using NodeOUs and an endorsement policy requiring "peer" endorsement
 >>`fabric-ca-client register -d --id.name org1-peer0 --id.secret peerpw --id.type peer`
 >
 ><br>
@@ -201,7 +222,9 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**1.17) Enroll the ORG ADMIN and populate the admincerts directory**
+>**1.17) Add the MSP config file and Enroll the ORG ADMIN and populate the admincerts directory**
+>>`cp /shared/config.yaml $FABRIC_CFG_PATH/orgs/org1/msp/config.yaml`
+>
 ><br>Take a look at the comments in `login-admin.sh` in the CLI directory to understand how the enroll process and cert copying fills in the MSP tree.
 >
 >**NOTE: MUST RUN `login-admin.sh` with ". /" to capture env vars**
@@ -219,10 +242,6 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >>`$FABRIC_CFG_PATH/setup/generate_channel_artifacts.sh`
 >
 >The `genesis.block`, `channel.tx`, and `anchors.tx` were created in and used from the `FABRIC_CFG_PATH` directory.
->
->You might see the following warning from `configtxgen`.  This can be ignored for now - an update later will use the latest version of the `configtx.yaml` file to include the missing sections:
-><br>`WARN 003 Default policy emission is deprecated, please include policy specificiations for the application group in configtx.yaml`
-><br>
 >
 >Move the genesis block to the shared directory - this is needed to start the orderer (env var `ORDERER_GENERAL_GENESISFILE` in orderer)
 >>`cp $FABRIC_CFG_PATH/genesis.block /shared`
@@ -243,15 +262,18 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 **1.20) Start a Bash session in the org1 ORDERER service**
 >`docker exec -it org1-orderer bash`
 
-#### The following step occurs inside the org1 ORDERER Bash session:
+#### The following steps occur inside the org1 ORDERER Bash session:
 >The env vars should be set, including: `FABRIC_CA_CLIENT_HOME=/etc/hyperledger/orderer`
 >
 ><br>
 >
->**1.21) Enroll profile & fill MSP tree**
+>**1.21) Add the MSP config files & Enroll the Orderer identity to fill MSP tree**
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
 >
 >Enroll the orderer profile to get the orderer's enrollment certificate (default profile):
 >>`fabric-ca-client enroll -d -u https://org1-orderer:ordererpw@org1-ca:7054 -M $FABRIC_CA_CLIENT_HOME/msp`
+>
+>>`cp /shared/config.yaml $ORDERER_GENERAL_LOCALMSPDIR/config.yaml`
 >
 >Copy the tlscacert to the orderer msp tree
 >>`/shared/utils/msp_add_tlscacert.sh -c $ORDERER_GENERAL_LOCALMSPDIR/cacerts/* -m $ORDERER_GENERAL_LOCALMSPDIR`
@@ -298,15 +320,18 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 **1.25) Start a Bash session in the org1 PEER0 service**
 >`docker exec -it org1-peer0 bash`
 
-#### The following step occurs inside the org1 PEER0 Bash session:
+#### The following steps occur inside the org1 PEER0 Bash session:
 >The env vars should be set, including: `CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/msp`
 >
 ><br>
 >
->**1.26) Enroll profile & fill MSP tree**
+>**1.26) Add the MSP config files & Enroll the Peer identity to fill MSP tree**
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
 >
 >Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
 >>`fabric-ca-client enroll -d -u https://org1-peer0:peerpw@org1-ca:7054 -M $CORE_PEER_MSPCONFIGPATH`
+>
+>>`cp /shared/config.yaml $CORE_PEER_MSPCONFIGPATH/config.yaml`
 >
 >Copy the tlscacert to the peer msp tree
 >>`/shared/utils/msp_add_tlscacert.sh -c $CORE_PEER_MSPCONFIGPATH/cacerts/* -m $CORE_PEER_MSPCONFIGPATH`
@@ -377,7 +402,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 >
 >**1.34) Instantiate the Chaincode on the new Anchor Peer**
->>`peer chaincode instantiate -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR('org1MSP.member')" $ORDERER_CONN_ARGS`
+>>`peer chaincode instantiate -C mychannel -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR('org1MSP.peer')" $ORDERER_CONN_ARGS`
 >
 ><br>
 >
@@ -418,19 +443,35 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 **2.2) Start a Bash session in the org2 CA service**
 >`docker exec -it org2-ca bash`
 
-#### The following step occurs inside the org2 CA Bash session:
->**2.3) Initialize the CA server**
+#### The following steps occur inside the org2 CA Bash session:
+>**2.3) Prepare the Server Config file**
+><br>Open the `fabric-ca-server-config.yaml` file in the CA directory and make any CA settings changes needed. Pay careful attention to the `registry:` and `csr:` sections.  You might also need to edit the OU config file (`config.yaml`) in the `/shared` directory.
+>
+>Create an msp directory for the msp tree and config file.
+>>`mkdir -p $FABRIC_CA_SERVER_HOME/msp`
+>
+>Copy over the Server Config file and the OU config file.
+>>`cp $FABRIC_CA_SERVER_HOME/setup/fabric-ca-server-config.yaml $FABRIC_CA_SERVER_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_SERVER_HOME/msp/config.yaml`
+>
+>Remove the old CA Cert to force the creation of a new one.
+>>`rm $FABRIC_CA_SERVER_HOME/ca-cert.pem`
+>
+><br>
+>
+>**2.4) Initialize the CA server**
+><br>We do not need to use the bootstrap `-b` option with the initial user login info. because we are using a custom Server Config file with those settings embedded.
 >>`fabric-ca-server init -b org2-admin-ca:adminpw >>/shared/logs/ca.log 2>&1 &`
 >
 ><br>
 >
->**2.4) Copy the crypto material**
+>**2.5) Copy the crypto material**
 ><br>Copy the Root CA Cert ONLY to the shared folder for production use.
->>`cp $FABRIC_CA_SERVER_HOME/ca-cert.pem /shared/org2-root-ca-cert.pem`
+>>`cp $FABRIC_CA_SERVER_HOME/org2-ca-cert.pem /shared/org2-root-ca-cert.pem`
 >
 ><br>
 >
->**2.5) Start the CA Server**
+>**2.6) Start the CA Server**
 >>`fabric-ca-server start >>/shared/logs/ca.log 2>&1 &`
 >
 >Check `ca.log` and ensure that the service is listening on the default port (7054).
@@ -444,12 +485,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 ## ORG 2 CLI (tools) Service
-**2.6) Start the org2 CLI (tools) service**
+**2.7) Start the org2 CLI (tools) service**
 >`docker-compose -f org2/cli/docker-compose.yaml up -d`
 
 <br>
 
-**2.7) Start a Bash session in the org2 CLI service**
+**2.8) Start a Bash session in the org2 CLI service**
 >`docker exec -it org2-cli bash`
 
 #### The following steps occur inside the org2 CLI Bash session:
@@ -457,11 +498,15 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.8) Enroll the CA administrator**
+>**2.9) Set Environment, Add Config files, and Enroll the CA administrator**
 ><br>First, create the needed msp directory and set the environment variables needed.  The `$FABRIC_CFG_PATH` was set when the container was started (default: `/etc/hyperledger/fabric`)
->>`mkdir -p $FABRIC_CFG_PATH/orgs/org2/ca/org2-admin-ca`
-><br>`export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/org2-root-ca-cert.pem`
+>>`export FABRIC_CA_CLIENT_TLS_CERTFILES=/shared/org2-root-ca-cert.pem`
+><br>`mkdir -p $FABRIC_CFG_PATH/orgs/org2/ca/org2-admin-ca/msp`
 ><br>`export FABRIC_CA_CLIENT_HOME=$FABRIC_CFG_PATH/orgs/org2/ca/org2-admin-ca`
+>
+>Add the needed config files
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
+><br>`cp /shared/config.yaml $FABRIC_CA_CLIENT_HOME/msp/config.yaml`
 >
 ><br>Enroll the CA admin:
 >>`fabric-ca-client enroll -d -u https://org2-admin-ca:adminpw@org2-ca:7054`
@@ -469,33 +514,36 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 ><br>
 ><br>
 >
+>(Optional) If you plan to use the SDK, you'll need to include other naming versions of the cert:
+>
 >For filekeyvaluestore (github.com/hyperledger/fabric-sdk-go/pkg/msp/filecertstore.go):
 >>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org2-admin-ca@org2-cert.pem`
 >
 >For certfileuserstore (github.com/hyperledger/fabric-sdk-go/pkg/msp/certfileuserstore.go):
 >>`cp $FABRIC_CA_CLIENT_HOME/msp/signcerts/cert.pem $FABRIC_CA_CLIENT_HOME/msp/signcerts/org2-admin-ca@org2MSP-cert.pem`
 >
+><br>
 >
 >### **Registration** of orderer(s), peer(s), and user(s)
 >Registration adds an entry into the `fabric-ca-server.db` or LDAP
 >
->**2.9) Register the org administrator**
+>**2.10) Register the org administrator**
 ><br>The admin identity has the "admin" attribute which is added to ECert by default.  The other attributes are needed for this example chaincode settings.  Register the admin:
 >>`fabric-ca-client register -d --id.name org2-admin --id.secret adminpw --id.attrs "hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert,abac.init=true:ecert"`
 >
 ><br>
 >
->**2.10) Register the peer profile**
+>**2.11) Register the peer profile**
 >>`fabric-ca-client register -d --id.name org2-peer0 --id.secret peerpw --id.type peer`
 >
 ><br>
 >
->**2.11) (OPTIONAL) Register a user**
+>**2.12) (OPTIONAL) Register a user**
 >>`fabric-ca-client register -d --id.name org2-user1 --id.secret userpw`
 >
 ><br>
 >
->**2.12) Generate client TLS cert and key pair for the peer commands**
+>**2.13) Generate client TLS cert and key pair for the peer commands**
 >>`fabric-ca-client enroll -d --enrollment.profile tls -u https://org2-peer0:peerpw@org2-ca:7054 -M /tmp/tls --csr.hosts org2-peer0`
 >
 >Copy the TLS key and cert to the local tls directory
@@ -503,25 +551,27 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.13) Create the MSP directory tree**
+>**2.14) Create the MSP directory tree**
 ><br>Get the root ca cert again and auto-create the org2 MSP tree
 >>`fabric-ca-client getcacert -d -u https://org2-ca:7054 -M $FABRIC_CFG_PATH/orgs/org2/msp`
 >
 ><br>
 >
->**2.14) Copy the tlscacert to the admin-ca msp tree**
+>**2.15) Copy the tlscacert to the admin-ca msp tree**
 >>`/shared/utils/msp_add_tlscacert.sh -c $FABRIC_CFG_PATH/orgs/org2/msp/cacerts/* -m $FABRIC_CFG_PATH/orgs/org2/msp`
 >
 ><br>
 >
->**2.15) Enroll the ORG ADMIN and populate the admincerts directory**
-><br>NOTE: MUST RUN `login-admin.sh` with ". /" to capture env vars
+>**2.16) Add the config file & Enroll the ORG ADMIN & populate the admincerts directory**
+>>`cp /shared/config.yaml $FABRIC_CFG_PATH/orgs/org2/msp/config.yaml`
+>
+>NOTE: MUST RUN `login-admin.sh` with ". /" to capture env vars
 >>`source /etc/hyperledger/fabric/setup/.env`
 <br>`. $FABRIC_CFG_PATH/setup/login-admin.sh`
 >
 ><br>
 >
->**2.16) Use the configtxgen tool to generate the org info JSON to join the channel**
+>**2.17) Use the configtxgen tool to generate the org info JSON to join the channel**
 ><br>Move the configtx.yaml file to the FABRIC_CFG_PATH directory (see docker compose env vars)
 >>`cp /etc/hyperledger/fabric/setup/configtx.yaml /etc/hyperledger/fabric/configtx.yaml`
 >
@@ -540,24 +590,24 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 ## MANUAL TRANSFER
-**2.17) MANUAL TRANSFER org2 -> org1**
+**2.18) MANUAL TRANSFER org2 -> org1**
 - Copy created `.json` file to org1 `/shared` directory
 
 <br>
 
-**2.18) MANUAL TRANSFER org1 -> org2**
+**2.19) MANUAL TRANSFER org1 -> org2**
 - Copy `org1-root-ca-cert.pem` to org2 `/shared` directory
 
 <br>
 <br>
 
 ## ORG 2 ANCHOR PEER
-**2.19) Start the org2 PEER0 service**
+**2.20) Start the org2 PEER0 service**
 >`docker-compose -f org2/peer0/docker-compose.yaml up -d`
 
 <br>
 
-**2.20) Start a Bash session in the org2 PEER0 service**
+**2.21) Start a Bash session in the org2 PEER0 service**
 >`docker exec -it org2-peer0 bash`
 
 #### The following step occurs inside the org2 PEER0 Bash session:
@@ -565,10 +615,13 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.21) Enroll profile & fill MSP tree**
+>**2.22) Add the config files & Enroll profile & fill MSP tree**
+>>`cp /shared/fabric-ca-client-config.yaml $FABRIC_CA_CLIENT_HOME`
 >
 >Enroll the peer to get an enrollment certificate and set up the core's local MSP directory
 >>`fabric-ca-client enroll -d -u https://org2-peer0:peerpw@org2-ca:7054 -M $CORE_PEER_MSPCONFIGPATH`
+>
+>>`cp /shared/config.yaml $CORE_PEER_MSPCONFIGPATH/config.yaml`
 >
 >Copy the tlscacert to the peer msp tree
 >>`/shared/utils/msp_add_tlscacert.sh -c $CORE_PEER_MSPCONFIGPATH/cacerts/* -m $CORE_PEER_MSPCONFIGPATH`
@@ -578,7 +631,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.22) Enroll the orderer to get TLS & Certs**
+>**2.23) Enroll the orderer to get TLS & Certs**
 ><br>Use the `--enrollment.profile` `tls` option to receive the TLS key & cert
 >>`fabric-ca-client enroll -d --enrollment.profile tls -u https://org2-peer0:peerpw@org2-ca:7054 -M /tmp/tls --csr.hosts org2-peer0`
 >
@@ -587,7 +640,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.23) Start the peer**
+>**2.24) Start the peer**
 >
 >>`peer node start >> /shared/logs/peer0.log 2>&1 &`
 >
@@ -603,7 +656,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 ## ORG 1 CLI - UPGRADE CHAINCODE
-**2.24) Start a Bash session in the org1 CLI service**
+**2.25) Start a Bash session in the org1 CLI service**
 >`docker exec -it org1-cli bash`
 
 #### The following step occurs inside the org1 CLI Bash session:
@@ -613,12 +666,12 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.25) Install jq (command-line JSON processor)**
+>**2.26) Install jq (command-line JSON processor)**
 >>`apt-get -y update && apt-get -y install jq`
 >
 ><br>
 >
->**2.26) Fetch the config block for the channel**
+>**2.27) Fetch the config block for the channel**
 >>`peer channel fetch config config_block.pb -c mychannel $ORDERER_CONN_ARGS`
 >
 >Convert it to json (output to `config.json`)
@@ -626,7 +679,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.27) Create Config Update Envelope**
+>**2.28) Create Config Update Envelope**
 ><br>Modify the configuration to append org2
 >>`jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"org2":.[1]}}}}}' config.json /shared/org2.json > modified_config.json`
 >
@@ -640,7 +693,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.28) Sign the Update Envelope**
+>**2.29) Sign the Update Envelope**
 >>`peer channel signconfigtx -f update_in_envelope.pb`
 >
 >Copy the envelope to the common directory and pass to other authorizing admins (if needed)
@@ -648,28 +701,28 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.29) Update Channel**
+>**2.30) Update Channel**
 ><br>After ALL needed admins have signed the update envelope, update the channel
 >>`peer channel update -f update_in_envelope.pb -c mychannel $ORDERER_CONN_ARGS`
 >
 ><br>
 >
->**2.30) Install Chaincode**
+>**2.31) Install Chaincode**
 ><br>Be sure to iterate the chaincode version before installation
 >>`peer chaincode install -n mycc -v 2.0 -l golang -p github.com/hyperledger/fabric-samples/chaincode/abac/go`
 >
 ><br>
 >
->**2.31) Upgrade Chaincode**
+>**2.32) Upgrade Chaincode**
 ><br>NOTES:
 >- Be sure to use the same chaincode version used on the install
->- Use ".member" NOT ".peer" - a later update will use NodeOUs to enable use of ".peer", ".client", etc.
+>- You can use ".member" or ".peer" - NodeOU is used in this example
 >
->>`peer chaincode upgrade -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","5000","b","8000"]}' -P "OR('org1MSP.member','org2MSP.member')" $ORDERER_CONN_ARGS`
+>>`peer chaincode upgrade -C mychannel -n mycc -v 2.0 -c '{"Args":["init","a","5000","b","8000"]}' -P "OR('org1MSP.peer','org2MSP.peer')" $ORDERER_CONN_ARGS`
 >
 ><br>
 >
->**2.32) Test Chaincode**
+>**2.33) Test Chaincode**
 ><br>First run a query to check the current ledger value
 >>`peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'`
 >
@@ -691,7 +744,7 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 <br>
 
 ## ORG 2 CLI - INSTALL CHAINCODE
-**2.33) Start a Bash session in the org2 CLI service**
+**2.34) Start a Bash session in the org2 CLI service**
 >`docker exec -it org2-cli bash`
 
 #### The following step occurs inside the org2 CLI Bash session:
@@ -701,24 +754,25 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 >
 ><br>
 >
->**2.34) Fetch the config block for the channel**
+>**2.35) Fetch the config block for the channel**
 >>`peer channel fetch 0 mychannel.block -c mychannel $ORDERER_CONN_ARGS`
 >
 ><br>
 >
->**2.35) Join the channel**
+>**2.36) Join the channel**
 >>`peer channel join -b mychannel.block`
 >
 ><br>
 >
->**2.36) Install Chaincode**
+>**2.37) Install Chaincode**
 ><br>Be sure to match the chaincode version with the other org chaincode install
 >>`peer chaincode install -n mycc -v 2.0 -l golang -p github.com/hyperledger/fabric-samples/chaincode/abac/go`
 >
 ><br>
 >
->**2.37) Test Chaincode**
+>**2.38) Test Chaincode**
 ><br>First run a query to check the current ledger value
+><br>This might take a minute since the new chaincode needs to run the setup process
 >>`peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'`
 >
 >Run an invoke to change the value
@@ -737,3 +791,18 @@ NOTE: If you explore the container filesystem, a CA cert and key are created in 
 
 <br>
 <br>
+
+## FINISHED
+That's it!  Both orgs are on the network & channel, using the same chaincode.
+
+<br>
+
+### OPTIONAL:
+
+WARNING: THE FOLLOWING COMMANDS WILL REMOVE ALL DOCKER CONTAINERS ON YOUR MACHINE (not just Hyperledger services) - USE WITH CAUTION
+
+You can shut down the network with:
+>`{repo home}/network_down.sh`
+
+Or, for automatic cleaning of script-created files, try:
+>`yes | {repo home}/network_down.sh delete`

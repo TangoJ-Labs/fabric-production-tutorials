@@ -155,7 +155,7 @@ func (mgr *ClientManager) Register(username string) (string, error) {
 	// Register the new user
 	enrollmentSecret, err := mgr.msp.Register(&msp.RegistrationRequest{
 		Name:        username,
-		Type:        "user",
+		Type:        "client", //can use "admin", "peer", "client" (see configtx.yaml Policies section)
 		Attributes:  attributes,
 		Affiliation: mgr.Org,
 	})

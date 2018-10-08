@@ -1,31 +1,128 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# ERROR WHEN ONLY ADDING "Policies" SECION:
+## "NodeOUs not activated. Cannot tell apart identities."
+# ERROR WHEN ADDING ALL BUT Application ADDITIONAL SECTIONS:
+## "Error reading configuration:  While parsing config: yaml: line 41: mapping values are not allowed in this context"
+
+---
 Organizations:
   - &huttcorp
     Name: huttcorp
     ID: huttcorpMSP
     # If FABRIC_CFG_PATH is modified, change the below MSP directory
     MSPDir: /etc/hyperledger/fabric/orgs/huttcorp/msp
+    Policies: &huttcorpPolicies
+        Readers:
+            Type: Signature
+            Rule: "OR('huttcorpMSP.admin', 'huttcorpMSP.peer', 'huttcorpMSP.client')"
+        Writers:
+            Type: Signature
+            Rule: "OR('huttcorpMSP.admin', 'huttcorpMSP.peer', 'huttcorpMSP.client')" #Including clients here so that the SDK identities can write
+        Admins:
+            Type: Signature
+            Rule: "OR('huttcorpMSP.admin')"
     AnchorPeers:
        - Host: huttcorp-peer0
          Port: 7051
 
+Capabilities:
+    Global: &ChannelCapabilities
+        V1_1: true
+    Orderer: &OrdererCapabilities
+        V1_1: true
+    Application: &ApplicationCapabilities
+        V1_2: true
+
 Application: &ApplicationDefaults
+    ACLs: &ACLsDefault
+      lscc/ChaincodeExists: /Channel/Application/Readers
+      lscc/GetDeploymentSpec: /Channel/Application/Readers
+      lscc/GetChaincodeData: /Channel/Application/Readers
+      lscc/GetInstantiatedChaincodes: /Channel/Application/Readers
+      qscc/GetChainInfo: /Channel/Application/Readers
+      qscc/GetBlockByNumber: /Channel/Application/Readers
+      qscc/GetBlockByHash: /Channel/Application/Readers
+      qscc/GetTransactionByID: /Channel/Application/Readers
+      qscc/GetBlockByTxID: /Channel/Application/Readers
+      cscc/GetConfigBlock: /Channel/Application/Readers
+      cscc/GetConfigTree: /Channel/Application/Readers
+      cscc/SimulateConfigTreeUpdate: /Channel/Application/Readers
+      peer/Propose: /Channel/Application/Writers
+      peer/ChaincodeToChaincode: /Channel/Application/Readers
+      event/Block: /Channel/Application/Readers
+      event/FilteredBlock: /Channel/Application/Readers
+
     Organizations:
+      
+    Policies: &ApplicationDefaultPolicies
+      Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+      Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+      Admins:
+        Type: ImplicitMeta
+        Rule: "ANY Admins" #"MAJORITY Admins"
+
+    Capabilities:
+      <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+    OrdererType: solo
+    Addresses:
+      - huttcorp-orderer:7050
+    BatchTimeout: 2s
+    BatchSize:
+      MaxMessageCount: 10
+      AbsoluteMaxBytes: 99 MB
+      PreferredMaxBytes: 512 KB
+    MaxChannels: 0
+    Kafka:
+      Brokers:
+        - 127.0.0.1:9092
+    
+    Policies:
+      Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+      Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+      Admins:
+        Type: ImplicitMeta
+        Rule: "ANY Admins" #"MAJORITY Admins"
+      BlockValidation:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+
+    Capabilities:
+      <<: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+    Policies:
+      Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+      Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+      Admins:
+        Type: ImplicitMeta
+        Rule: "ANY Admins" #"MAJORITY Admins"
+
+    Capabilities:
+      <<: *ChannelCapabilities
 
 Profiles:
-
   OrgsOrdererGenesis:
+    <<: *ChannelDefaults
     Orderer:
-      OrdererType: solo
-      Addresses:
-        - huttcorp-orderer:7050
-      BatchTimeout: 2s
-      BatchSize:
-        MaxMessageCount: 10
-        AbsoluteMaxBytes: 99 MB
-        PreferredMaxBytes: 512 KB
-      Kafka:
-        Brokers:
-          - 127.0.0.1:9092
+      <<: *OrdererDefaults
       Organizations:
         - *huttcorp
     Consortiums:
@@ -39,3 +136,4 @@ Profiles:
       <<: *ApplicationDefaults
       Organizations:
         - *huttcorp
+    
